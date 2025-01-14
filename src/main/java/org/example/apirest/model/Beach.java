@@ -21,7 +21,7 @@ public class Beach {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn //(name = "beach_has_service")
-    private List<Service> services;
+    private List<ServiceBeach> serviceBeaches;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn //(name = "beach_has_types")

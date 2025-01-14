@@ -35,9 +35,9 @@ public class BeachServiceImpl implements BeachService {
     }
 
     @Override
-    public BeachDto update(Long id, CreateBeachDto createBeachDto) {
+    public BeachDto update(Long id, CreateBeachDto beach) {
         Beach oldBeach = beachRepository.findById(id).orElse(null);
-        Beach beachToInsert = beachDtoConverter.convertToCreateBeachEntity(createBeachDto);
+        Beach beachToInsert = beachDtoConverter.convertToCreateBeachEntity(beach);
 
         if (oldBeach == null) {
             return null;
@@ -45,7 +45,7 @@ public class BeachServiceImpl implements BeachService {
 
         oldBeach.setName(beachToInsert.getName());
         oldBeach.setDescription(beachToInsert.getDescription());
-        oldBeach.setServices(beachToInsert.getServices());
+        oldBeach.setServiceBeaches(beachToInsert.getServiceBeaches());
         oldBeach.setTypes(beachToInsert.getTypes());
 
 

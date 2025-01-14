@@ -1,7 +1,7 @@
 package org.example.apirest.dto.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.model.Service;
+import org.example.apirest.model.ServiceBeach;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -12,25 +12,25 @@ import java.util.List;
 public class ServiceDtoConverter {
     private final ModelMapper modelMapper;
 
-    public ServiceDto convertDto(Service service) {
-        return modelMapper.map(service, ServiceDto.class);
+    public ServiceDto convertDto(ServiceBeach serviceBeach) {
+        return modelMapper.map(serviceBeach, ServiceDto.class);
     }
 
-    public List<ServiceDto> convertDtoList(List<Service> serviceList) {
-        return serviceList.stream().map(this::convertDto).toList();
+    public List<ServiceDto> convertDtoList(List<ServiceBeach> serviceBeachList) {
+        return serviceBeachList.stream().map(this::convertDto).toList();
     }
 
-    public Service convertToCreateServiceEntity(ServiceDto serviceDto) {
-        return modelMapper.map(serviceDto, Service.class);
+    public ServiceBeach convertToCreateServiceEntity(ServiceDto serviceDto) {
+        return modelMapper.map(serviceDto, ServiceBeach.class);
     }
 
-    public Service convertToCreateServiceEntity(CreateServiceDto createServiceDto) {
-        Service service = modelMapper.map(createServiceDto, Service.class);
-        service.setId(null);
-        return service;
+    public ServiceBeach convertToCreateServiceEntity(CreateServiceDto createServiceDto) {
+        ServiceBeach serviceBeach = modelMapper.map(createServiceDto, ServiceBeach.class);
+        serviceBeach.setId(null);
+        return serviceBeach;
     }
 
-    public List<Service> convertToEntityList(List<CreateServiceDto> serviceDtos) {
+    public List<ServiceBeach> convertToEntityList(List<CreateServiceDto> serviceDtos) {
         return serviceDtos.stream().map(this::convertToCreateServiceEntity).toList();
     }
 }
