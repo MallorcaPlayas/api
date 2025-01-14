@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
+import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.Beach;
 import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.model.TypeBeach;
@@ -26,7 +27,7 @@ public class BeachServiceImpl implements BeachService {
 
     @Override
     public BeachDto findOne(Long id) {
-        Beach beach = beachRepository.findById(id).orElse(null);
+        Beach beach = beachRepository.findById(id).orElseThrow(()-> new NotFoundException(Beach.class,id));
         return beachDtoConverter.convertDto(beach,BeachDto.class);
     }
 
@@ -38,7 +39,7 @@ public class BeachServiceImpl implements BeachService {
 
     @Override
     public BeachDto update(Long id, CreateBeachDto beach) {
-        Beach oldBeach = beachRepository.findById(id).orElse(null);
+        Beach oldBeach = beachRepository.findById(id).orElseThrow(()-> new NotFoundException(Beach.class,id));
         Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach,Beach.class);
 
         if (oldBeach == null) {
@@ -71,7 +72,7 @@ public class BeachServiceImpl implements BeachService {
 
     @Override
     public void delete(Long id) {
-        Beach beach = beachRepository.findById(id).orElse(null);
+        Beach beach = beachRepository.findById(id).orElseThrow(()-> new NotFoundException(Beach.class,id));
 
         beachRepository.delete(beach);
     }

@@ -6,15 +6,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@ControllerAdvice
 public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(BeachNotFoundException.class)
-    public ResponseEntity<ApiError> handleRestaurantNotFound(BeachNotFoundException ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
-        return ResponseEntity.status(apiError.getStatus()).body(apiError);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
     @Override
@@ -26,4 +28,5 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(HttpStatus.valueOf(statusCode.value()), ex.getMessage());
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
+
 }

@@ -5,6 +5,8 @@ import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
+import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.model.TypeBeach;
 import org.example.apirest.repository.TypeBeachRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class TypeBeachServiceImpl implements TypeBeachService {
 
     @Override
     public TypeBeachDto findOne(Long id) {
-        TypeBeach typeBeach = serviceRepository.findById(id).orElse(null);
+        TypeBeach typeBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(TypeBeach.class,id));
         return serviceDtoConverter.convertDto(typeBeach, TypeBeachDto.class);
     }
 
@@ -38,7 +40,7 @@ public class TypeBeachServiceImpl implements TypeBeachService {
 
     @Override
     public TypeBeachDto update(Long id, CreateTypeBeachDto typeBeach) {
-        TypeBeach oldTypeBeach = serviceRepository.findById(id).orElse(null);
+        TypeBeach oldTypeBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(TypeBeach.class,id));
         TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach, TypeBeach.class);
 
         if (oldTypeBeach == null) {
@@ -53,7 +55,7 @@ public class TypeBeachServiceImpl implements TypeBeachService {
 
     @Override
     public void delete(Long id) {
-        TypeBeach typeBeach = serviceRepository.findById(id).orElse(null);
+        TypeBeach typeBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(TypeBeach.class,id));
 
         serviceRepository.delete(typeBeach);
     }

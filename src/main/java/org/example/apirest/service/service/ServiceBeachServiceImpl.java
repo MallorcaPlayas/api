@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.service.CreateServiceBeachDto;
 import org.example.apirest.dto.service.ServiceBeachDto;
+import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Beach;
 import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.repository.ServiceRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class ServiceBeachServiceImpl implements ServiceBeachService {
 
     @Override
     public ServiceBeachDto findOne(Long id) {
-        ServiceBeach beach = serviceRepository.findById(id).orElse(null);
+        ServiceBeach beach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(ServiceBeach.class,id));
         return serviceDtoConverter.convertDto(beach, ServiceBeachDto.class);
     }
 
@@ -37,7 +39,7 @@ public class ServiceBeachServiceImpl implements ServiceBeachService {
 
     @Override
     public ServiceBeachDto update(Long id, CreateServiceBeachDto service) {
-        ServiceBeach oldService = serviceRepository.findById(id).orElse(null);
+        ServiceBeach oldService = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(ServiceBeach.class,id));
         ServiceBeach serviceToInsert = serviceDtoConverter.convertToEntityFromCreateDto(service, ServiceBeach.class);
 
         if (oldService == null) {
@@ -55,7 +57,7 @@ public class ServiceBeachServiceImpl implements ServiceBeachService {
 
     @Override
     public void delete(Long id) {
-        ServiceBeach serviceBeach = serviceRepository.findById(id).orElse(null);
+        ServiceBeach serviceBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(ServiceBeach.class,id));
 
         serviceRepository.delete(serviceBeach);
     }
