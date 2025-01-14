@@ -1,13 +1,12 @@
 package org.example.apirest.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +18,8 @@ public class TypeBeach {
     @GeneratedValue
     private Long id;
     private String name;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn //(name = "beach_has_types")
+    private List<Beach> beaches;
 }

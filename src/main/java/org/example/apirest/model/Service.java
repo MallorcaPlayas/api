@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +24,8 @@ public class Service {
 
     //@Column(name= "end_time")
     private LocalTime endTime;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn //(name = "beach_has_service")
+    private List<Beach> beaches;
 }
