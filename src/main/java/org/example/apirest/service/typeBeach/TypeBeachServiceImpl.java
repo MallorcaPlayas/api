@@ -1,9 +1,13 @@
 package org.example.apirest.service.typeBeach;
 
 import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.DtoConverterImpl;
+import org.example.apirest.dto.service.CreateServiceDto;
+import org.example.apirest.dto.service.ServiceDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachConvertor;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
+import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.model.TypeBeach;
 import org.example.apirest.repository.TypeBeachRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +20,7 @@ public class TypeBeachServiceImpl implements TypeBeachService {
 
 
     private final TypeBeachRepository serviceRepository;
-    private final TypeBeachConvertor serviceDtoConverter;
+    private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> serviceDtoConverter;
 
     @Override
     public List<TypeBeachDto> findAll() {

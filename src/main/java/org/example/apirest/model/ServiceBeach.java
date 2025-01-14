@@ -1,5 +1,6 @@
 package org.example.apirest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table //(name = "service")
-public class ServiceBeach{
+public class ServiceBeach implements BaseEntity{
     @Id
     @GeneratedValue
     private Long id;
@@ -26,7 +27,7 @@ public class ServiceBeach{
     //@Column(name= "end_time")
     private LocalTime endTime;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToMany(mappedBy = "services")
     private List<Beach> beaches;
 

@@ -1,8 +1,8 @@
 package org.example.apirest.service.beach;
 
 import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.beach.BeachDto;
-import org.example.apirest.dto.beach.BeachDtoConvertor;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.model.Beach;
 import org.example.apirest.repository.BeachRepository;
@@ -15,7 +15,7 @@ import java.util.List;
 public class BeachServiceImpl implements BeachService {
 
     private final BeachRepository beachRepository;
-    private final BeachDtoConvertor beachDtoConverter;
+    private final DtoConverterImpl<Beach,BeachDto,CreateBeachDto> beachDtoConverter;
 
     @Override
     public List<BeachDto> findAll() {

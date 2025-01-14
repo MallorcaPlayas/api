@@ -2,19 +2,15 @@ package org.example.apirest.dto;
 
 import java.util.List;
 
-// E => Entity
-// D => Dto
-// DC => DtoCreate
+public interface DtoConverter<Entity, Dto, CreateDto> {
 
-public interface DtoConverter<E, D, DC> {
+    Dto convertDto(Entity entity);
 
-    D convertDto(E entity);
+    List<Dto> convertDtoList(List<Entity> entities);
 
-    List<D> convertDtoList(List<E> entities);
+    Entity convertToEntityFromDto(Dto dto);
 
-    E convertToEntityFromDto(D dto);
+    Entity convertToEntityFromCreateDto(CreateDto createDto);
 
-    E convertToEntityFromCreateDto(DC createDto);
-
-    List<E> convertToEntityListFromCreateDto(List<DC> createDtos);
+    List<Entity> convertToEntityListFromCreateDto(List<CreateDto> createDtos);
 }
