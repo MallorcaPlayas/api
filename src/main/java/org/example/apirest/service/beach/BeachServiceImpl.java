@@ -1,6 +1,9 @@
-package org.example.apirest.service;
+package org.example.apirest.service.beach;
 
 import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.beach.BeachDto;
+import org.example.apirest.dto.beach.CreateBeachDto;
+import org.example.apirest.model.Beach;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,27 +13,27 @@ import java.util.List;
 public class BeachServiceImpl implements BeachService {
 
     @Override
-    public List<PlayaDto> findAll() {
+    public List<BeachDto> findAll() {
         return List.of();
     }
 
     @Override
-    public PlayaDto findOne(Long id) {
+    public BeachDto findOne(Long id) {
         return null;
     }
 
     @Override
-    public List<Playa> findAllNewest(int openSince) {
+    public List<Beach> findAllNewest(int openSince) {
         return List.of();
     }
 
     @Override
-    public PlayaDto save(CreatePlayaDto restaurant) {
+    public BeachDto save(CreateBeachDto restaurant) {
         return null;
     }
 
     @Override
-    public PlayaDto update(Long id, CreatePlayaDto restaurant) {
+    public BeachDto update(Long id, CreateBeachDto restaurant) {
         return null;
     }
 
