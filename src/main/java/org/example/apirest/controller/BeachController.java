@@ -3,6 +3,7 @@ package org.example.apirest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beach.BeachDto;
+import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.dto.service.CreateServiceDto;
 import org.example.apirest.dto.service.ServiceDto;
 import org.example.apirest.model.ServiceBeach;
@@ -10,12 +11,11 @@ import org.example.apirest.service.beach.BeachService;
 import org.example.apirest.service.beach.BeachServiceImpl;
 import org.example.apirest.service.service.ServiceBeachServiceImpl;
 import org.example.apirest.service.typeBeach.TypeBeachService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -26,8 +26,31 @@ public class BeachController {
     private final BeachService service;
 
     @GetMapping
-    public ResponseEntity<List<BeachDto>> findAllRestaurants() {
+    public ResponseEntity<List<BeachDto>> index() {
         return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BeachDto> show(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findOne(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto beach) {
+        BeachDto newBeach = service.save(beach);
+        return ResponseEntity.created(URI.create("/api/restaurant/" + newBeach.getId())).body(newBeach);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BeachDto> update(@RequestBody CreateBeachDto beach,@PathVariable Long id) {
+        BeachDto updatedBeach = service.update(id,beach);
+        return ResponseEntity.created(URI.create("/api/restaurant/" + id)).body(updatedBeach);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 
 }
