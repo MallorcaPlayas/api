@@ -2,12 +2,8 @@ package org.example.apirest.service.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.beach.BeachDto;
-import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.dto.service.CreateServiceDto;
 import org.example.apirest.dto.service.ServiceDto;
-import org.example.apirest.dto.service.ServiceDtoConvertor;
-import org.example.apirest.model.Beach;
 import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.repository.ServiceRepository;
 import org.springframework.stereotype.Service;
