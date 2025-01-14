@@ -1,9 +1,7 @@
 package org.example.apirest.dto;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.model.BaseEntity;
-import org.example.apirest.model.Beach;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -16,29 +14,29 @@ public class DtoConverterImpl<Entity extends BaseEntity, Dto, CreateDto> impleme
     private final ModelMapper modelMapper;
 
     @Override
-    public Dto convertDto(Entity entity) {
-        return modelMapper.map(entity, (Class<Dto>) entity.getClass());
+    public Dto convertDto(Entity entity, Class<Dto> dtoClass) {
+        return modelMapper.map(entity, dtoClass);
     }
 
     @Override
-    public List<Dto> convertDtoList(List<Entity> entities) {
-        return entities.stream().map(this::convertDto).toList();
+    public List<Dto> convertDtoList(List<Entity> entities, Class<Dto> dtoClass) {
+        return entities.stream().map(entity -> convertDto(entity, dtoClass)).toList();
     }
 
     @Override
-    public Entity convertToEntityFromDto(Dto dto) {
-        return modelMapper.map(dto, (Class<Entity>) dto.getClass());
+    public Entity convertToEntityFromDto(Dto dto, Class<Entity> entityClass) {
+        return modelMapper.map(dto, entityClass);
     }
 
     @Override
-    public Entity convertToEntityFromCreateDto(CreateDto createDto) {
-        Entity entity = modelMapper.map(createDto, (Class<Entity>) createDto.getClass());
+    public Entity convertToEntityFromCreateDto(CreateDto createDto, Class<Entity> entityClass) {
+        Entity entity = modelMapper.map(createDto, entityClass);
         entity.setId(null);
         return entity;
     }
 
     @Override
-    public List<Entity> convertToEntityListFromCreateDto(List<CreateDto> createDtos) {
-        return createDtos.stream().map(this::convertToEntityFromCreateDto).toList();
+    public List<Entity> convertToEntityListFromCreateDto(List<CreateDto> createDtos, Class<Entity> entityClass) {
+        return createDtos.stream().map(createDto -> convertToEntityFromCreateDto(createDto, entityClass)).toList();
     }
 }

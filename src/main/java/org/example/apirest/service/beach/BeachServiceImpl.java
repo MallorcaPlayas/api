@@ -5,6 +5,8 @@ import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.model.Beach;
+import org.example.apirest.model.ServiceBeach;
+import org.example.apirest.model.TypeBeach;
 import org.example.apirest.repository.BeachRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,37 +21,52 @@ public class BeachServiceImpl implements BeachService {
 
     @Override
     public List<BeachDto> findAll() {
-        return beachDtoConverter.convertDtoList(beachRepository.findAll());
+        return beachDtoConverter.convertDtoList(beachRepository.findAll(),BeachDto.class);
     }
 
     @Override
     public BeachDto findOne(Long id) {
         Beach beach = beachRepository.findById(id).orElse(null);
-        return beachDtoConverter.convertDto(beach);
+        return beachDtoConverter.convertDto(beach,BeachDto.class);
     }
 
     @Override
     public BeachDto save(CreateBeachDto beach) {
-        Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach);
-        return beachDtoConverter.convertDto(beachRepository.save(beachToInsert));
+        Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach,Beach.class);
+        return beachDtoConverter.convertDto(beachRepository.save(beachToInsert),BeachDto.class);
     }
 
     @Override
     public BeachDto update(Long id, CreateBeachDto beach) {
         Beach oldBeach = beachRepository.findById(id).orElse(null);
-        Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach);
+        Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach,Beach.class);
 
         if (oldBeach == null) {
             return null;
         }
+        String newName = beachToInsert.getName();
+        String newDescription = beachToInsert.getDescription();
+        List<ServiceBeach> newServiceBeachList = beachToInsert.getServices();
+        List<TypeBeach> newTypeBeachList = beachToInsert.getTypes();
 
-        oldBeach.setName(beachToInsert.getName());
-        oldBeach.setDescription(beachToInsert.getDescription());
-        oldBeach.setServices(beachToInsert.getServices());
-        oldBeach.setTypes(beachToInsert.getTypes());
+        if (newName != null){
+            oldBeach.setName(newName);
+        }
+
+        if (newDescription != null){
+            oldBeach.setDescription(newDescription);
+        }
+
+        if (newServiceBeachList != null){
+            oldBeach.setServices(newServiceBeachList);
+        }
+
+        if (newTypeBeachList != null){
+            oldBeach.setTypes(newTypeBeachList);
+        }
 
 
-        return beachDtoConverter.convertDto(beachRepository.save(oldBeach));
+        return beachDtoConverter.convertDto(beachRepository.save(oldBeach),BeachDto.class);
     }
 
     @Override

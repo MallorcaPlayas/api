@@ -4,13 +4,7 @@ package org.example.apirest.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
-import org.example.apirest.dto.service.CreateServiceDto;
-import org.example.apirest.dto.service.ServiceDto;
-import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.service.beach.BeachService;
-import org.example.apirest.service.beach.BeachServiceImpl;
-import org.example.apirest.service.service.ServiceBeachServiceImpl;
-import org.example.apirest.service.typeBeach.TypeBeachService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/playa")
+@RequestMapping("/api/beaches")
 @RequiredArgsConstructor
 public class BeachController {
 
@@ -38,13 +32,13 @@ public class BeachController {
     @PostMapping
     public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto beach) {
         BeachDto newBeach = service.save(beach);
-        return ResponseEntity.created(URI.create("/api/restaurant/" + newBeach.getId())).body(newBeach);
+        return ResponseEntity.created(URI.create("/api/playas/" + newBeach.getId())).body(newBeach);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BeachDto> update(@RequestBody CreateBeachDto beach,@PathVariable Long id) {
         BeachDto updatedBeach = service.update(id,beach);
-        return ResponseEntity.created(URI.create("/api/restaurant/" + id)).body(updatedBeach);
+        return ResponseEntity.created(URI.create("/api/playas/" + id)).body(updatedBeach);
     }
 
     @DeleteMapping("/{id}")

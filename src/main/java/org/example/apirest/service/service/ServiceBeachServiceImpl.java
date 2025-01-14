@@ -2,8 +2,8 @@ package org.example.apirest.service.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.service.CreateServiceDto;
-import org.example.apirest.dto.service.ServiceDto;
+import org.example.apirest.dto.service.CreateServiceBeachDto;
+import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.repository.ServiceRepository;
 import org.springframework.stereotype.Service;
@@ -15,30 +15,30 @@ import java.util.List;
 public class ServiceBeachServiceImpl implements ServiceBeachService {
 
     private final ServiceRepository serviceRepository;
-    private final DtoConverterImpl<ServiceBeach, ServiceDto, CreateServiceDto> serviceDtoConverter;
+    private final DtoConverterImpl<ServiceBeach, ServiceBeachDto, CreateServiceBeachDto> serviceDtoConverter;
 
     @Override
-    public List<ServiceDto> findAll() {
-        return serviceDtoConverter.convertDtoList(serviceRepository.findAll());
+    public List<ServiceBeachDto> findAll() {
+        return serviceDtoConverter.convertDtoList(serviceRepository.findAll(), ServiceBeachDto.class);
     }
 
     @Override
-    public ServiceDto findOne(Long id) {
+    public ServiceBeachDto findOne(Long id) {
         ServiceBeach beach = serviceRepository.findById(id).orElse(null);
-        return serviceDtoConverter.convertDto(beach);
+        return serviceDtoConverter.convertDto(beach, ServiceBeachDto.class);
     }
 
     @Override
-    public ServiceDto save(CreateServiceDto service) {
-        ServiceBeach serviceToInsert = serviceDtoConverter.convertToEntityFromCreateDto(service);
+    public ServiceBeachDto save(CreateServiceBeachDto service) {
+        ServiceBeach serviceToInsert = serviceDtoConverter.convertToEntityFromCreateDto(service, ServiceBeach.class);
         System.out.println("Beaches en ServiceBeach antes de guardar: " + serviceToInsert.getBeaches());
-        return serviceDtoConverter.convertDto(serviceRepository.save(serviceToInsert));
+        return serviceDtoConverter.convertDto(serviceRepository.save(serviceToInsert), ServiceBeachDto.class);
     }
 
     @Override
-    public ServiceDto update(Long id, CreateServiceDto service) {
+    public ServiceBeachDto update(Long id, CreateServiceBeachDto service) {
         ServiceBeach oldService = serviceRepository.findById(id).orElse(null);
-        ServiceBeach serviceToInsert = serviceDtoConverter.convertToEntityFromCreateDto(service);
+        ServiceBeach serviceToInsert = serviceDtoConverter.convertToEntityFromCreateDto(service, ServiceBeach.class);
 
         if (oldService == null) {
             return null;
@@ -50,7 +50,7 @@ public class ServiceBeachServiceImpl implements ServiceBeachService {
         oldService.setBeaches(serviceToInsert.getBeaches());
 
 
-        return serviceDtoConverter.convertDto(serviceRepository.save(oldService));
+        return serviceDtoConverter.convertDto(serviceRepository.save(oldService), ServiceBeachDto.class);
     }
 
     @Override

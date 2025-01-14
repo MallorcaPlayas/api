@@ -1,15 +1,15 @@
 package org.example.apirest.service.service;
 
 
-import org.example.apirest.dto.service.CreateServiceDto;
-import org.example.apirest.dto.service.ServiceDto;
+import org.example.apirest.dto.service.CreateServiceBeachDto;
+import org.example.apirest.dto.service.ServiceBeachDto;
 
 import java.util.List;
 
 public interface ServiceBeachService {
-    List<ServiceDto> findAll();
-    ServiceDto findOne(Long id);
-    ServiceDto save(CreateServiceDto service);
-    ServiceDto update(Long id, CreateServiceDto service);
+    List<ServiceBeachDto> findAll();
+    ServiceBeachDto findOne(Long id);
+    ServiceBeachDto save(CreateServiceBeachDto service);
+    ServiceBeachDto update(Long id, CreateServiceBeachDto service);
     void delete(Long id);
 }

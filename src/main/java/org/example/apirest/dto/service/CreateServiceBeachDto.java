@@ -2,13 +2,13 @@ package org.example.apirest.dto.service;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.apirest.dto.BaseDto;
+import org.example.apirest.dto.BaseCreateDto;
 
 import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ServiceDto extends BaseDto {
+public class CreateServiceBeachDto extends BaseCreateDto {
     private LocalTime startTime;
     private LocalTime endTime;
 }

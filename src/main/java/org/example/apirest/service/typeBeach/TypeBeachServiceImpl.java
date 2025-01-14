@@ -2,6 +2,7 @@ package org.example.apirest.service.typeBeach;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
+import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.model.TypeBeach;
@@ -20,25 +21,25 @@ public class TypeBeachServiceImpl implements TypeBeachService {
 
     @Override
     public List<TypeBeachDto> findAll() {
-        return serviceDtoConverter.convertDtoList(serviceRepository.findAll());
+        return serviceDtoConverter.convertDtoList(serviceRepository.findAll(), TypeBeachDto.class);
     }
 
     @Override
     public TypeBeachDto findOne(Long id) {
         TypeBeach typeBeach = serviceRepository.findById(id).orElse(null);
-        return serviceDtoConverter.convertDto(typeBeach);
+        return serviceDtoConverter.convertDto(typeBeach, TypeBeachDto.class);
     }
 
     @Override
     public TypeBeachDto save(CreateTypeBeachDto typeBeach) {
-        TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach);
-        return serviceDtoConverter.convertDto(serviceRepository.save(typeBeachToInsert));
+        TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach, TypeBeach.class);
+        return serviceDtoConverter.convertDto(serviceRepository.save(typeBeachToInsert), TypeBeachDto.class);
     }
 
     @Override
     public TypeBeachDto update(Long id, CreateTypeBeachDto typeBeach) {
         TypeBeach oldTypeBeach = serviceRepository.findById(id).orElse(null);
-        TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach);
+        TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach, TypeBeach.class);
 
         if (oldTypeBeach == null) {
             return null;
@@ -47,7 +48,7 @@ public class TypeBeachServiceImpl implements TypeBeachService {
         oldTypeBeach.setName(typeBeachToInsert.getName());
         oldTypeBeach.setBeaches(typeBeachToInsert.getBeaches());
 
-        return serviceDtoConverter.convertDto(serviceRepository.save(oldTypeBeach));
+        return serviceDtoConverter.convertDto(serviceRepository.save(oldTypeBeach), TypeBeachDto.class);
     }
 
     @Override
