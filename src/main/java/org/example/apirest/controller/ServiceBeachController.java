@@ -2,13 +2,8 @@ package org.example.apirest.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.beach.BeachDto;
-import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.dto.service.CreateServiceBeachDto;
 import org.example.apirest.dto.service.ServiceBeachDto;
-import org.example.apirest.model.ServiceBeach;
-import org.example.apirest.repository.ServiceRepository;
-import org.example.apirest.service.beach.BeachService;
 import org.example.apirest.service.service.ServiceBeachService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
