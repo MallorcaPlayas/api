@@ -1,6 +1,7 @@
 package org.example.apirest.dto.beach;
 
 import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.model.Beach;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class BeachDtoConverter {
+public class BeachDtoConvertor  implements DtoConverter<Beach,BeachDto,CreateBeachDto> {
     private final ModelMapper modelMapper;
 
     public BeachDto convertDto(Beach beach) {
@@ -20,17 +21,17 @@ public class BeachDtoConverter {
         return beachList.stream().map(this::convertDto).toList();
     }
 
-    public Beach convertToCreateBeachEntity(BeachDto beachDto) {
+    public Beach convertToEntityFromDto(BeachDto beachDto) {
         return modelMapper.map(beachDto, Beach.class);
     }
 
-    public Beach convertToCreateBeachEntity(CreateBeachDto createBeachDto) {
+    public Beach convertToEntityFromCreateDto(CreateBeachDto createBeachDto) {
         Beach beach = modelMapper.map(createBeachDto, Beach.class);
         beach.setId(null);
         return beach;
     }
 
-    public List<Beach> convertToEntityList(List<CreateBeachDto> beachDtos) {
-        return beachDtos.stream().map(this::convertToCreateBeachEntity).toList();
+    public List<Beach> convertToEntityListFromCreateDto(List<CreateBeachDto> beachDtos) {
+        return beachDtos.stream().map(this::convertToEntityFromCreateDto).toList();
     }
 }

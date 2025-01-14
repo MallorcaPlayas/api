@@ -1,6 +1,6 @@
 package org.example.apirest.model;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,13 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table //(name = "type_beaches")
-public class TypeBeach {
+public class TypeBeach{
     @Id
     @GeneratedValue
     private Long id;
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn //(name = "beach_has_types")
+    @JsonManagedReference
+    @ManyToMany(mappedBy = "types")
     private List<Beach> beaches;
+
+    public TypeBeach(String name) {
+        this.name = name;
+    }
 }

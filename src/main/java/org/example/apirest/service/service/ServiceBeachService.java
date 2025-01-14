@@ -6,7 +6,7 @@ import org.example.apirest.dto.service.ServiceDto;
 
 import java.util.List;
 
-public interface ServiceService {
+public interface ServiceBeachService {
     List<ServiceDto> findAll();
     ServiceDto findOne(Long id);
     ServiceDto save(CreateServiceDto service);

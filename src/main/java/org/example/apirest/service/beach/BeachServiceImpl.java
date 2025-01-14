@@ -2,7 +2,7 @@ package org.example.apirest.service.beach;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beach.BeachDto;
-import org.example.apirest.dto.beach.BeachDtoConverter;
+import org.example.apirest.dto.beach.BeachDtoConvertor;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.model.Beach;
 import org.example.apirest.repository.BeachRepository;
@@ -15,7 +15,7 @@ import java.util.List;
 public class BeachServiceImpl implements BeachService {
 
     private final BeachRepository beachRepository;
-    private final BeachDtoConverter beachDtoConverter;
+    private final BeachDtoConvertor beachDtoConverter;
 
     @Override
     public List<BeachDto> findAll() {
@@ -30,14 +30,14 @@ public class BeachServiceImpl implements BeachService {
 
     @Override
     public BeachDto save(CreateBeachDto beach) {
-        Beach beachToInsert = beachDtoConverter.convertToCreateBeachEntity(beach);
+        Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach);
         return beachDtoConverter.convertDto(beachRepository.save(beachToInsert));
     }
 
     @Override
     public BeachDto update(Long id, CreateBeachDto beach) {
         Beach oldBeach = beachRepository.findById(id).orElse(null);
-        Beach beachToInsert = beachDtoConverter.convertToCreateBeachEntity(beach);
+        Beach beachToInsert = beachDtoConverter.convertToEntityFromCreateDto(beach);
 
         if (oldBeach == null) {
             return null;
@@ -45,11 +45,11 @@ public class BeachServiceImpl implements BeachService {
 
         oldBeach.setName(beachToInsert.getName());
         oldBeach.setDescription(beachToInsert.getDescription());
-        oldBeach.setServiceBeaches(beachToInsert.getServiceBeaches());
+        oldBeach.setServices(beachToInsert.getServices());
         oldBeach.setTypes(beachToInsert.getTypes());
 
 
-        return beachDtoConverter.convertDto(beachRepository.save(beachToInsert));
+        return beachDtoConverter.convertDto(beachRepository.save(oldBeach));
     }
 
     @Override

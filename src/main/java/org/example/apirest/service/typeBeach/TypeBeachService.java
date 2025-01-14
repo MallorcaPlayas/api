@@ -5,7 +5,7 @@ import org.example.apirest.dto.typeBeach.TypeBeachDto;
 
 import java.util.List;
 
-public interface TypeBeach {
+public interface TypeBeachService {
     List<TypeBeachDto> findAll();
     TypeBeachDto findOne(Long id);
     TypeBeachDto save(CreateTypeBeachDto restaurant);

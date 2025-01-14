@@ -2,7 +2,6 @@ package org.example.apirest.service.beach;
 
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
-import org.example.apirest.model.Beach;
 
 import java.util.List;
 
