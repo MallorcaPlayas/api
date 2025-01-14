@@ -8,7 +8,6 @@ import java.util.List;
 public interface TypeBeach {
     List<TypeBeachDto> findAll();
     TypeBeachDto findOne(Long id);
-    List<TypeBeach> findAllNewest(int openSince);
     TypeBeachDto save(CreateTypeBeachDto restaurant);
     TypeBeachDto update(Long id, CreateTypeBeachDto restaurant);
     void delete(Long id);

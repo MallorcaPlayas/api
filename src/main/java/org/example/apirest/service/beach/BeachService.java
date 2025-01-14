@@ -9,8 +9,7 @@ import java.util.List;
 public interface BeachService {
     List<BeachDto> findAll();
     BeachDto findOne(Long id);
-    List<Beach> findAllNewest(int openSince);
-    BeachDto save(CreateBeachDto restaurant);
-    BeachDto update(Long id, CreateBeachDto restaurant);
+    BeachDto save(CreateBeachDto beach);
+    BeachDto update(Long id, CreateBeachDto beach);
     void delete(Long id);
 }
