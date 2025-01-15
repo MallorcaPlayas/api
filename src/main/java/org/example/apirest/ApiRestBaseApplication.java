@@ -1,17 +1,15 @@
 package org.example.apirest;
 
-import org.example.apirest.model.Beach;
-import org.example.apirest.model.ServiceBeach;
-import org.example.apirest.model.TypeBeach;
-import org.example.apirest.repository.BeachRepository;
-import org.example.apirest.repository.ServiceRepository;
-import org.example.apirest.repository.TypeBeachRepository;
+import org.example.apirest.model.*;
+import org.example.apirest.repository.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -23,6 +21,8 @@ public class ApiRestBaseApplication {
         BeachRepository beachRepository = context.getBean(BeachRepository.class);
         ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
         TypeBeachRepository typeBeachRepository = context.getBean(TypeBeachRepository.class);
+        RoleRepository roleRepository = context.getBean(RoleRepository.class);
+        UserRepository userRepository = context.getBean(UserRepository.class);
 
 
         ServiceBeach service1 = new ServiceBeach("Toilet", LocalTime.of(8, 0), LocalTime.of(20, 0));
@@ -63,6 +63,37 @@ public class ApiRestBaseApplication {
         Beach beach10 = new Beach(null, "Ocean Breeze", "Cool breezes and beautiful views", List.of(service10, service2), List.of(type6, type10));
 
         beachRepository.saveAll(List.of(beach1, beach2, beach3, beach4, beach5, beach6, beach7, beach8, beach9, beach10));
-    }
 
+        Role adminRole = new Role(null, "Admin", 1000L, "Administrator with full access", null);
+        Role guiaRole = new Role(null, "Guia", 300L, "Guide with access to specific beach areas", null);
+        Role socorristaRole = new Role(null, "Socorrista", 500L, "Lifeguard with safety responsibilities", null);
+        Role gratisRole = new Role(null, "Gratis", 0L, "Free access with basic permissions", null);
+        Role premiumRole = new Role(null, "Premium", 800L, "User with premium access and benefits", null);
+
+        roleRepository.saveAll(Arrays.asList(adminRole, guiaRole, socorristaRole, gratisRole, premiumRole));
+
+        User user1 = new User(
+                null, "John Doe", "John", "Doe", "Smith", new Date(), "password123", "url/photo1", false,
+                Arrays.asList(adminRole, guiaRole)
+        );
+        User user2 = new User(
+                null, "Jane Roe", "Jane", "Roe", "Johnson", new Date(), "password456", "url/photo2", true,
+                Arrays.asList(socorristaRole, gratisRole)
+        );
+        User user3 = new User(
+                null, "Alice Green", "Alice", "Green", "Taylor", new Date(), "password789", "url/photo3", false,
+                Arrays.asList(premiumRole)
+        );
+        User user4 = new User(
+                null, "Bob Black", "Bob", "Black", "Brown", new Date(), "password012", "url/photo4", true,
+                Arrays.asList(socorristaRole, gratisRole)
+        );
+        User user5 = new User(
+                null, "Charlie White", "Charlie", "White", "Clark", new Date(), "password345", "url/photo5", false,
+                Arrays.asList(adminRole, premiumRole)
+        );
+
+        // Save users to the database
+        userRepository.saveAll(Arrays.asList(user1, user2, user3, user4, user5));
+    }
 }
