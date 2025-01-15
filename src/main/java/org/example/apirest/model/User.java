@@ -28,6 +28,7 @@ public class User implements BaseEntity {
     private String password;
     private String urlPhoto;
     private boolean privatePrivacy;
+    private boolean state;
 
     @ManyToMany
     @JoinTable(
