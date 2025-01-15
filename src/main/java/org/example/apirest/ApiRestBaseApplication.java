@@ -72,23 +72,23 @@ public class ApiRestBaseApplication {
         roleRepository.saveAll(Arrays.asList(adminRole, guiaRole, socorristaRole, gratisRole, premiumRole));
 
         User user1 = new User(
-                null, "John Doe", "John", "Doe", "Smith", new Date(), "password123", "url/photo1", false, true,
+                null, "John Doe", "John", "Doe", "Smith", "alex@alex.com", new Date(), "password123", "url/photo1", false, true,
                 Arrays.asList(adminRole, guiaRole)
         );
         User user2 = new User(
-                null, "Jane Roe", "Jane", "Roe", "Johnson", new Date(), "password456", "url/photo2", true, true,
+                null, "Jane Roe", "Jane", "Roe", "Johnson", "alex@alex.com", new Date(), "password456", "url/photo2", true, true,
                 Arrays.asList(socorristaRole, gratisRole)
         );
         User user3 = new User(
-                null, "Alice Green", "Alice", "Green", "Taylor", new Date(), "password789", "url/photo3", false, true,
+                null, "Alice Green", "Alice", "Green", "Taylor", "alex@alex.com", new Date(), "password789", "url/photo3", false, true,
                 Arrays.asList(premiumRole)
         );
         User user4 = new User(
-                null, "Bob Black", "Bob", "Black", "Brown", new Date(), "password012", "url/photo4", true, false,
+                null, "Bob Black", "Bob", "Black", "Brown", "alex@alex.com", new Date(), "password012", "url/photo4", true, false,
                 Arrays.asList(socorristaRole, gratisRole)
         );
         User user5 = new User(
-                null, "Charlie White", "Charlie", "White", "Clark", new Date(), "password345", "url/photo5", false, false,
+                null, "Charlie White", "Charlie", "White", "Clark", "alex@alex.com", new Date(), "password345", "url/photo5", false, false,
                 Arrays.asList(adminRole, premiumRole)
         );
 

@@ -10,6 +10,4 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RoleDto extends BaseDto {
-    private Long price;
-    private String description;
 }
