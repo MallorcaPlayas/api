@@ -9,6 +9,7 @@ import org.example.apirest.model.Beach;
 import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.model.TypeBeach;
 import org.example.apirest.repository.BeachRepository;
+import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,27 +46,8 @@ public class BeachServiceImpl implements BeachService {
         if (oldBeach == null) {
             return null;
         }
-        String newName = beachToInsert.getName();
-        String newDescription = beachToInsert.getDescription();
-        List<ServiceBeach> newServiceBeachList = beachToInsert.getServices();
-        List<TypeBeach> newTypeBeachList = beachToInsert.getTypes();
 
-        if (newName != null){
-            oldBeach.setName(newName);
-        }
-
-        if (newDescription != null){
-            oldBeach.setDescription(newDescription);
-        }
-
-        if (newServiceBeachList != null){
-            oldBeach.setServices(newServiceBeachList);
-        }
-
-        if (newTypeBeachList != null){
-            oldBeach.setTypes(newTypeBeachList);
-        }
-
+        UtilsClass.updateFields(oldBeach, beachToInsert);
 
         return beachDtoConverter.convertDto(beachRepository.save(oldBeach),BeachDto.class);
     }

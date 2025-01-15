@@ -15,8 +15,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table // (name = "users")
-public class User {
+@Table (name = "users_project")
+public class User implements BaseEntity {
     @Id
     @GeneratedValue
     private Long id;

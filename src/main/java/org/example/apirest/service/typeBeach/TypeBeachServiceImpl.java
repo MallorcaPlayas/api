@@ -9,6 +9,7 @@ import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.ServiceBeach;
 import org.example.apirest.model.TypeBeach;
 import org.example.apirest.repository.TypeBeachRepository;
+import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,8 +48,7 @@ public class TypeBeachServiceImpl implements TypeBeachService {
             return null;
         }
 
-        oldTypeBeach.setName(typeBeachToInsert.getName());
-        oldTypeBeach.setBeaches(typeBeachToInsert.getBeaches());
+        UtilsClass.updateFields(oldTypeBeach, typeBeachToInsert);
 
         return serviceDtoConverter.convertDto(serviceRepository.save(oldTypeBeach), TypeBeachDto.class);
     }

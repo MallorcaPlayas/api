@@ -7,9 +7,12 @@ import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.Beach;
 import org.example.apirest.model.ServiceBeach;
+import org.example.apirest.model.TypeBeach;
 import org.example.apirest.repository.ServiceRepository;
+import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -46,11 +49,7 @@ public class ServiceBeachServiceImpl implements ServiceBeachService {
             return null;
         }
 
-        oldService.setName(serviceToInsert.getName());
-        oldService.setStartTime(serviceToInsert.getStartTime());
-        oldService.setEndTime(serviceToInsert.getEndTime());
-        oldService.setBeaches(serviceToInsert.getBeaches());
-
+        UtilsClass.updateFields(oldService, serviceToInsert);
 
         return serviceDtoConverter.convertDto(serviceRepository.save(oldService), ServiceBeachDto.class);
     }

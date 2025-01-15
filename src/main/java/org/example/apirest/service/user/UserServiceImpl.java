@@ -4,9 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
+import org.example.apirest.dto.user.CreateUserDto;
+import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.TypeBeach;
+import org.example.apirest.model.User;
 import org.example.apirest.repository.TypeBeachRepository;
+import org.example.apirest.repository.UserRepository;
+import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,46 +20,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-    private final TypeBeachRepository serviceRepository;
-    private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> serviceDtoConverter;
+    private final UserRepository userRepository;
+    private final DtoConverterImpl<User, UserDto, CreateUserDto> serviceDtoConverter;
 
     @Override
-    public List<TypeBeachDto> findAll() {
-        return serviceDtoConverter.convertDtoList(serviceRepository.findAll(), TypeBeachDto.class);
+    public List<UserDto> findAll() {
+        return serviceDtoConverter.convertDtoList(userRepository.findAll(), UserDto.class);
     }
 
     @Override
-    public TypeBeachDto findOne(Long id) {
-        TypeBeach typeBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(TypeBeach.class,id));
-        return serviceDtoConverter.convertDto(typeBeach, TypeBeachDto.class);
+    public UserDto findOne(Long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(User.class,id));
+        return serviceDtoConverter.convertDto(user, UserDto.class);
     }
 
     @Override
-    public TypeBeachDto save(CreateTypeBeachDto typeBeach) {
-        TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach, TypeBeach.class);
-        return serviceDtoConverter.convertDto(serviceRepository.save(typeBeachToInsert), TypeBeachDto.class);
+    public UserDto save(CreateUserDto user) {
+        User userToInsert = serviceDtoConverter.convertToEntityFromCreateDto(user, User.class);
+        return serviceDtoConverter.convertDto(userRepository.save(userToInsert), UserDto.class);
     }
 
     @Override
-    public TypeBeachDto update(Long id, CreateTypeBeachDto typeBeach) {
-        TypeBeach oldTypeBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(TypeBeach.class,id));
-        TypeBeach typeBeachToInsert = serviceDtoConverter.convertToEntityFromCreateDto(typeBeach, TypeBeach.class);
+    public UserDto update(Long id, CreateUserDto user) {
+        User oldUser = userRepository.findById(id).orElseThrow(()-> new NotFoundException(User.class,id));
+        User userToInsert = serviceDtoConverter.convertToEntityFromCreateDto(user, User.class);
 
-        if (oldTypeBeach == null) {
+        if (user == null) {
             return null;
         }
 
-        oldTypeBeach.setName(typeBeachToInsert.getName());
-        oldTypeBeach.setBeaches(typeBeachToInsert.getBeaches());
+        UtilsClass.updateFields(oldUser, userToInsert);
 
-        return serviceDtoConverter.convertDto(serviceRepository.save(oldTypeBeach), TypeBeachDto.class);
+        return serviceDtoConverter.convertDto(userRepository.save(oldUser), UserDto.class);
     }
 
     @Override
     public void delete(Long id) {
-        TypeBeach typeBeach = serviceRepository.findById(id).orElseThrow(()-> new NotFoundException(TypeBeach.class,id));
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(User.class,id));
 
-        serviceRepository.delete(typeBeach);
+        userRepository.delete(user);
     }
 }
