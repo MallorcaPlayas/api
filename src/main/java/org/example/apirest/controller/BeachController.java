@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/beaches")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class BeachController {
 
     private final BeachService service;
