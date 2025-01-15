@@ -20,7 +20,7 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    private String nickname;
+    private String name;
 
     private String first_name;
     private String last_name;
