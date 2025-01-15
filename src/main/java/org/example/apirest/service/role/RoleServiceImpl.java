@@ -16,40 +16,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService{
 
-    private final RoleRepository roleRepository;
-    private final DtoConverterImpl<Role, RoleDto, CreateRoleDto> roleDtoConverter;
+    private final RoleRepository repository;
+    private final DtoConverterImpl<Role, RoleDto, CreateRoleDto> dtoConverter;
 
     @Override
     public List<RoleDto> findAll() {
-        return roleDtoConverter.convertDtoList(roleRepository.findAll(),RoleDto.class);
+        return dtoConverter.convertDtoList(repository.findAll(),RoleDto.class);
     }
 
     @Override
     public RoleDto findOne(Long id) {
-        Role role = roleRepository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
-        return roleDtoConverter.convertDto(role,RoleDto.class);
+        Role role = repository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
+        return dtoConverter.convertDto(role,RoleDto.class);
     }
 
     @Override
     public RoleDto save(CreateRoleDto role) {
-        Role roleToInsert = roleDtoConverter.convertToEntityFromCreateDto(role,Role.class);
-        return roleDtoConverter.convertDto(roleRepository.save(roleToInsert),RoleDto.class);
+        Role roleToInsert = dtoConverter.convertToEntityFromCreateDto(role,Role.class);
+        return dtoConverter.convertDto(repository.save(roleToInsert),RoleDto.class);
     }
 
     @Override
     public RoleDto update(Long id, CreateRoleDto role) {
-        Role oldRole = roleRepository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
-        Role roleToInsert = roleDtoConverter.convertToEntityFromCreateDto(role,Role.class);
+        Role oldRole = repository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
+        Role roleToInsert = dtoConverter.convertToEntityFromCreateDto(role,Role.class);
 
         UtilsClass.updateFields(oldRole, roleToInsert);
 
-        return roleDtoConverter.convertDto(roleRepository.save(oldRole),RoleDto.class);
+        return dtoConverter.convertDto(repository.save(oldRole),RoleDto.class);
     }
 
     @Override
     public void delete(Long id) {
-        Role role = roleRepository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
+        Role role = repository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
 
-        roleRepository.delete(role);
+        repository.delete(role);
     }
 }
