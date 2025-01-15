@@ -1,13 +1,13 @@
 package org.example.apirest.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +21,8 @@ public class Role implements BaseEntity{
     private String name;
     private Long price;
     private String description;
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 }
