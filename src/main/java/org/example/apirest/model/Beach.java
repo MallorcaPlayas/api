@@ -37,4 +37,9 @@ public class Beach implements BaseEntity {
     )
     @JsonManagedReference
     private List<TypeBeach> types;
+
+    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL)
+    private List<Camera> cameras;
+
+
 }
