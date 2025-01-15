@@ -49,19 +49,19 @@ public class ApiRestBaseApplication {
         TypeBeach type10 = new TypeBeach("Marsh");
 
         typeBeachRepository.saveAll(List.of(type1, type2, type3, type4, type5, type6, type7, type8, type9, type10));
+//
+//        Beach beach1 = new Beach(null, "Fiufiu", "Beautiful beach with fine sand", List.of(service1, service2), List.of(type1, type2));
+//        Beach beach2 = new Beach(null, "Paradise Bay", "Calm waters and great for families", List.of(service3, service4), List.of(type3, type4));
+//        Beach beach3 = new Beach(null, "Coral Reef", "Excellent spot for diving", List.of(service5, service6), List.of(type5, type6));
+//        Beach beach4 = new Beach(null, "Sunny Beach", "Warm weather all year round", List.of(service7, service8), List.of(type7, type8));
+//        Beach beach5 = new Beach(null, "Blue Lagoon", "Known for its crystal-clear water", List.of(service9, service10), List.of(type9, type10));
+//        Beach beach6 = new Beach(null, "Sandy Shores", "Great for surfing", List.of(service1, service3), List.of(type2, type6));
+//        Beach beach7 = new Beach(null, "Rocky Point", "Perfect for adventurers", List.of(service4, service5), List.of(type4, type7));
+//        Beach beach8 = new Beach(null, "Crystal Beach", "Famous for its clean water", List.of(service6, service7), List.of(type3, type8));
+//        Beach beach9 = new Beach(null, "Seaside Retreat", "A quiet beach for relaxation", List.of(service8, service9), List.of(type5, type9));
+//        Beach beach10 = new Beach(null, "Ocean Breeze", "Cool breezes and beautiful views", List.of(service10, service2), List.of(type6, type10));
 
-        Beach beach1 = new Beach(null, "Fiufiu", "Beautiful beach with fine sand", List.of(service1, service2), List.of(type1, type2));
-        Beach beach2 = new Beach(null, "Paradise Bay", "Calm waters and great for families", List.of(service3, service4), List.of(type3, type4));
-        Beach beach3 = new Beach(null, "Coral Reef", "Excellent spot for diving", List.of(service5, service6), List.of(type5, type6));
-        Beach beach4 = new Beach(null, "Sunny Beach", "Warm weather all year round", List.of(service7, service8), List.of(type7, type8));
-        Beach beach5 = new Beach(null, "Blue Lagoon", "Known for its crystal-clear water", List.of(service9, service10), List.of(type9, type10));
-        Beach beach6 = new Beach(null, "Sandy Shores", "Great for surfing", List.of(service1, service3), List.of(type2, type6));
-        Beach beach7 = new Beach(null, "Rocky Point", "Perfect for adventurers", List.of(service4, service5), List.of(type4, type7));
-        Beach beach8 = new Beach(null, "Crystal Beach", "Famous for its clean water", List.of(service6, service7), List.of(type3, type8));
-        Beach beach9 = new Beach(null, "Seaside Retreat", "A quiet beach for relaxation", List.of(service8, service9), List.of(type5, type9));
-        Beach beach10 = new Beach(null, "Ocean Breeze", "Cool breezes and beautiful views", List.of(service10, service2), List.of(type6, type10));
-
-        beachRepository.saveAll(List.of(beach1, beach2, beach3, beach4, beach5, beach6, beach7, beach8, beach9, beach10));
+//        beachRepository.saveAll(List.of(beach1, beach2, beach3, beach4, beach5, beach6, beach7, beach8, beach9, beach10));
 
         Role adminRole = new Role(null, "Admin", 1000L, "Administrator with full access", null);
         Role guiaRole = new Role(null, "Guia", 300L, "Guide with access to specific beach areas", null);

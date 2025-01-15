@@ -11,9 +11,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CreateUserDto extends BaseCreateDto {
-    private String first_name;
-    private String last_name;
-    private String second_last_name;
+    private String userName;
+    private String firstSurname;
+    private String secondSurname;
     private String email;
     private Date birthday;
     private String password;
