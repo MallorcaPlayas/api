@@ -33,7 +33,6 @@ public class ServiceBeachServiceImpl implements ServiceBeachService {
     @Override
     public ServiceBeachDto save(CreateServiceBeachDto service) {
         ServiceBeach serviceToInsert = dtoConverter.convertToEntityFromCreateDto(service, ServiceBeach.class);
-        System.out.println("Beaches en ServiceBeach antes de guardar: " + serviceToInsert.getBeaches());
         return dtoConverter.convertDto(repository.save(serviceToInsert), ServiceBeachDto.class);
     }
 

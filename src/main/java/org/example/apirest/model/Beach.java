@@ -20,14 +20,8 @@ public class Beach implements BaseEntity {
     private String name;
     private String description;
 
-    @ManyToMany
-    @JoinTable(
-            name = "beach_service",
-            joinColumns = @JoinColumn(name = "beach_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    @JsonManagedReference
-    private List<ServiceBeach> services;
+    @OneToMany(mappedBy = "beach")
+    private List<BeachHasService> beachHasServiceBeache;
 
     @ManyToMany
     @JoinTable(

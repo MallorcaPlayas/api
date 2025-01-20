@@ -12,6 +12,5 @@ import java.util.List;
 @Data
 public class CreateBeachDto extends BaseCreateDto {
     private String description;
-    private List<CreateServiceBeachDto> services;
     private List<CreateTypeBeachDto> types;
 }

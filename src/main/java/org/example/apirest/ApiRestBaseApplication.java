@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -20,6 +21,13 @@ public class ApiRestBaseApplication {
         RoleRepository roleRepository = context.getBean(RoleRepository.class);
         UserHasRoleRepository userHasRoleRepository = context.getBean(UserHasRoleRepository.class);
         UserRequireRoleRepository userRequireRoleRepository = context.getBean(UserRequireRoleRepository.class);
+
+        // Nuevos repositorios
+        BeachRepository beachRepository = context.getBean(BeachRepository.class);
+        ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
+        BeachHasServiceRepository beachHasServiceRepository = context.getBean(BeachHasServiceRepository.class);
+        TypeBeachRepository typeBeachRepository = context.getBean(TypeBeachRepository.class);
+        CameraRepository cameraRepository = context.getBean(CameraRepository.class);
 
         // Crear roles
         Role adminRole = new Role();
@@ -61,6 +69,7 @@ public class ApiRestBaseApplication {
         userRepository.saveAll(Arrays.asList(user1, user2));
         userHasRoleRepository.saveAll(Arrays.asList(userRole1, userRole2, userRole3));
 
+        // Crear instancias de UserRequireRole
         UserRequireRole userRequireRole1 = new UserRequireRole();
         userRequireRole1.setUser(user1);
         userRequireRole1.setRole(adminRole);
@@ -77,5 +86,68 @@ public class ApiRestBaseApplication {
 
         // Guardar las instancias de UserRequireRole
         userRequireRoleRepository.saveAll(Arrays.asList(userRequireRole1, userRequireRole2));
+
+        // Crear instancias de las nuevas entidades
+
+        // Crear tipos de playas
+        TypeBeach typeBeach1 = new TypeBeach();
+        typeBeach1.setName("Playa tranquila");
+
+        TypeBeach typeBeach2 = new TypeBeach();
+        typeBeach2.setName("Playa deportiva");
+
+        // Guardar los tipos de playa
+        typeBeachRepository.saveAll(Arrays.asList(typeBeach1, typeBeach2));
+
+        // Crear playas
+        Beach beach1 = new Beach();
+        beach1.setName("Playa Bonita");
+        beach1.setDescription("Una playa con arenas doradas y aguas cristalinas.");
+
+        Beach beach2 = new Beach();
+        beach2.setName("Playa del Sol");
+        beach2.setDescription("Una playa famosa por su sol brillante y el clima cálido.");
+
+        // Relacionar playas con tipos
+        beach1.setTypes(Arrays.asList(typeBeach1));
+        beach2.setTypes(Arrays.asList(typeBeach2));
+
+        // Guardar las playas
+        beachRepository.saveAll(Arrays.asList(beach1, beach2));
+
+        // Crear servicios
+        ServiceBeach service1 = new ServiceBeach();
+        service1.setName("Alquiler de sombrillas");
+
+        ServiceBeach service2 = new ServiceBeach();
+        service2.setName("Alquiler de kayaks");
+
+        // Guardar los servicios
+        serviceRepository.saveAll(Arrays.asList(service1, service2));
+
+        // Crear relaciones BeachHasService
+        BeachHasService beachHasService1 = new BeachHasService();
+        beachHasService1.setBeach(beach1);
+        beachHasService1.setServiceBeach(service1);
+
+        BeachHasService beachHasService2 = new BeachHasService();
+        beachHasService2.setBeach(beach2);
+        beachHasService2.setServiceBeach(service2);
+        beachHasService2.setStartTime(LocalTime.of(1,1,1));
+        beachHasService2.setEndTime(LocalTime.of(8,8,8));
+
+        // Guardar las relaciones BeachHasService
+        beachHasServiceRepository.saveAll(Arrays.asList(beachHasService1, beachHasService2));
+
+
+        // Crear cámaras
+        Camera camera1 = new Camera();
+        camera1.setBeach(beach1);
+
+        Camera camera2 = new Camera();
+        camera2.setBeach(beach2);
+
+        // Guardar las cámaras
+        cameraRepository.saveAll(Arrays.asList(camera1, camera2));
     }
 }
