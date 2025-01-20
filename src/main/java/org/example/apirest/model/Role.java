@@ -2,6 +2,7 @@ package org.example.apirest.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,6 @@ public class Role implements BaseEntity{
     private Long price;
     private String description;
 
-    @JsonBackReference
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    @OneToMany(mappedBy = "role")
+    private List<UserHasRole> userHasRoles;
 }

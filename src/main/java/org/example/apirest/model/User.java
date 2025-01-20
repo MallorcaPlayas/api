@@ -1,6 +1,7 @@
 package org.example.apirest.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,6 @@ public class User implements BaseEntity {
     private boolean privatePrivacy;
     private boolean state;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    @JsonManagedReference
-    private List<Role> roles;
+    @OneToMany(mappedBy = "user")
+    private List<UserHasRole> userHasRoles;
 }
