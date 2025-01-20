@@ -21,13 +21,13 @@ public class ApiRestBaseApplication {
         RoleRepository roleRepository = context.getBean(RoleRepository.class);
         UserHasRoleRepository userHasRoleRepository = context.getBean(UserHasRoleRepository.class);
         UserRequireRoleRepository userRequireRoleRepository = context.getBean(UserRequireRoleRepository.class);
-
-        // Nuevos repositorios
         BeachRepository beachRepository = context.getBean(BeachRepository.class);
         ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
         BeachHasServiceRepository beachHasServiceRepository = context.getBean(BeachHasServiceRepository.class);
         TypeBeachRepository typeBeachRepository = context.getBean(TypeBeachRepository.class);
         CameraRepository cameraRepository = context.getBean(CameraRepository.class);
+        BeachManagerRepository beachManagerRepository = context.getBean(BeachManagerRepository.class);
+
 
         // Crear roles
         Role adminRole = new Role();
@@ -149,5 +149,22 @@ public class ApiRestBaseApplication {
 
         // Guardar las cámaras
         cameraRepository.saveAll(Arrays.asList(camera1, camera2));
+
+        // Crear instancias de BeachManager
+        BeachManager beachManager1 = new BeachManager();
+        beachManager1.setUser(user1);
+        beachManager1.setBeach(beach1);
+
+        BeachManager beachManager2 = new BeachManager();
+        beachManager2.setUser(user2);
+        beachManager2.setBeach(beach2);
+
+        // Guardar las instancias de BeachManager
+        beachManagerRepository.saveAll(Arrays.asList(beachManager1, beachManager2));
+
+        // Guardar las relaciones de BeachManager
+        beachManagerRepository.saveAll(Arrays.asList(beachManager1, beachManager2));
+
+
     }
 }
