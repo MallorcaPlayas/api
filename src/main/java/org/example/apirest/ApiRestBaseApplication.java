@@ -19,6 +19,7 @@ public class ApiRestBaseApplication {
         UserRepository userRepository = context.getBean(UserRepository.class);
         RoleRepository roleRepository = context.getBean(RoleRepository.class);
         UserHasRoleRepository userHasRoleRepository = context.getBean(UserHasRoleRepository.class);
+        UserRequireRoleRepository userRequireRoleRepository = context.getBean(UserRequireRoleRepository.class);
 
         // Crear roles
         Role adminRole = new Role();
@@ -59,5 +60,22 @@ public class ApiRestBaseApplication {
         // Guardar los usuarios y sus roles
         userRepository.saveAll(Arrays.asList(user1, user2));
         userHasRoleRepository.saveAll(Arrays.asList(userRole1, userRole2, userRole3));
+
+        UserRequireRole userRequireRole1 = new UserRequireRole();
+        userRequireRole1.setUser(user1);
+        userRequireRole1.setRole(adminRole);
+        userRequireRole1.setUrlPhotoDni("https://example.com/dni/john_doe.jpg");
+        userRequireRole1.setUrlOfficialDoc("https://example.com/docs/john_doe.pdf");
+        userRequireRole1.setApproved(true);
+
+        UserRequireRole userRequireRole2 = new UserRequireRole();
+        userRequireRole2.setUser(user2);
+        userRequireRole2.setRole(userRole);
+        userRequireRole2.setUrlPhotoDni("https://example.com/dni/jane_doe.jpg");
+        userRequireRole2.setUrlOfficialDoc("https://example.com/docs/jane_doe.pdf");
+        userRequireRole2.setApproved(false); // No aprobado
+
+        // Guardar las instancias de UserRequireRole
+        userRequireRoleRepository.saveAll(Arrays.asList(userRequireRole1, userRequireRole2));
     }
 }

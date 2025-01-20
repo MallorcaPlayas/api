@@ -34,4 +34,7 @@ public class User implements BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<UserHasRole> userHasRoles;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRequireRole> userRequireRoles;
 }
