@@ -12,5 +12,4 @@ import java.util.List;
 public class OrganizationDto extends BaseDto {
     private String documentationUrl;
     private String contactNumber;
-    private List<UserDto> users;
 }
