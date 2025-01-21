@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +20,7 @@ public class Organization implements BaseEntity {
     private String name;
     private String documentationUrl;
     private String contactNumber;
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private List<User> users;
 }

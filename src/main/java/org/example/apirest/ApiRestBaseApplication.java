@@ -31,7 +31,7 @@ public class ApiRestBaseApplication {
         CommentRepository commentRepository = context.getBean(CommentRepository.class);
         ComplaintRepository complaintRepository = context.getBean(ComplaintRepository.class);
         RouteRepository routeRepository = context.getBean(RouteRepository.class);
-
+        OrganizationRepository organizationRepository = context.getBean(OrganizationRepository.class);
 
 
         // Crear roles
@@ -44,12 +44,33 @@ public class ApiRestBaseApplication {
         // Guardar los roles
         roleRepository.saveAll(Arrays.asList(adminRole, userRole));
 
+        // Crear organizaciones
+        Organization org1 = new Organization();
+        org1.setName("Organización A");
+        org1.setDocumentationUrl("https://example.com/docs/org1");
+        org1.setContactNumber("+123456789");
+
+        // Crear otra organización
+        Organization org2 = new Organization();
+        org2.setName("Organización B");
+        org2.setDocumentationUrl("https://example.com/docs/org2");
+        org2.setContactNumber("+987654321");
+
+        // Guardar las organizaciones en la base de datos
+        organizationRepository.saveAll(Arrays.asList(org1, org2));
+
         // Crear usuarios
         User user1 = new User();
         user1.setUserName("john_doe");
+        user1.setOrganization(org1);
 
         User user2 = new User();
         user2.setUserName("jane_doe");
+        user2.setOrganization(org2);
+
+
+
+
 
         // Crear la relación UserRole con fechas
         UserHasRole userRole1 = new UserHasRole();
@@ -225,7 +246,6 @@ public class ApiRestBaseApplication {
 
         // Guardar las rutas en la base de datos
         routeRepository.saveAll(Arrays.asList(route1, route2));
-
 
 
     }

@@ -40,4 +40,7 @@ public class User implements BaseEntity {
 
     @OneToMany(mappedBy = "userInCharge")
     private List<Route> userRoutes;
+
+    @ManyToOne
+    private Organization organization;
 }

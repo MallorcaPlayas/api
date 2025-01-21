@@ -23,4 +23,5 @@ public class UserDto extends BaseDto {
     private String urlPhoto;
     private boolean privatePrivacy;
     private boolean state;
+    private Long organizationId;
 }
