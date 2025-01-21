@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.aggregationType.AggregationTypeDto;
 import org.example.apirest.dto.aggregationType.CreateAggregationTypeDto;
 import org.example.apirest.service.GeneralizedService;
+import org.example.apirest.service.aggregationType.AggregationTypeServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/aggregation-types")
 @CrossOrigin(origins = "*")
 public class AggregationTypeController extends GeneralizedController<AggregationTypeDto, CreateAggregationTypeDto> {
-    public AggregationTypeController(GeneralizedService<AggregationTypeDto, CreateAggregationTypeDto> service) {
+    public AggregationTypeController(AggregationTypeServiceImpl service) {
         super(service);
     }
 }
