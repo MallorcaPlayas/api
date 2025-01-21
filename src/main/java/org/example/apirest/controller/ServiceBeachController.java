@@ -4,7 +4,6 @@ package org.example.apirest.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.service.CreateServiceBeachDto;
 import org.example.apirest.dto.service.ServiceBeachDto;
-import org.example.apirest.service.service.ServiceBeachService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

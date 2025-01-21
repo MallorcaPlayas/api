@@ -10,4 +10,5 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RoleDto extends BaseDto {
+    private String name;
 }

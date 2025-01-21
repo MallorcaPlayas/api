@@ -3,7 +3,6 @@ package org.example.apirest.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.dto.location.CreateLocationDto;
-import org.example.apirest.service.location.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

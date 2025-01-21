@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,13 @@ public class Route implements BaseEntity {
     private double duration;
     private double elevation;
 
+
+    @OneToMany(mappedBy = "route")
+    private List<Complaint> routeComplaints;
+
+    @OneToMany(mappedBy = "route")
+    private List<Comment> routeComments;
+
     @ManyToOne
-    private User userInCharge;
+    private User user;
 }

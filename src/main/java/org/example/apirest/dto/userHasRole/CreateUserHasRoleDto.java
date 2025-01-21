@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @Data
 public class CreateUserHasRoleDto {
-    private Long user_id;
-    private Long role_id;
+    private Long userId;
+    private Long roleId;
     private LocalDate dateBegin;
     private LocalDate dateFinish;
 }

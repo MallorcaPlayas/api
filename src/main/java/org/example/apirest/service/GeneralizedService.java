@@ -1,11 +1,8 @@
 package org.example.apirest.service;
 
-import org.example.apirest.dto.user.CreateUserDto;
-import org.example.apirest.dto.user.UserDto;
-
 import java.util.List;
 
-public interface BaseService<Dto,CreateDto> {
+public interface GeneralizedService <Dto,CreateDto>{
     List<Dto> findAll();
     Dto findOne(Long id);
     Dto save(CreateDto dto);

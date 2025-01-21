@@ -1,12 +1,8 @@
 package org.example.apirest.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
-import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.dto.userRequireRole.CreateUserRequireRoleDto;
 import org.example.apirest.dto.userRequireRole.UserRequireRoleDto;
-import org.example.apirest.service.userHasRole.UserHasRoleService;
-import org.example.apirest.service.userRequireRole.UserRequireRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

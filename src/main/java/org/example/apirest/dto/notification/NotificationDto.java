@@ -7,6 +7,7 @@ import org.example.apirest.dto.BaseDto;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class NotificationDto extends BaseDto {
+    private String name;
     private String subject;
     private String description;
     private boolean read;

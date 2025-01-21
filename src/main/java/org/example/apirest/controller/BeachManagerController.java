@@ -3,7 +3,6 @@ package org.example.apirest.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
-import org.example.apirest.service.beachManager.BeachManagerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

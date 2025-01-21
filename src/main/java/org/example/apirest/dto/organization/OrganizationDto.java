@@ -10,6 +10,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class OrganizationDto extends BaseDto {
+    private String name;
     private String documentationUrl;
     private String contactNumber;
 }

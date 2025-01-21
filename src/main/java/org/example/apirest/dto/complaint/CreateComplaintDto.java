@@ -9,4 +9,6 @@ public class CreateComplaintDto {
     private String message;
     private String status;
     private String date;
+    private Long beachId;
+    private Long routeId;
 }

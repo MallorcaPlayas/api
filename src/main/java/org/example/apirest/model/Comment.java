@@ -27,6 +27,10 @@ public class Comment implements BaseEntity {
     private Date publishedDate;
 
     @ManyToOne
-    @JoinColumn(name = "beach_id", nullable = false)
+    @JoinColumn(name = "beach_id")
     private Beach beach;
+
+    @ManyToOne
+    @JoinColumn(name = "route_id")
+    private Route route;
 }

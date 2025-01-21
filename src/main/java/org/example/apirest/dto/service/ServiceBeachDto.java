@@ -9,4 +9,5 @@ import java.time.LocalTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ServiceBeachDto extends BaseDto {
+    private String name;
 }

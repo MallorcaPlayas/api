@@ -3,7 +3,6 @@ package org.example.apirest.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.complaint.ComplaintDto;
 import org.example.apirest.dto.complaint.CreateComplaintDto;
-import org.example.apirest.service.complaint.ComplaintService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

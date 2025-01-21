@@ -1,12 +1,8 @@
 package org.example.apirest.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.aggregationType.AggregationTypeDto;
-import org.example.apirest.dto.aggregationType.CreateAggregationTypeDto;
 import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
 import org.example.apirest.dto.userHasRole.UserHasRoleDto;
-import org.example.apirest.service.aggregationType.AggregationTypeService;
-import org.example.apirest.service.userHasRole.UserHasRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +31,6 @@ public class UserHasRoleController {
     @PostMapping
     public ResponseEntity<UserHasRoleDto> create(@RequestBody CreateUserHasRoleDto entity) {
         UserHasRoleDto newEntity = service.save(entity);
-
-        System.out.println("User ID: " + newEntity.getUser());
-        System.out.println("Role ID: " + newEntity.getRole());
         return ResponseEntity.created(URI.create("/api/aggregation-types/" + newEntity.getId())).body(newEntity);
     }
 

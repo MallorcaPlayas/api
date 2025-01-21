@@ -8,4 +8,5 @@ import org.example.apirest.dto.BaseDto;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class TypeBeachDto extends BaseDto {
+    private String name;
 }

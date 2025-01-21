@@ -17,6 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserDto extends BaseDto {
+    private String name;
     private String userName;
     private String firstSurname;
     private String secondSurname;

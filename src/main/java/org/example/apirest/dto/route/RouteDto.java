@@ -7,6 +7,7 @@ import org.example.apirest.dto.BaseDto;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RouteDto extends BaseDto {
+    private String name;
     private double distance;
     private double duration;
     private double elevation;

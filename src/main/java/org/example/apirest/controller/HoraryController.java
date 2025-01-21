@@ -3,7 +3,6 @@ package org.example.apirest.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.horary.HoraryDto;
 import org.example.apirest.dto.horary.CreateHoraryDto;
-import org.example.apirest.service.horary.HoraryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

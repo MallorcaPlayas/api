@@ -38,8 +38,11 @@ public class User implements BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<UserRequireRole> userRequireRoles;
 
-    @OneToMany(mappedBy = "userInCharge")
-    private List<Route> userRoutes;
+    @ManyToMany(mappedBy = "usersInCharge")
+    private List<Beach> beaches;
+
+    @OneToMany(mappedBy = "user")
+    private List<Route> routes;
 
     @ManyToOne
     private Organization organization;

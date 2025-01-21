@@ -36,10 +36,17 @@ public class Beach implements BaseEntity {
     private List<Camera> cameras;
 
     @OneToMany(mappedBy = "beach")
-    private List<BeachHasService> beachComplaints;
+    private List<Complaint> beachComplaints;
 
     @OneToMany(mappedBy = "beach")
-    private List<BeachHasService> beachComments;
+    private List<Comment> beachComments;
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "beach_user", // Name of the join table
+            joinColumns = @JoinColumn(name = "beach_id"), // Foreign key for Beach
+            inverseJoinColumns = @JoinColumn(name = "user_id") // Foreign key for TypeBeach
+    )
+    @JsonManagedReference
+    private List<User> usersInCharge;
 }

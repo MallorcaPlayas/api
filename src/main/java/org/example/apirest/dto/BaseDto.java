@@ -6,5 +6,4 @@ import lombok.Data;
 @Data
 public class BaseDto {
     private Long id;
-    private String name;
 }

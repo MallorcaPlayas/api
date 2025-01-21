@@ -129,6 +129,7 @@ public class ApiRestBaseApplication {
         Beach beach1 = new Beach();
         beach1.setName("Playa Bonita");
         beach1.setDescription("Una playa con arenas doradas y aguas cristalinas.");
+        beach1.setUsersInCharge(Arrays.asList(user1, user2));
 
         Beach beach2 = new Beach();
         beach2.setName("Playa del Sol");
@@ -234,7 +235,7 @@ public class ApiRestBaseApplication {
         route1.setDistance(5.5); // Distancia en km
         route1.setDuration(2.0); // Duración en horas
         route1.setElevation(150.0); // Elevación en metros
-        route1.setUserInCharge(user2); // Asignar el usuario encargado (user1)
+        route1.setUser(user2); // Asignar el usuario encargado (user1)
 
         Route route2 = new Route();
         route2.setName("Ruta costera");
@@ -242,7 +243,7 @@ public class ApiRestBaseApplication {
         route2.setDistance(8.2);
         route2.setDuration(3.5);
         route2.setElevation(200.0);
-        route2.setUserInCharge(user1); // Asignar el usuario encargado (user2)
+        route2.setUser(user1); // Asignar el usuario encargado (user2)
 
         // Guardar las rutas en la base de datos
         routeRepository.saveAll(Arrays.asList(route1, route2));
