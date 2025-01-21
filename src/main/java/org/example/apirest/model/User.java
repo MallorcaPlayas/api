@@ -44,6 +44,12 @@ public class User implements BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Route> routes;
 
+    @OneToMany(mappedBy = "user")
+    private List<Excursion> excursions;
+
     @ManyToOne
     private Organization organization;
+
+    @OneToMany(mappedBy = "user")
+    private List<Ticket> tickets;
 }

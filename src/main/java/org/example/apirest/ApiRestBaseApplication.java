@@ -35,6 +35,7 @@ public class ApiRestBaseApplication {
         HoraryRepository horaryRepository = context.getBean(HoraryRepository.class);
         ExcursionRepository excursionRepository = context.getBean(ExcursionRepository.class);
         ExcursionTicketDetailsRepository excursionTicketDetailsRepository = context.getBean(ExcursionTicketDetailsRepository.class);
+        TicketRepository ticketRepository = context.getBean(TicketRepository.class);
 
 
         // Crear roles
@@ -285,6 +286,20 @@ public class ApiRestBaseApplication {
 
         // Guardar los detalles de los tickets
         excursionTicketDetailsRepository.saveAll(Arrays.asList(ticketDetail1, ticketDetail2));
+
+        // Crear tickets comprados por los usuarios
+        Ticket ticket1 = new Ticket();
+        ticket1.setDatePurchase(new Date()); // Fecha de compra
+        ticket1.setUser(user1); // Asociado al usuario 1
+        ticket1.setExcursionTicketDetails(ticketDetail1); // Asociado al detalle de ticket 1 (excursión 1)
+
+        Ticket ticket2 = new Ticket();
+        ticket2.setDatePurchase(new Date()); // Fecha de compra
+        ticket2.setUser(user2); // Asociado al usuario 2
+        ticket2.setExcursionTicketDetails(ticketDetail2); // Asociado al detalle de ticket 2 (excursión 2)
+
+        // Guardar los tickets en la base de datos
+        ticketRepository.saveAll(Arrays.asList(ticket1, ticket2));
 
 
     }

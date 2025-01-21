@@ -7,5 +7,4 @@ import org.example.apirest.dto.BaseCreateDto;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CreateAggregationTypeDto extends BaseCreateDto {
-    private String name;
 }
