@@ -12,4 +12,5 @@ public class ComplaintDto extends BaseDto {
     private String date;
     private Long beachId;
     private Long routeId;
+    private Long userId;
 }

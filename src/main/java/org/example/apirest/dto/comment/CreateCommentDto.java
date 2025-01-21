@@ -15,4 +15,5 @@ public class CreateCommentDto{
     private Date publishedDate;
     private Long beachId;
     private Long routeId;
+    private Long userId;
 }

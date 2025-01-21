@@ -31,4 +31,8 @@ public class Complaint implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "route_id")
     private Route route;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

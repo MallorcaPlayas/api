@@ -52,4 +52,10 @@ public class User implements BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user")
+    private List<Complaint> complaints;
 }
