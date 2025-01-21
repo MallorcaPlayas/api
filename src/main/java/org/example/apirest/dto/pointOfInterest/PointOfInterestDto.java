@@ -10,4 +10,5 @@ public class PointOfInterestDto extends BaseDto {
     private String name;
     private String description;
     private String url;
+    private Long pointOfInterestId;
 }

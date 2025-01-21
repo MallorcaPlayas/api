@@ -18,4 +18,8 @@ public class PointOfInterest implements BaseEntity {
     private String name;
     private String description;
     private String url;
+
+    @ManyToOne
+    @JoinColumn(name = "point_of_interest_type_id")
+    private PointOfInterestType pointOfInterestType;
 }

@@ -9,4 +9,5 @@ import org.example.apirest.dto.BaseCreateDto;
 public class CreatePointOfInterestDto extends BaseCreateDto {
     private String description;
     private String url;
+    private Long pointOfInterestId;
 }
