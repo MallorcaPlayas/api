@@ -11,8 +11,8 @@ import java.time.LocalTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BeachHasServiceDto extends BaseDto {
-    private BeachDto beach;
-    private ServiceBeachDto serviceBeach;
+    private Long beachId;
+    private Long serviceBeachId;
     private LocalTime startTime;
     private LocalTime endTime;
 }
