@@ -25,4 +25,8 @@ public class Comment implements BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date publishedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "beach_id", nullable = false)
+    private Beach beach;
 }

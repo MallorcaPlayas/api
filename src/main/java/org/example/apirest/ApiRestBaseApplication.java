@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Date;
 
 @SpringBootApplication
 public class ApiRestBaseApplication {
@@ -27,6 +28,9 @@ public class ApiRestBaseApplication {
         TypeBeachRepository typeBeachRepository = context.getBean(TypeBeachRepository.class);
         CameraRepository cameraRepository = context.getBean(CameraRepository.class);
         BeachManagerRepository beachManagerRepository = context.getBean(BeachManagerRepository.class);
+        CommentRepository commentRepository = context.getBean(CommentRepository.class);
+        ComplaintRepository complaintRepository = context.getBean(ComplaintRepository.class);
+
 
 
         // Crear roles
@@ -133,8 +137,8 @@ public class ApiRestBaseApplication {
         BeachHasService beachHasService2 = new BeachHasService();
         beachHasService2.setBeach(beach2);
         beachHasService2.setServiceBeach(service2);
-        beachHasService2.setStartTime(LocalTime.of(1,1,1));
-        beachHasService2.setEndTime(LocalTime.of(8,8,8));
+        beachHasService2.setStartTime(LocalTime.of(1, 1, 1));
+        beachHasService2.setEndTime(LocalTime.of(8, 8, 8));
 
         // Guardar las relaciones BeachHasService
         beachHasServiceRepository.saveAll(Arrays.asList(beachHasService1, beachHasService2));
@@ -164,6 +168,42 @@ public class ApiRestBaseApplication {
 
         // Guardar las relaciones de BeachManager
         beachManagerRepository.saveAll(Arrays.asList(beachManager1, beachManager2));
+
+        // Crear comentarios para las playas
+        Comment comment1 = new Comment();
+        comment1.setRating(5); // Rating de 5 estrellas
+        comment1.setComment("¡Una playa increíblemente hermosa! Perfecta para un día de descanso.");
+        comment1.setPublishedDate(new Date()); // Fecha de publicación
+        comment1.setEditedDate(new Date()); // Fecha de edición
+        comment1.setBeach(beach1); // Asociación con Playa Bonita
+
+        Comment comment2 = new Comment();
+        comment2.setRating(4); // Rating de 4 estrellas
+        comment2.setComment("Buen ambiente, pero un poco ruidosa durante la tarde.");
+        comment2.setPublishedDate(new Date());
+        comment2.setEditedDate(new Date());
+        comment2.setBeach(beach2); // Asociación con Playa del Sol
+
+        // Guardar los comentarios en la base de datos
+        commentRepository.saveAll(Arrays.asList(comment1, comment2));
+
+        // Crear quejas (complaints) para las playas
+        Complaint complaint1 = new Complaint();
+        complaint1.setSubject("Problema con el servicio de limpieza");
+        complaint1.setMessage("La limpieza de la playa no fue adecuada en la mañana.");
+        complaint1.setStatus("Pendiente"); // Estado de la queja
+        complaint1.setDate(new Date()); // Fecha de la queja
+        complaint1.setBeach(beach1); // Asociación con Playa Bonita
+
+        Complaint complaint2 = new Complaint();
+        complaint2.setSubject("Ruidos molestos por parte de turistas");
+        complaint2.setMessage("Hubo ruidos molestos cerca de la zona de descanso durante la noche.");
+        complaint2.setStatus("Resuelta"); // Estado de la queja
+        complaint2.setDate(new Date()); // Fecha de la queja
+        complaint2.setBeach(beach2); // Asociación con Playa del Sol
+
+        // Guardar las quejas en la base de datos
+        complaintRepository.saveAll(Arrays.asList(complaint1, complaint2));
 
 
     }

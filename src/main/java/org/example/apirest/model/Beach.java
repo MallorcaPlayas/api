@@ -21,7 +21,7 @@ public class Beach implements BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "beach")
-    private List<BeachHasService> beachHasServiceBeache;
+    private List<BeachHasService> beachHasServiceBeach;
 
     @ManyToMany
     @JoinTable(
@@ -34,6 +34,12 @@ public class Beach implements BaseEntity {
 
     @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL)
     private List<Camera> cameras;
+
+    @OneToMany(mappedBy = "beach")
+    private List<BeachHasService> beachComplaints;
+
+    @OneToMany(mappedBy = "beach")
+    private List<BeachHasService> beachComments;
 
 
 }

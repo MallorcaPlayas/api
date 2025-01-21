@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.apirest.dto.BaseDto;
 import org.example.apirest.dto.camera.CameraDto;
+import org.example.apirest.dto.comment.CommentDto;
+import org.example.apirest.dto.complaint.ComplaintDto;
 import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 

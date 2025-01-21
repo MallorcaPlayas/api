@@ -23,4 +23,8 @@ public class Complaint implements BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "beach_id", nullable = false)
+    private Beach beach;
 }
