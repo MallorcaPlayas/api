@@ -37,4 +37,7 @@ public class User implements BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<UserRequireRole> userRequireRoles;
+
+    @OneToMany(mappedBy = "userInCharge")
+    private List<Route> userRoutes;
 }

@@ -20,4 +20,7 @@ public class Route implements BaseEntity {
     private double distance;
     private double duration;
     private double elevation;
+
+    @ManyToOne
+    private User userInCharge;
 }

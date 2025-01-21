@@ -30,6 +30,7 @@ public class ApiRestBaseApplication {
         BeachManagerRepository beachManagerRepository = context.getBean(BeachManagerRepository.class);
         CommentRepository commentRepository = context.getBean(CommentRepository.class);
         ComplaintRepository complaintRepository = context.getBean(ComplaintRepository.class);
+        RouteRepository routeRepository = context.getBean(RouteRepository.class);
 
 
 
@@ -204,6 +205,27 @@ public class ApiRestBaseApplication {
 
         // Guardar las quejas en la base de datos
         complaintRepository.saveAll(Arrays.asList(complaint1, complaint2));
+
+        // Crear rutas y asignar usuarios
+        Route route1 = new Route();
+        route1.setName("Ruta hacia el mirador");
+        route1.setPrivate(false);
+        route1.setDistance(5.5); // Distancia en km
+        route1.setDuration(2.0); // Duración en horas
+        route1.setElevation(150.0); // Elevación en metros
+        route1.setUserInCharge(user2); // Asignar el usuario encargado (user1)
+
+        Route route2 = new Route();
+        route2.setName("Ruta costera");
+        route2.setPrivate(true); // Ruta privada
+        route2.setDistance(8.2);
+        route2.setDuration(3.5);
+        route2.setElevation(200.0);
+        route2.setUserInCharge(user1); // Asignar el usuario encargado (user2)
+
+        // Guardar las rutas en la base de datos
+        routeRepository.saveAll(Arrays.asList(route1, route2));
+
 
 
     }
