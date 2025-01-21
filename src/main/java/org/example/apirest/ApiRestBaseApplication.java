@@ -32,6 +32,9 @@ public class ApiRestBaseApplication {
         ComplaintRepository complaintRepository = context.getBean(ComplaintRepository.class);
         RouteRepository routeRepository = context.getBean(RouteRepository.class);
         OrganizationRepository organizationRepository = context.getBean(OrganizationRepository.class);
+        HoraryRepository horaryRepository = context.getBean(HoraryRepository.class);
+        ExcursionRepository excursionRepository = context.getBean(ExcursionRepository.class);
+        ExcursionTicketDetailsRepository excursionTicketDetailsRepository = context.getBean(ExcursionTicketDetailsRepository.class);
 
 
         // Crear roles
@@ -67,10 +70,6 @@ public class ApiRestBaseApplication {
         User user2 = new User();
         user2.setUserName("jane_doe");
         user2.setOrganization(org2);
-
-
-
-
 
         // Crear la relación UserRole con fechas
         UserHasRole userRole1 = new UserHasRole();
@@ -247,6 +246,45 @@ public class ApiRestBaseApplication {
 
         // Guardar las rutas en la base de datos
         routeRepository.saveAll(Arrays.asList(route1, route2));
+
+        Horary horary1 = new Horary();
+        horary1.setStartTime(new Date());  // Hora de inicio
+        horary1.setEndTime(new Date(System.currentTimeMillis() + 3600000)); // 1 hora después de la hora de inicio
+
+        Horary horary2 = new Horary();
+        horary2.setStartTime(new Date(System.currentTimeMillis() + 7200000)); // 2 horas después
+        horary2.setEndTime(new Date(System.currentTimeMillis() + 10800000)); // 3 horas después
+
+        // Guardar las instancias de Horary
+        horaryRepository.saveAll(Arrays.asList(horary1, horary2));
+
+        Excursion excursion1 = new Excursion();
+        excursion1.setDescription("Excursión a la montaña para disfrutar de vistas panorámicas.");
+        excursion1.setCreationDate(new Date());
+
+        Excursion excursion2 = new Excursion();
+        excursion2.setDescription("Excursión en bote por la costa para avistar vida marina.");
+        excursion2.setCreationDate(new Date());
+
+        // Guardar las instancias de Excursion
+        excursionRepository.saveAll(Arrays.asList(excursion1, excursion2));
+
+        ExcursionTicketDetails ticketDetail1 = new ExcursionTicketDetails();
+        ticketDetail1.setPrice(100); // Precio
+        ticketDetail1.setAvailableSpaces(30); // Espacios disponibles
+        ticketDetail1.setExcursion(excursion1); // Relación con excursion1
+        ticketDetail1.setRoute(route1); // Relación con route1
+        ticketDetail1.setHorary(horary1); // Relación con horary1
+
+        ExcursionTicketDetails ticketDetail2 = new ExcursionTicketDetails();
+        ticketDetail2.setPrice(80); // Precio
+        ticketDetail2.setAvailableSpaces(50); // Espacios disponibles
+        ticketDetail2.setExcursion(excursion2); // Relación con excursion2
+        ticketDetail2.setRoute(route2); // Relación con route2
+        ticketDetail2.setHorary(horary2); // Relación con horary2
+
+        // Guardar los detalles de los tickets
+        excursionTicketDetailsRepository.saveAll(Arrays.asList(ticketDetail1, ticketDetail2));
 
 
     }

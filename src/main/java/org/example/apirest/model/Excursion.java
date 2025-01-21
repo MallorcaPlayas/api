@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,7 @@ public class Excursion implements BaseEntity {
 
     private String description;
     private Date creationDate;
+
+    @OneToMany(mappedBy = "excursion")
+    private List<ExcursionTicketDetails> excursionTicketDetails;
 }
