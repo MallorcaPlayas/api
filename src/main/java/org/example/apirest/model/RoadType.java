@@ -5,23 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "segment")
-public class Segment implements BaseEntity {
+@Table(name = "road_type")
+public class RoadType implements BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    @OneToOne
-    private Location locationOne;
+    String name;
 
-    @OneToOne
-    private Location locationTwo;
-
-    @ManyToOne
-    @JoinColumn(name = "road_type_id")
-    private RoadType roadType;
+    @OneToMany(mappedBy = "segment")
+    private List<Segment> segments;
 }
