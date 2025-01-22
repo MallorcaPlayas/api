@@ -2,10 +2,10 @@ package org.example.apirest.dto.horary;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalTime;
 
 @Data
 public class CreateHoraryDto{
-    private Date startTime;
-    private Date endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 }

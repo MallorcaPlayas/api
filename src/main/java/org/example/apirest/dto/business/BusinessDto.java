@@ -11,4 +11,5 @@ public class BusinessDto extends BaseDto {
     private String documentationUrl;
     private String contactNumber;
     private String text;
+    private Long businessTypeId;
 }

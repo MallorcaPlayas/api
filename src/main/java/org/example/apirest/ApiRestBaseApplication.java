@@ -36,7 +36,19 @@ public class ApiRestBaseApplication {
         ExcursionRepository excursionRepository = context.getBean(ExcursionRepository.class);
         ExcursionTicketDetailsRepository excursionTicketDetailsRepository = context.getBean(ExcursionTicketDetailsRepository.class);
         TicketRepository ticketRepository = context.getBean(TicketRepository.class);
+        BusinessRepository businessRepository = context.getBean(BusinessRepository.class);
+        BusinessHoraryRepository businessHoraryRepository = context.getBean(BusinessHoraryRepository.class);
+        BusinessTypeRepository businessTypeRepository = context.getBean(BusinessTypeRepository.class);
 
+        // Crear tipos de negocios
+        BusinessType businessType1 = new BusinessType();
+        businessType1.setName("Electrónica");
+
+        BusinessType businessType2 = new BusinessType();
+        businessType2.setName("Ropa");
+
+        // Guardar los tipos de negocios
+        businessTypeRepository.saveAll(Arrays.asList(businessType1, businessType2));
 
         // Crear roles
         Role adminRole = new Role();
@@ -249,12 +261,12 @@ public class ApiRestBaseApplication {
         routeRepository.saveAll(Arrays.asList(route1, route2));
 
         Horary horary1 = new Horary();
-        horary1.setStartTime(new Date());  // Hora de inicio
-        horary1.setEndTime(new Date(System.currentTimeMillis() + 3600000)); // 1 hora después de la hora de inicio
+        horary1.setStartTime(LocalTime.of(9, 0));  // Hora de inicio: 09:00
+        horary1.setEndTime(horary1.getStartTime().plusHours(1)); // Hora de fin: 10:00
 
         Horary horary2 = new Horary();
-        horary2.setStartTime(new Date(System.currentTimeMillis() + 7200000)); // 2 horas después
-        horary2.setEndTime(new Date(System.currentTimeMillis() + 10800000)); // 3 horas después
+        horary2.setStartTime(LocalTime.of(11, 0)); // Hora de inicio: 11:00
+        horary2.setEndTime(horary2.getStartTime().plusHours(3)); // Hora de fin: 14:00
 
         // Guardar las instancias de Horary
         horaryRepository.saveAll(Arrays.asList(horary1, horary2));
@@ -302,5 +314,35 @@ public class ApiRestBaseApplication {
         ticketRepository.saveAll(Arrays.asList(ticket1, ticket2));
 
 
+        // Crear algunos negocios
+        Business business1 = new Business();
+        business1.setName("Negocio A");
+        business1.setDocumentationUrl("https://example.com/docs/businessA");
+        business1.setContactNumber("+123456789");
+        business1.setText("Este es un negocio dedicado a la venta de productos electrónicos.");
+        business1.setBusinessType(businessType2);
+
+        Business business2 = new Business();
+        business2.setName("Negocio B");
+        business2.setDocumentationUrl("https://example.com/docs/businessB");
+        business2.setContactNumber("+987654321");
+        business2.setText("Este negocio se especializa en venta de ropa y accesorios.");
+        business1.setBusinessType(businessType2);
+
+        // Guardar los negocios
+        businessRepository.saveAll(Arrays.asList(business1, business2));
+
+        // Crear horarios de negocio para el Negocio A
+        BusinessHorary businessHorary1 = new BusinessHorary();
+        businessHorary1.setHorary(horary2); // Hora de apertura
+        businessHorary1.setBusiness(business1);  // Asociar el horario con el negocio A
+
+        // Crear horarios de negocio para el Negocio B
+        BusinessHorary businessHorary2 = new BusinessHorary();
+        businessHorary2.setHorary(horary1); // Hora de apertura
+        businessHorary2.setBusiness(business2);  // Asociar el horario con el negocio B
+
+        // Guardar los horarios
+        businessHoraryRepository.saveAll(Arrays.asList(businessHorary1, businessHorary2));
     }
 }

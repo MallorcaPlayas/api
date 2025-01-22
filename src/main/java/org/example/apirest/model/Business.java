@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,4 +21,11 @@ public class Business implements BaseEntity {
     private String documentationUrl;
     private String contactNumber;
     private String text;
+
+    @OneToMany(mappedBy = "business")
+    private List<BusinessHorary> businessHoraries;
+
+    @ManyToOne
+    @JoinColumn(name = "business_type_id")
+    private BusinessType businessType;
 }

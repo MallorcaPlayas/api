@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,9 +19,12 @@ public class Horary implements BaseEntity {
     @GeneratedValue
     private Long id;
 
-    private Date startTime;
-    private Date endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     @OneToMany(mappedBy = "horary")
     private List<ExcursionTicketDetails> excursionTicketDetails;
+
+    @OneToMany(mappedBy = "horary")
+    private List<BusinessHorary> businessHoraries;
 }

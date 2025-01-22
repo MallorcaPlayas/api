@@ -10,4 +10,5 @@ public class CreateBusinessDto extends BaseCreateDto {
     private String documentationUrl;
     private String contactNumber;
     private String text;
+    private Long businessTypeId;
 }
