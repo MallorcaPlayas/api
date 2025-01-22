@@ -27,13 +27,13 @@ public class GeneralizedController<Dto extends BaseDto,CreateDto> {
     @PostMapping
     public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
         Dto newEntity = service.save(entity);
-        return ResponseEntity.created(URI.create("/api/aggregation-types/" + newEntity.getId())).body(newEntity);
+        return ResponseEntity.ok(newEntity);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
         Dto updated = service.update(id, entity);
-        return ResponseEntity.created(URI.create("/api/aggregation-types/" + id)).body(updated);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
