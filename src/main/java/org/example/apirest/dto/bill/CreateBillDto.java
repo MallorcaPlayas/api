@@ -14,4 +14,5 @@ public class CreateBillDto{
     private String email;
     private Double amount;
     private Date amountDate;
+    private Long billTypeId;
 }

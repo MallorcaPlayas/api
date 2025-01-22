@@ -35,4 +35,7 @@ public class Route implements BaseEntity {
 
     @OneToMany(mappedBy = "route")
     private List<ExcursionTicketDetails> excursionTicketDetails;
+
+    @OneToMany(mappedBy = "route")
+    private List<Location> locations;
 }

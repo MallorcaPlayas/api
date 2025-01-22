@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "locations")
-public class Location implements BaseEntity {
+@Table(name = "segment")
+public class Segment implements BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    private Double coordinateX;
-    private Double coordinateY;
+    @OneToOne
+    private Location locationOne;
 
-    @ManyToOne
-    private Route route;
+    @OneToOne
+    private Location locationTwo;
 }

@@ -16,4 +16,5 @@ public class BillDto extends BaseDto {
     private String email;
     private Double amount;
     private Date amountDate;
+    private Long billTypeId;
 }

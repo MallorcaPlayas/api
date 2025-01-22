@@ -24,4 +24,8 @@ public class Bill implements BaseEntity {
     private String email;
     private Double amount;
     private Date amountDate;
+
+    @ManyToOne
+    @JoinColumn(name = "bill_type_id")
+    private BillType billType;
 }

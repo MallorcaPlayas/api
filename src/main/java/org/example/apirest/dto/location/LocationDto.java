@@ -9,4 +9,5 @@ import org.example.apirest.dto.BaseDto;
 public class LocationDto extends BaseDto {
     private Double coordinateX;
     private Double coordinateY;
+    private Long routeId;
 }

@@ -6,4 +6,5 @@ import lombok.Data;
 public class CreateLocationDto{
     private Double coordinateX;
     private Double coordinateY;
+    private Long routeId;
 }
