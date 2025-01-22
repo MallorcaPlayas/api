@@ -17,7 +17,7 @@ import java.util.Date;
 @Table(name = "user_has_rol")
 public class UserHasRole implements BaseEntity{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

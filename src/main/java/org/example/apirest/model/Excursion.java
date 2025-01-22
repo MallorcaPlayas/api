@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "excursions")
 public class Excursion implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String description;

@@ -15,7 +15,7 @@ import java.util.List;
 @Table // (name = "beaches")
 public class Beach implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
@@ -41,12 +41,6 @@ public class Beach implements BaseEntity {
     @OneToMany(mappedBy = "beach")
     private List<Comment> beachComments;
 
-    @ManyToMany
-    @JoinTable(
-            name = "beach_user", // Name of the join table
-            joinColumns = @JoinColumn(name = "beach_id"), // Foreign key for Beach
-            inverseJoinColumns = @JoinColumn(name = "user_id") // Foreign key for TypeBeach
-    )
-    @JsonManagedReference
-    private List<User> usersInCharge;
+    @OneToMany(mappedBy = "beach")
+    private List<BeachManager> usersInCharge;
 }

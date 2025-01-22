@@ -141,7 +141,7 @@ public class ApiRestBaseApplication {
         Beach beach1 = new Beach();
         beach1.setName("Playa Bonita");
         beach1.setDescription("Una playa con arenas doradas y aguas cristalinas.");
-        beach1.setUsersInCharge(Arrays.asList(user1, user2));
+        //beach1.setUsersInCharge(Arrays.asList(user1, user2));
 
         Beach beach2 = new Beach();
         beach2.setName("Playa del Sol");

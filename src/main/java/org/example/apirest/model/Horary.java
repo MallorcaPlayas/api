@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "horaries")
 public class Horary implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalTime startTime;

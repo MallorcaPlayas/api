@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "photos")
 public class Photo implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String url;

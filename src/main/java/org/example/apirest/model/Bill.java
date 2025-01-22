@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "bills")
 public class Bill implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String userName;

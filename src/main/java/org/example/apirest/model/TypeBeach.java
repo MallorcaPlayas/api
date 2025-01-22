@@ -16,7 +16,7 @@ import java.util.List;
 @Table //(name = "type_beaches")
 public class TypeBeach implements BaseEntity{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 

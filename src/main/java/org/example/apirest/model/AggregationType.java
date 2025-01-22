@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "aggregation_types")
 public class AggregationType implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

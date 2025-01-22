@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "points_of_interest")
 public class PointOfInterest implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

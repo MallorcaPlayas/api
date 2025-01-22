@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "business_types")
 public class BusinessType implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

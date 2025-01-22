@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "road_type")
 public class RoadType implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     String name;

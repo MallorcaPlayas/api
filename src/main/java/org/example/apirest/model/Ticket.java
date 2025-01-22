@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "tickets")
 public class Ticket implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date datePurchase;

@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Table(name = "beach_has_service")
 public class BeachHasService implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

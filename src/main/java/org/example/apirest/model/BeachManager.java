@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "beach_manager")
 public class BeachManager implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

@@ -18,7 +18,7 @@ import java.util.List;
 @Table (name = "users_project")
 public class User implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
@@ -38,8 +38,8 @@ public class User implements BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<UserRequireRole> userRequireRoles;
 
-    @ManyToMany(mappedBy = "usersInCharge")
-    private List<Beach> beaches;
+    @OneToMany(mappedBy = "user")
+    private List<BeachManager> beaches;
 
     @OneToMany(mappedBy = "user")
     private List<Route> routes;

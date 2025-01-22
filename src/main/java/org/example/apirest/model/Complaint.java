@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "complaints")
 public class Complaint implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String subject;

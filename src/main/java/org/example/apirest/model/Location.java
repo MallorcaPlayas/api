@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "locations")
 public class Location implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Double coordinateX;

@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "point_of_interest_types")
 public class PointOfInterestType implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

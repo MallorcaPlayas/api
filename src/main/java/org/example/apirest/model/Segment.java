@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "segment")
 public class Segment implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne

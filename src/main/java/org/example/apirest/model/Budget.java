@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "budgets")
 public class Budget implements BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Double price;
