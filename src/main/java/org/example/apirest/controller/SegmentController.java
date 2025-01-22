@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/routes")
+@RequestMapping("/api/segments")
 @CrossOrigin(origins = "*")
 public class SegmentController extends GeneralizedController<SegmentDto, CreateSegmentDto> {
     public SegmentController(SegmentServiceImpl service) {
