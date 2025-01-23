@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.apirest.dto.BaseCreateDto;
 import org.example.apirest.dto.role.RoleDto;
+import org.example.apirest.model.Role;
 import org.example.apirest.model.UserHasRole;
 
 import java.util.Date;
@@ -21,4 +22,5 @@ public class CreateUserDto extends BaseCreateDto {
     private String urlPhoto;
     private boolean privatePrivacy;
     private List<UserHasRole> userHasRoles;
+    private Role role;
 }

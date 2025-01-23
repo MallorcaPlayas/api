@@ -1,5 +1,6 @@
 package org.example.apirest.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.apirest.dto.BaseDto;
@@ -27,4 +28,6 @@ public class UserDto extends BaseDto {
     private boolean privatePrivacy;
     private boolean state;
     private OrganizationDto organization;
+    @JsonProperty("roles")
+    private List<UserHasRoleDto> userHasRoles;
 }

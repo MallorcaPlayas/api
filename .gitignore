@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### database ###
+spring.sql
+
+### Docker ###
+docker-compose.yml
