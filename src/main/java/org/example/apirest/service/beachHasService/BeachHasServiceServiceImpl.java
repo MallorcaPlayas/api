@@ -2,8 +2,6 @@ package org.example.apirest.service.beachHasService;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.aggregationType.AggregationTypeDto;
-import org.example.apirest.dto.aggregationType.CreateAggregationTypeDto;
 import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
 import org.example.apirest.dto.beachHasService.CreateBeachHasServiceDto;
 import org.example.apirest.error.NotFoundException;

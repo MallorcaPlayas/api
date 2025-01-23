@@ -13,8 +13,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserHasRoleDto extends BaseDto {
-    private Long userId;
-    private Long roleId;
+    private RoleDto role;
     private LocalDate dateBegin;
     private LocalDate dateFinish;
 }
