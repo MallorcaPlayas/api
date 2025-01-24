@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.apirest.dto.BaseDto;
 import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
+import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.comment.CommentDto;
 import org.example.apirest.dto.complaint.ComplaintDto;
@@ -23,7 +24,7 @@ public class BeachDto extends BaseDto {
     private String description;
     private List<TypeBeachDto> types;
     private List <CameraDto> cameras;
-    private List<UserDto> usersInCharge;
+    private List<BeachManagerDto> usersInCharge;
     @JsonProperty("services")
     private List<BeachHasServiceDto> beachHasServiceBeach;
 }

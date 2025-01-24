@@ -28,6 +28,5 @@ public class UserDto extends BaseDto {
     private boolean privatePrivacy;
     private boolean state;
     private OrganizationDto organization;
-    @JsonProperty("roles")
-    private List<UserHasRoleDto> userHasRoles;
+    private List<UserHasRoleDto> roles;
 }

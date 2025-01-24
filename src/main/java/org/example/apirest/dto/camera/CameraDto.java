@@ -8,5 +8,4 @@ import org.example.apirest.dto.BaseDto;
 @Data
 public class CameraDto extends BaseDto {
     private String url;
-    private Long beachId;
 }

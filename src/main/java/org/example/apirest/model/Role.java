@@ -28,4 +28,7 @@ public class Role implements BaseEntity{
 
     @OneToMany(mappedBy = "role")
     private List<UserRequireRole> userRequireRoles;
+
+    @OneToMany(mappedBy = "role")
+    private List<RoleHasFunction> roleHasFunctionsD;
 }

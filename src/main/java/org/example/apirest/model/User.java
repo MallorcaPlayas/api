@@ -33,7 +33,7 @@ public class User implements BaseEntity {
     private boolean state;
 
     @OneToMany(mappedBy = "user")
-    private List<UserHasRole> userHasRoles;
+    private List<UserHasRole> roles;
 
     @OneToMany(mappedBy = "user")
     private List<UserRequireRole> userRequireRoles;

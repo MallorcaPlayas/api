@@ -32,15 +32,15 @@ public class Beach implements BaseEntity {
     @JsonManagedReference
     private List<TypeBeach> types;
 
-    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Camera> cameras;
 
-    @OneToMany(mappedBy = "beach")
+    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Complaint> beachComplaints;
 
-    @OneToMany(mappedBy = "beach")
+    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Comment> beachComments;
 
-    @OneToMany(mappedBy = "beach")
+    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<BeachManager> usersInCharge;
 }

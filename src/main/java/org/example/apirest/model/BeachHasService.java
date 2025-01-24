@@ -22,7 +22,7 @@ public class BeachHasService implements BaseEntity {
     private Beach beach;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "service_beach_id", nullable = false)
     private ServiceBeach serviceBeach;
 
     //@Column(name= "start_time")

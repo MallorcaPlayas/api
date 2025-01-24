@@ -13,6 +13,4 @@ import java.util.List;
 @Data
 public class ServiceBeachDto extends BaseDto {
     private String name;
-    @JsonProperty("beaches")
-    private List<BeachHasServiceDto> beachHasServiceBeach;
 }

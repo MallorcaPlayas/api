@@ -13,6 +13,5 @@ import java.time.LocalTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BeachManagerDto extends BaseDto {
-    private BeachDto beach;
     private UserDto user;
 }
