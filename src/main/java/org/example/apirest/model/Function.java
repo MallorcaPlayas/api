@@ -19,6 +19,6 @@ public class Function implements BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "function")
+    @OneToMany(mappedBy = "function", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<RoleHasFunction> roleHasFunctions;
 }

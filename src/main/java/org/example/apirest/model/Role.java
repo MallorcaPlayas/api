@@ -23,12 +23,12 @@ public class Role implements BaseEntity{
     private Long price;
     private String description;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<UserHasRole> userHasRoles;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<UserRequireRole> userRequireRoles;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<RoleHasFunction> roleHasFunctionsD;
 }

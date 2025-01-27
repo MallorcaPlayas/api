@@ -72,39 +72,13 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach,BeachDto,Crea
         return dtoConverter.convertDto(repository.save(entityToInsert), BeachDto.class);
     }
 
-//    @Override
-//    public BeachDto update(Long id, CreateBeachDto entity) {
-//        Beach old = repository.findById(id).orElseThrow(()-> new NotFoundException(Beach.class,id));
-//        Beach newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
-//
-//        UtilsClass.updateFields(old, newEntity);
-//
-//        List<BeachManager> beachManagers = entity.getUsersInCharge().stream()
-//                .map(entityChild -> beachManagerRepository.findById(entityChild.getId())
-//                        .orElseThrow(() -> new NotFoundException(BeachManager.class, entityChild.getId())))
-//                .toList();
-//
-//        List<BeachHasService> beachHasServices = entity.getBeachHasServiceBeach().stream()
-//                .map(entityChild -> beachHasServiceRepository.findById(entityChild.getId())
-//                        .orElseThrow(() -> new NotFoundException(BeachHasService.class, entityChild.getId())))
-//                .toList();
-//
-//        List<TypeBeach> typeBeaches = entity.getTypes().stream()
-//                .map(entityChild -> typeBeachRepository.findById(entityChild.getId())
-//                        .orElseThrow(() -> new NotFoundException(TypeBeach.class, entityChild.getId())))
-//                .toList();
-//
-//        List<Camera> cameras = entity.getCameras().stream()
-//                .map(entityChild -> cameraRepository.findById(entityChild.getId())
-//                        .orElseThrow(() -> new NotFoundException(Camera.class, entityChild.getId())))
-//                .toList();
-//
-//
-//        old.setTypes(typeBeaches);
-//        old.setCameras(cameras);
-//        old.setUsersInCharge(beachManagers);
-//        old.setBeachHasServiceBeach(beachHasServices);
-//
-//        return dtoConverter.convertDto(repository.save(old), BeachDto.class);
-//    }
+    @Override
+    public BeachDto update(Long id, CreateBeachDto entity) {
+        Beach old = repository.findById(id).orElseThrow(()-> new NotFoundException(Beach.class,id));
+        Beach newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
+
+        UtilsClass.updateFields(old, newEntity);
+
+        return dtoConverter.convertDto(repository.save(old), BeachDto.class);
+    }
 }

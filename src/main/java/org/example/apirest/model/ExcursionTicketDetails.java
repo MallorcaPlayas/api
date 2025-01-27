@@ -32,6 +32,6 @@ public class ExcursionTicketDetails implements BaseEntity {
     @JoinColumn(name = "horary_id")
     private Horary horary;
 
-    @OneToMany(mappedBy = "excursionTicketDetails")
+    @OneToMany(mappedBy = "excursionTicketDetails", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Ticket> tickets;
 }

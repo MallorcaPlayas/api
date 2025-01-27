@@ -22,9 +22,9 @@ public class Horary implements BaseEntity {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @OneToMany(mappedBy = "horary")
+    @OneToMany(mappedBy = "horary", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<ExcursionTicketDetails> excursionTicketDetails;
 
-    @OneToMany(mappedBy = "horary")
+    @OneToMany(mappedBy = "horary", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<BusinessHorary> businessHoraries;
 }

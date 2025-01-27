@@ -12,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class GeneralizedController<Dto extends BaseDto,CreateDto> {
-    private final GeneralizedService<Dto,CreateDto> service;
+    protected final GeneralizedService<Dto,CreateDto> service;
 
     @GetMapping
     public ResponseEntity<List<Dto>> index() {
