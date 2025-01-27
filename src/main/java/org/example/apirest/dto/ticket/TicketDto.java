@@ -3,6 +3,7 @@ package org.example.apirest.dto.ticket;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.apirest.dto.BaseDto;
+import org.example.apirest.dto.user.UserDto;
 
 import java.util.Date;
 
@@ -10,6 +11,6 @@ import java.util.Date;
 @Data
 public class TicketDto extends BaseDto {
     private Date datePurchase;
-    private Long userId;
+    private UserDto userDto;
     private Long excursionTicketDetailsId;
 }

@@ -26,4 +26,8 @@ public class Excursion implements BaseEntity {
 
     @ManyToOne
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "route_id")
+    private Route route;
 }

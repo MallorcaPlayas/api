@@ -34,7 +34,7 @@ public class Route implements BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<ExcursionTicketDetails> excursionTicketDetails;
+    private List<Excursion> excursions;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Location> locations;
