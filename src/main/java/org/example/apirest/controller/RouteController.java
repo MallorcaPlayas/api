@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
@@ -26,15 +27,15 @@ public class RouteController extends GeneralizedControllerImpl<RouteDto, CreateR
     }
 
 
-    @PostMapping
-    public ResponseEntity<RouteDto> create(@RequestBody CreateRouteDto entity , @RequestPart("gpx") MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException {
+    @PostMapping("upload")
+    public ResponseEntity<RouteDto> upload(@RequestPart CreateRouteDto entity , @RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         LocationHandler gpxHandler = new LocationHandler();
 
-        saxParser.parse((InputStream) gpxFile, gpxHandler);
+        saxParser.parse(gpxFile.getInputStream(), gpxHandler);
 
-        List<LocationDto> result = gpxHandler.getLocations();
+        List<CreateLocationDto> result = gpxHandler.getLocations();
 
         entity.setLocations(result);
         RouteDto newEntity = service.save(entity);

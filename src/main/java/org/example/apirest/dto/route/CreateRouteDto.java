@@ -3,6 +3,7 @@ package org.example.apirest.dto.route;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.apirest.dto.BaseCreateDto;
+import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.model.Location;
@@ -18,6 +19,6 @@ public class CreateRouteDto extends BaseCreateDto {
     private double duration;
     private double elevation;
     private boolean isPrivate;
-    private List<LocationDto> locations;
+    private List<CreateLocationDto> locations;
     private Long userId;
 }

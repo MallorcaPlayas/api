@@ -1,6 +1,7 @@
 package org.example.apirest.utils;
 
 import lombok.Data;
+import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.model.Location;
 import org.xml.sax.Attributes;
@@ -18,8 +19,8 @@ public class LocationHandler extends DefaultHandler {
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
     
-    private List<LocationDto> locations;
-    private LocationDto currentLocation;
+    private List<CreateLocationDto> locations;
+    private CreateLocationDto currentLocation;
     private StringBuilder elementValue;
 
     @Override
@@ -40,7 +41,7 @@ public class LocationHandler extends DefaultHandler {
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
         switch (qName) {
             case POINT:
-                this.currentLocation = new LocationDto();
+                this.currentLocation = new CreateLocationDto();
                 this.currentLocation.setLatitude(Double.parseDouble(attr.getValue("lat")));
                 this.currentLocation.setLongitude(Double.parseDouble(attr.getValue("lon")));
                 break;

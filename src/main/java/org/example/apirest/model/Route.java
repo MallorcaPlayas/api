@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Data
@@ -36,6 +37,6 @@ public class Route implements BaseEntity {
     @OneToMany(mappedBy = "route")
     private List<ExcursionTicketDetails> excursionTicketDetails;
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Location> locations;
 }

@@ -23,5 +23,6 @@ public class Location implements BaseEntity {
     private LocalDateTime time;
 
     @ManyToOne
+    @JoinColumn(name = "route_id")
     private Route route;
 }
