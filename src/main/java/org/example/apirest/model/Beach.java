@@ -20,7 +20,7 @@ public class Beach implements BaseEntity {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "beach")
+    @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<BeachHasService> beachHasServiceBeach;
 
     @ManyToMany

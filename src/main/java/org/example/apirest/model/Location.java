@@ -25,6 +25,4 @@ public class Location implements BaseEntity {
 
     @ManyToOne
     private Route route;
-
-    File
 }

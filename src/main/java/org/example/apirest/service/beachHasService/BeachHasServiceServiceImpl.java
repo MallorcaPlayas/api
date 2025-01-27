@@ -29,7 +29,7 @@ public class BeachHasServiceServiceImpl extends GeneralizedServiceImpl<BeachHasS
     public BeachHasServiceDto save(CreateBeachHasServiceDto entity) {
         BeachHasService entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, BeachHasService.class);
         Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
-        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach_id()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach_id()));
+        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach().getId()));
         entityToInsert.setBeach(beach);
         entityToInsert.setServiceBeach(service);
         return dtoConverter.convertDto(repository.save(entityToInsert), BeachHasServiceDto.class);
@@ -47,7 +47,7 @@ public class BeachHasServiceServiceImpl extends GeneralizedServiceImpl<BeachHasS
         UtilsClass.updateFields(old, newEntity);
 
         Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
-        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach_id()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach_id()));
+        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach().getId()));
         old.setBeach(beach);
         old.setServiceBeach(service);
 
