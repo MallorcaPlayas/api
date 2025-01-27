@@ -30,5 +30,5 @@ public class Role implements BaseEntity{
     private List<UserRequireRole> userRequireRoles;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<RoleHasFunction> roleHasFunctionsD;
+    private List<RoleHasFunction> roleHasFunctions;
 }

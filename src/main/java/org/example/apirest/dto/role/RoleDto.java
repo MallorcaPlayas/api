@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class RoleDto extends BaseDto {
     private String name;
+    private Long price;
+    private String description;
     @JsonProperty("functions")
     private List<RoleHasFunctionDto> roleHasFunctions;
 }

@@ -17,6 +17,6 @@ public class Camera implements BaseEntity {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "camera_id")
+    @JoinColumn(name = "beach_id")
     private Beach beach;
 }
