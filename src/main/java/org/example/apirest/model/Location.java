@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,8 +17,10 @@ public class Location implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double coordinateX;
-    private Double coordinateY;
+    private Double latitude;
+    private Double longitude;
+    private Double elevation;
+    private LocalDateTime time;
 
     @ManyToOne
     private Route route;

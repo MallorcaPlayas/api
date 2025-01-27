@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class GeneralizedController<Dto extends BaseDto,CreateDto> {
-    private final GeneralizedService<Dto,CreateDto> service;
+public class GeneralizedControllerImpl<Dto extends BaseDto,CreateDto>{
+
+    protected final GeneralizedService<Dto,CreateDto> service;
 
     @GetMapping
     public ResponseEntity<List<Dto>> index() {

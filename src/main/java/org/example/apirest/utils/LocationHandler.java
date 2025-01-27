@@ -1,22 +1,25 @@
 package org.example.apirest.utils;
 
 import lombok.Data;
+import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.model.Location;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
-public class RouteTestHandler extends DefaultHandler {
+public class LocationHandler extends DefaultHandler {
     private static final String SEGMENTS = "trkseg";
     private static final String POINT = "trkpt";
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
-
-    private RouteTest route;
-    private LocationTest currentLocation;
+    
+    private List<LocationDto> locations;
+    private LocationDto currentLocation;
     private StringBuilder elementValue;
 
     @Override
@@ -30,17 +33,16 @@ public class RouteTestHandler extends DefaultHandler {
 
     @Override
     public void startDocument() throws SAXException {
-        this.route = new RouteTest();
-        this.route.setSegment(new ArrayList<>());
+        this.locations = new ArrayList<>();
     }
 
     @Override
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
         switch (qName) {
             case POINT:
-                this.currentLocation = new LocationTest();
-                this.currentLocation.setLat(Double.parseDouble(attr.getValue("lat")));
-                this.currentLocation.setLon(Double.parseDouble(attr.getValue("lon")));
+                this.currentLocation = new LocationDto();
+                this.currentLocation.setLatitude(Double.parseDouble(attr.getValue("lat")));
+                this.currentLocation.setLongitude(Double.parseDouble(attr.getValue("lon")));
                 break;
             case ELEVATION , TIME:
                 this.elementValue = new StringBuilder();
@@ -52,17 +54,17 @@ public class RouteTestHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case POINT:
-                this.route.getSegment().add(this.currentLocation);
+                this.locations.add(this.currentLocation);
                 break;
             case ELEVATION:
-                currentLocation.setEle(Double.parseDouble(elementValue.toString()));
+                currentLocation.setElevation(Double.parseDouble(elementValue.toString()));
                 break;
             case TIME:
                 if (this.currentLocation == null) {
                     return;
                 }
                 String datetime = elementValue.toString().replace("Z", "");
-                currentLocation.setDateTime(LocalDateTime.parse(datetime));
+                currentLocation.setTime(LocalDateTime.parse(datetime));
                 break;
         }
     }
