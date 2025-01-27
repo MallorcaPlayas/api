@@ -8,6 +8,6 @@ import org.example.apirest.dto.role.RoleDto;
 
 @Data
 public class CreateRoleHasFunctionDto{
-    private RoleDto role;
+    private Long role_id;
     private FunctionDto function;
 }
