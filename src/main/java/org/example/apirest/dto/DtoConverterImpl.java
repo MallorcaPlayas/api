@@ -39,4 +39,9 @@ public class DtoConverterImpl<Entity extends BaseEntity, Dto, CreateDto> impleme
     public List<Entity> convertToEntityListFromCreateDto(List<CreateDto> createDtos, Class<Entity> entityClass) {
         return createDtos.stream().map(createDto -> convertToEntityFromCreateDto(createDto, entityClass)).toList();
     }
+
+    @Override
+    public List<Entity> convertToEntityListFromDto(List<Dto> dtos, Class<Entity> entityClass) {
+        return dtos.stream().map(createDto -> convertToEntityFromDto(createDto, entityClass)).toList();
+    }
 }

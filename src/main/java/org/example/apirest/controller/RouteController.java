@@ -13,9 +13,4 @@ public class RouteController extends GeneralizedController<RouteDto, CreateRoute
     public RouteController(RouteServiceImpl service) {
         super(service);
     }
-
-    @PostMapping
-    public ResponseEntity<RouteDto> create(@RequestBody CreateRouteDto entity, @RequestBody CreateRouteDto entity2) {
-        return ResponseEntity.ok(service.findOne(Long.valueOf(1)));
-    }
 }
