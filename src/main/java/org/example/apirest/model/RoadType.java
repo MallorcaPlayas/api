@@ -18,7 +18,4 @@ public class RoadType implements BaseEntity {
     private Long id;
 
     String name;
-
-    @OneToMany(mappedBy = "roadType")
-    private List<Segment> segments;
 }
