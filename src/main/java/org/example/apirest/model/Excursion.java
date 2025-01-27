@@ -21,9 +21,13 @@ public class Excursion implements BaseEntity {
     private String description;
     private Date creationDate;
 
-    @OneToMany(mappedBy = "excursion")
+    @OneToMany(mappedBy = "excursion", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<ExcursionTicketDetails> excursionTicketDetails;
 
     @ManyToOne
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "route_id")
+    private Route route;
 }

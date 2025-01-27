@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/functions")
 @CrossOrigin(origins = "*")
-public class FunctionController extends GeneralizedControllerImpl<FunctionDto, CreateFunctionDto> {
+public class FunctionController extends GeneralizedController<FunctionDto, CreateFunctionDto> {
     public FunctionController(FunctionServiceImpl service) {
         super(service);
     }

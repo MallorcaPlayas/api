@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/road-types")
 @CrossOrigin(origins = "*")
-public class RoadTypeController extends GeneralizedControllerImpl<RoadTypeDto, CreateRoadTypeDto> {
+public class RoadTypeController extends GeneralizedController<RoadTypeDto, CreateRoadTypeDto> {
     public RoadTypeController(RoadTypeServiceImpl service) {
         super(service);
     }

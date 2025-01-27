@@ -25,17 +25,17 @@ public class Route implements BaseEntity {
     private double elevation;
 
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Complaint> routeComplaints;
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Comment> routeComments;
 
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "route")
-    private List<ExcursionTicketDetails> excursionTicketDetails;
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Excursion> excursions;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Location> locations;

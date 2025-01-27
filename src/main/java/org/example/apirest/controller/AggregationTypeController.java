@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/aggregation-types")
 @CrossOrigin(origins = "*")
-public class AggregationTypeController extends GeneralizedControllerImpl<AggregationTypeDto, CreateAggregationTypeDto> {
+public class AggregationTypeController extends GeneralizedController<AggregationTypeDto, CreateAggregationTypeDto> {
     public AggregationTypeController(AggregationTypeServiceImpl service) {
         super(service);
     }

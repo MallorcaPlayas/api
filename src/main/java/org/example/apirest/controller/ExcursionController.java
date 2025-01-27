@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/excursions")
 @CrossOrigin(origins = "*")
-public class ExcursionController extends GeneralizedControllerImpl<ExcursionDto, CreateExcursionDto> {
+public class ExcursionController extends GeneralizedController<ExcursionDto, CreateExcursionDto> {
     public ExcursionController(ExcursionServiceImpl service) {
         super(service);
     }

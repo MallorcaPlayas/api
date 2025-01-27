@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/cameras")
 @CrossOrigin(origins = "*")
-public class CameraController extends GeneralizedControllerImpl<CameraDto, CreateCameraDto> {
+public class CameraController extends GeneralizedController<CameraDto, CreateCameraDto> {
     public CameraController(CameraServiceImpl service) {
         super(service);
     }

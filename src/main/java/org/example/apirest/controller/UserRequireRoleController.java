@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/user-require-role")
 @CrossOrigin(origins = "*")
-public class UserRequireRoleController extends GeneralizedControllerImpl<UserRequireRoleDto, CreateUserRequireRoleDto> {
+public class UserRequireRoleController extends GeneralizedController<UserRequireRoleDto, CreateUserRequireRoleDto> {
     public UserRequireRoleController(UserRequireRoleServiceImpl  service) {
         super(service);
     }

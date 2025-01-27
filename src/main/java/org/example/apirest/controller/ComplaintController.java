@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/complaints")
 @CrossOrigin(origins = "*")
-public class ComplaintController extends GeneralizedControllerImpl<ComplaintDto, CreateComplaintDto> {
+public class ComplaintController extends GeneralizedController<ComplaintDto, CreateComplaintDto> {
     public ComplaintController(ComplaintServiceImpl service) {
         super(service);
     }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/excursions-ticket-details")
 @CrossOrigin(origins = "*")
-public class ExcursionTicketDetails extends GeneralizedControllerImpl<ExcursionTicketDetailsDto, CreateExcursionTicketDetailsDto> {
+public class ExcursionTicketDetails extends GeneralizedController<ExcursionTicketDetailsDto, CreateExcursionTicketDetailsDto> {
     public ExcursionTicketDetails(ExcursionTicketDetailsServiceImpl service) {
         super(service);
     }

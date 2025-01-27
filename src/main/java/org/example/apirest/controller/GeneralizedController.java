@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class GeneralizedControllerImpl<Dto extends BaseDto,CreateDto>{
-
+public class GeneralizedController<Dto extends BaseDto,CreateDto> {
     protected final GeneralizedService<Dto,CreateDto> service;
 
     @GetMapping

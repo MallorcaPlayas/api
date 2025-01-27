@@ -19,6 +19,6 @@ public class BillType implements BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "billType")
+    @OneToMany(mappedBy = "billType", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Bill> bills;
 }

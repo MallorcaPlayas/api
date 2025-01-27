@@ -21,6 +21,6 @@ public class Organization implements BaseEntity {
     private String documentationUrl;
     private String contactNumber;
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<User> users;
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/types")
 @CrossOrigin(origins = "*")
-public class TypeBeachController extends GeneralizedControllerImpl<TypeBeachDto, CreateTypeBeachDto> {
+public class TypeBeachController extends GeneralizedController<TypeBeachDto, CreateTypeBeachDto> {
     public TypeBeachController(TypeBeachServiceImpl service) {
         super(service);
     }

@@ -19,6 +19,6 @@ public class BusinessType implements BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "businessType")
+    @OneToMany(mappedBy = "businessType", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Business> businesses;
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -24,14 +25,9 @@ public class ExcursionTicketDetails implements BaseEntity {
     @JoinColumn(name = "excursion_id")
     private Excursion excursion;
 
-    @ManyToOne
-    @JoinColumn(name = "route_id")
-    private Route route;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "horary_id")
-    private Horary horary;
-
-    @OneToMany(mappedBy = "excursionTicketDetails")
+    @OneToMany(mappedBy = "excursionTicketDetails", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Ticket> tickets;
 }

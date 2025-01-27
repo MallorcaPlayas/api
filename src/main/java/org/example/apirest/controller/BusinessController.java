@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/businesses")
 @CrossOrigin(origins = "*")
-public class BusinessController extends GeneralizedControllerImpl<BusinessDto, CreateBusinessDto> {
+public class BusinessController extends GeneralizedController<BusinessDto, CreateBusinessDto> {
     public BusinessController(BusinessServiceImpl service) {
         super(service);
     }

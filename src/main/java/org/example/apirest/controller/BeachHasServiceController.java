@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/beach-has-service")
 @CrossOrigin(origins = "*")
-public class BeachHasServiceController  extends GeneralizedControllerImpl<BeachHasServiceDto, CreateBeachHasServiceDto> {
+public class BeachHasServiceController  extends GeneralizedController<BeachHasServiceDto, CreateBeachHasServiceDto> {
     public BeachHasServiceController(BeachHasServiceServiceImpl service) {
         super(service);
     }

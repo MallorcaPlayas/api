@@ -31,7 +31,7 @@ public class BeachManagerServiceImpl extends GeneralizedServiceImpl<BeachManager
     public BeachManagerDto save(CreateBeachManagerDto entity) {
         BeachManager entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, BeachManager.class);
         Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
-        User user = userRepository.findById(entity.getUser_id()).orElseThrow(()-> new NotFoundException(User.class,entity.getUser_id()));
+        User user = userRepository.findById(entity.getUser().getId()).orElseThrow(()-> new NotFoundException(User.class,entity.getUser().getId()));
         entityToInsert.setBeach(beach);
         entityToInsert.setUser(user);
         return dtoConverter.convertDto(repository.save(entityToInsert), BeachManagerDto.class);
@@ -49,7 +49,7 @@ public class BeachManagerServiceImpl extends GeneralizedServiceImpl<BeachManager
         UtilsClass.updateFields(old, newEntity);
 
         Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
-        User user = userRepository.findById(entity.getUser_id()).orElseThrow(()-> new NotFoundException(Role.class,entity.getUser_id()));
+        User user = userRepository.findById(entity.getUser().getId()).orElseThrow(()-> new NotFoundException(Role.class,entity.getUser().getId()));
         old.setBeach(beach);
         old.setUser(user);
 

@@ -18,7 +18,7 @@ public class ServiceBeach implements BaseEntity{
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "serviceBeach")
+    @OneToMany(mappedBy = "serviceBeach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<BeachHasService> beachHasServiceBeach;
 
 }

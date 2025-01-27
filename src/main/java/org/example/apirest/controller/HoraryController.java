@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/horaries")
 @CrossOrigin(origins = "*")
-public class HoraryController extends GeneralizedControllerImpl<HoraryDto, CreateHoraryDto> {
+public class HoraryController extends GeneralizedController<HoraryDto, CreateHoraryDto> {
     public HoraryController(HoraryServiceImpl service) {
         super(service);
     }

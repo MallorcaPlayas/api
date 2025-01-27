@@ -19,6 +19,6 @@ public class PointOfInterestType implements BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "pointOfInterestType")
+    @OneToMany(mappedBy = "pointOfInterestType", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<PointOfInterest> pointOfInterests;
 }

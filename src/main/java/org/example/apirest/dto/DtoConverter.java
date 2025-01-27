@@ -13,4 +13,6 @@ public interface DtoConverter<Entity, Dto, CreateDto> {
     Entity convertToEntityFromCreateDto(CreateDto createDto, Class<Entity> entityClass);
 
     List<Entity> convertToEntityListFromCreateDto(List<CreateDto> createDtos, Class<Entity> entityClass);
+
+    List<Entity> convertToEntityListFromDto(List<Dto> dtos, Class<Entity> entityClass);
 }
