@@ -4,7 +4,7 @@ import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.service.route.RouteServiceImpl;
-import org.example.apirest.utils.LocationHandler;
+import org.example.apirest.utils.RouteHandler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +29,7 @@ public class RouteController extends GeneralizedController<RouteDto, CreateRoute
     public ResponseEntity<RouteDto> upload(@RequestPart CreateRouteDto entity , @RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException, ParserConfigurationException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        LocationHandler gpxHandler = new LocationHandler();
+        RouteHandler gpxHandler = new RouteHandler();
 
         saxParser.parse(gpxFile.getInputStream(), gpxHandler);
 

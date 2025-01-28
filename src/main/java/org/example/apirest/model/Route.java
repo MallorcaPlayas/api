@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,7 +23,8 @@ public class Route implements BaseEntity {
     private boolean isPrivate;
     private double distance;
     private double duration;
-    private double elevation;
+    private double elevation_asc;
+    private double elevation_desc;
 
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
