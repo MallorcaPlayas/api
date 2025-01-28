@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, CreateRouteDto, RouteRepository> {
-    private final LocationRepository locationRepository;
+
     private final DtoConverterImpl<Location, LocationDto,CreateLocationDto> dtoConverterLocation;
 
     public RouteServiceImpl(RouteRepository repository,
@@ -31,7 +31,6 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
                             DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation) {
 
         super(repository, dtoConverter, Route.class, RouteDto.class);
-        this.locationRepository = locationRepository;
         this.dtoConverterLocation = dtoConverterLocation;
     }
 
@@ -39,6 +38,7 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
     public RouteDto save(CreateRouteDto entity) {
         Route route = dtoConverter.convertToEntityFromCreateDto(entity, Route.class);
         List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(entity.getLocations(),Location.class);
+        System.out.println(locations);
         for(Location location : locations){
            location.setRoute(route);
         }

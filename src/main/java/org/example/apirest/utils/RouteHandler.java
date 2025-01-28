@@ -17,14 +17,13 @@ public class RouteHandler extends DefaultHandler {
     private static final String NAME = "name";
     private static final String DISTANCE_METERS = "gpxtrkx:Distance";
     private static final String DURATION_SECONDS = "gpxtrkx:TotalElapsedTime";
-    private static final String ASCENDANT = "gpxtrkx:Ascent";
-    private static final String DESCENDANT = "gpxtrkx:Descent";
+    private static final String ASCENDANT_METERS = "gpxtrkx:Ascent";
+    private static final String DESCENDANT_METERS = "gpxtrkx:Descent";
     private static final String POINT = "trkpt";
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
 
     private CreateRouteDto route;
-    private List<CreateLocationDto> locations;
     private CreateLocationDto currentLocation;
     private StringBuilder elementValue;
 
@@ -51,7 +50,7 @@ public class RouteHandler extends DefaultHandler {
                 this.currentLocation.setLatitude(Double.parseDouble(attr.getValue("lat")));
                 this.currentLocation.setLongitude(Double.parseDouble(attr.getValue("lon")));
                 break;
-            case ELEVATION, TIME, NAME, DISTANCE_METERS, DURATION_SECONDS, ASCENDANT, DESCENDANT:
+            case ELEVATION, TIME, NAME, DISTANCE_METERS, DURATION_SECONDS, ASCENDANT_METERS, DESCENDANT_METERS:
                 this.elementValue = new StringBuilder();
                 break;
         }
@@ -62,8 +61,9 @@ public class RouteHandler extends DefaultHandler {
         switch (qName) {
             case NAME:
                 this.route.setName(this.elementValue.toString());
+                break;
             case POINT:
-                this.locations.add(this.currentLocation);
+                this.route.getLocations().add(this.currentLocation);
                 break;
             case ELEVATION:
                 currentLocation.setElevation(Double.parseDouble(elementValue.toString()));
@@ -81,11 +81,11 @@ public class RouteHandler extends DefaultHandler {
             case DURATION_SECONDS:
                 this.route.setDuration(Double.parseDouble(elementValue.toString()));
                 break;
-            case ASCENDANT:
-                this.route.set
+            case ASCENDANT_METERS:
+                this.route.setElevationAsc(Double.parseDouble(elementValue.toString()));
                 break;
-            case DESCENDANT:
-
+            case DESCENDANT_METERS:
+                this.route.setElevationDesc(Double.parseDouble(elementValue.toString()));
                 break;
         }
     }

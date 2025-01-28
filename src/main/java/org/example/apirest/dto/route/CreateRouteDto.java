@@ -17,7 +17,8 @@ public class CreateRouteDto extends BaseCreateDto {
     private String name;
     private double distance;
     private double duration;
-    private double elevation;
+    private double elevationAsc;
+    private double elevationDesc;
     private boolean isPrivate;
     private List<CreateLocationDto> locations;
     private Long userId;

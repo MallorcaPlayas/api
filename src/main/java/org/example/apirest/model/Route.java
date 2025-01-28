@@ -23,8 +23,8 @@ public class Route implements BaseEntity {
     private boolean isPrivate;
     private double distance;
     private double duration;
-    private double elevation_asc;
-    private double elevation_desc;
+    private double elevationAsc;
+    private double elevationDesc;
 
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)

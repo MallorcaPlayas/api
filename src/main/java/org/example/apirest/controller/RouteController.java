@@ -26,17 +26,14 @@ public class RouteController extends GeneralizedController<RouteDto, CreateRoute
 
 
     @PostMapping("upload")
-    public ResponseEntity<RouteDto> upload(@RequestPart CreateRouteDto entity , @RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException, ParserConfigurationException, IOException {
+    public ResponseEntity<RouteDto> upload(@RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException, ParserConfigurationException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         RouteHandler gpxHandler = new RouteHandler();
 
         saxParser.parse(gpxFile.getInputStream(), gpxHandler);
 
-        List<CreateLocationDto> result = gpxHandler.getLocations();
-
-        entity.setLocations(result);
-        RouteDto newEntity = service.save(entity);
+        RouteDto newEntity = service.save(gpxHandler.getRoute());
         return ResponseEntity.ok(newEntity);
     }
 }

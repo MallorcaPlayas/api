@@ -1,6 +1,7 @@
 package org.example.apirest.utils;
 
 import org.example.apirest.dto.location.CreateLocationDto;
+import org.example.apirest.dto.route.CreateRouteDto;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,7 +18,7 @@ public class Main {
 
         saxParser.parse("Maraton-Costitx-Pina-Algaida-Montuiri-Comuna_de_Lloret-Costitx-Llubi.gpx", gpxHandler);
 
-        List<CreateLocationDto> result = gpxHandler.getLocations();
+        CreateRouteDto result = gpxHandler.getRoute();
 
         System.out.println(result);
     }
