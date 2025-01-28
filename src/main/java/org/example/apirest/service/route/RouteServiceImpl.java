@@ -16,22 +16,33 @@ import org.example.apirest.repository.LocationRepository;
 import org.example.apirest.repository.RoleRepository;
 import org.example.apirest.repository.RouteRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
+import org.example.apirest.utils.RouteHandler;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, CreateRouteDto, RouteRepository> {
 
+    private SAXParser saxParser;
     private final DtoConverterImpl<Location, LocationDto,CreateLocationDto> dtoConverterLocation;
 
     public RouteServiceImpl(RouteRepository repository,
                             DtoConverterImpl<Route,RouteDto,CreateRouteDto> dtoConverter,
                             LocationRepository locationRepository,
-                            DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation) {
+                            DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation)
+            throws ParserConfigurationException, SAXException {
 
         super(repository, dtoConverter, Route.class, RouteDto.class);
         this.dtoConverterLocation = dtoConverterLocation;
+        this.saxParser = SAXParserFactory.newInstance().newSAXParser();
     }
 
     @Override
@@ -41,6 +52,20 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
         System.out.println(locations);
         for(Location location : locations){
            location.setRoute(route);
+        }
+        route.setLocations(locations);
+        return dtoConverter.convertDto(repository.save(route),RouteDto.class);
+    }
+
+    public RouteDto alex(MultipartFile multipartFile) throws IOException, SAXException {
+        RouteHandler routeHandler = new RouteHandler();
+        saxParser.parse(multipartFile.getInputStream(),routeHandler);
+        CreateRouteDto createRouteDto = routeHandler.getRoute();
+        Route route = dtoConverter.convertToEntityFromCreateDto(createRouteDto,Route.class);
+        List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(createRouteDto.getLocations(),Location.class);
+        System.out.println(locations);
+        for(Location location : locations){
+            location.setRoute(route);
         }
         route.setLocations(locations);
         return dtoConverter.convertDto(repository.save(route),RouteDto.class);
