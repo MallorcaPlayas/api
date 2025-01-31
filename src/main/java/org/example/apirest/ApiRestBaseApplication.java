@@ -4,6 +4,7 @@ import org.example.apirest.model.*;
 import org.example.apirest.repository.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
-public class ApiRestBaseApplication {
+public class ApiRestBaseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ApiRestBaseApplication.class, args);
