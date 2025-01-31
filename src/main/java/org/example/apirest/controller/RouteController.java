@@ -29,7 +29,7 @@ public class RouteController extends GeneralizedController<RouteDto, CreateRoute
 
     @PostMapping("upload")
     public ResponseEntity<RouteDto> upload(@RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException, ParserConfigurationException, IOException {
-        RouteDto newEntity = routeService.alex(gpxFile);
+        RouteDto newEntity = routeService.upload(gpxFile);
         return ResponseEntity.ok(newEntity);
     }
 }

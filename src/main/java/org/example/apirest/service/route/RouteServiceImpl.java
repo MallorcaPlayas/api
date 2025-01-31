@@ -57,7 +57,7 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
         return dtoConverter.convertDto(repository.save(route),RouteDto.class);
     }
 
-    public RouteDto alex(MultipartFile multipartFile) throws IOException, SAXException {
+    public RouteDto upload(MultipartFile multipartFile) throws IOException, SAXException {
         RouteHandler routeHandler = new RouteHandler();
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
         CreateRouteDto createRouteDto = routeHandler.getRoute();
