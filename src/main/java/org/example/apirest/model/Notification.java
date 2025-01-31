@@ -18,5 +18,6 @@ public class Notification implements BaseEntity {
     private String name;
     private String subject;
     private String description;
-    private boolean read;
+    private boolean readNotification;
 }
+
