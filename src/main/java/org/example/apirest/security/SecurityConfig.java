@@ -38,16 +38,20 @@ public class SecurityConfig {
     }
 
     @Bean
+    // Este mét_odo define cómo se encriptan las contraseñas antes de guardarlas en la base de datos.
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
+    // AuthenticationManager: Es como el jefe del sistema de seguridad que valida si un usuario puede acceder o no.
+    // UserDetailsService: Un servicio que proporciona la información del usuario (nombre de usuario, contraseña y roles) al AuthenticationManager.
+    // @Qualifier: Le dice a Spring cuál de las implementaciones de UserDetailsService usar.
     public AuthenticationManager authenticationManager(
             @Qualifier("userServiceImpl") UserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(provider);
+        provider.setUserDetailsService(userDetailsService); // UserDetailsService: Un servicio que proporciona la información del usuario (nombre de usuario, contraseña y roles) al AuthenticationManager.
+        provider.setPasswordEncoder(passwordEncoder()); // PasswordEncoder: Una herramienta para verificar que la contraseña que ingresó el usuario coincide con la encriptada en la base de datos.
+        return new ProviderManager(provider); // El ProviderManager  decide si el usuario es válido o no
     }
 }
