@@ -7,7 +7,7 @@ import org.example.apirest.service.service.ServiceBeachServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/services")
+@RequestMapping("/services")
 @CrossOrigin(origins = "*")
 public class ServiceBeachController extends GeneralizedController<ServiceBeachDto, CreateServiceBeachDto> {
     public ServiceBeachController(ServiceBeachServiceImpl service) {

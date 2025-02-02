@@ -17,19 +17,20 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/routes")
+@RequestMapping("/routes")
 @CrossOrigin(origins = "*")
 public class RouteController extends GeneralizedController<RouteDto, CreateRouteDto> {
+
     private final RouteServiceImpl routeService;
+
     public RouteController(RouteServiceImpl service, RouteServiceImpl routeService) {
         super(service);
         this.routeService = routeService;
     }
 
-
     @PostMapping("upload")
-    public ResponseEntity<RouteDto> upload(@RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException, ParserConfigurationException, IOException {
-        RouteDto newEntity = routeService.upload(gpxFile);
-        return ResponseEntity.ok(newEntity);
+    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles){
+        List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
+        return ResponseEntity.ok(routeDtos);
     }
 }

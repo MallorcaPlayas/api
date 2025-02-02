@@ -6,7 +6,7 @@ import org.example.apirest.service.organization.OrganizationServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/organizations")
+@RequestMapping("/organizations")
 @CrossOrigin(origins = "*")
 public class OrganizationController extends GeneralizedController<OrganizationDto, CreateOrganizationDto> {
     public OrganizationController(OrganizationServiceImpl service) {

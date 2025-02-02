@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/budget-business")
+@RequestMapping("/budget-business")
 @CrossOrigin(origins = "*")
 public class BudgetBusinessController extends GeneralizedController<BudgetBusinessDto, CreateBudgetBusinessDto> {
     public BudgetBusinessController(BudgetBusinessServiceImpl service) {

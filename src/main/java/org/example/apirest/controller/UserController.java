@@ -6,7 +6,7 @@ import org.example.apirest.service.user.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @CrossOrigin(origins = "*")
 public class UserController extends GeneralizedController<UserDto, CreateUserDto> {
     public UserController(UserServiceImpl service) {

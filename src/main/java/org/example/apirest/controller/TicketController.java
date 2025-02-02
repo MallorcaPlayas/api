@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping("/tickets")
 @CrossOrigin(origins = "*")
 public class TicketController extends GeneralizedController<TicketDto, CreateTicketDto> {
     public TicketController(TicketServiceImpl service) {

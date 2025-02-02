@@ -6,7 +6,7 @@ import org.example.apirest.service.photo.PhotoServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/photos")
+@RequestMapping("/photos")
 @CrossOrigin(origins = "*")
 public class PhotoController extends GeneralizedController<PhotoDto, CreatePhotoDto> {
     public PhotoController(PhotoServiceImpl service) {

@@ -6,7 +6,7 @@ import org.example.apirest.service.pointOfInterestType.PointOfInterestTypeServic
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/point-of-interest-types")
+@RequestMapping("/point-of-interest-types")
 @CrossOrigin(origins = "*")
 public class PointOfInterestTypeController extends GeneralizedController<PointOfInterestTypeDto, CreatePointOfInterestTypeDto> {
     public PointOfInterestTypeController(PointOfInterestTypeServiceImpl service) {

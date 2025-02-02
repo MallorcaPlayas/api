@@ -6,7 +6,7 @@ import org.example.apirest.service.complaint.ComplaintServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/complaints")
+@RequestMapping("/complaints")
 @CrossOrigin(origins = "*")
 public class ComplaintController extends GeneralizedController<ComplaintDto, CreateComplaintDto> {
     public ComplaintController(ComplaintServiceImpl service) {
