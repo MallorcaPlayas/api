@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Collections;
+import java.util.List;
 
 // esta anotacion para que sirve:
 // @Component -> Spring se encarga de crear el objeto por ti y
@@ -65,10 +67,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .getBody();
 
             String username = claims.getSubject(); // Obtiene el nombre de usuario del claim subject del token JWT
-            if (username != null) {
-                UserDetails userDetails = new User(username, "", Collections.emptyList()); // Crea un objeto UserDetails con el nombre de usuario y sin contraseña ni roles
+
+            // Estoy haciendo un casting
+            // y con "var" estoy diciendo que es una lista de Strings. "var" permite declarar variables locales sin especificar explícitamente su tipo
+            // "var" Solo funciona en variables locales, dentro de un mét_odo
+            var roles = (List<String>) claims.get("roles"); // Recupera los roles como lista de cadenas
+
+            if (username != null && roles != null) {
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // SimpleGrantedAuthority: Almacenar un rol o permiso que puede ser usado por Spring Security para tomar decisiones sobre la autorización. Definir qué rutas o recursos puede acceder un usuario según sus roles.
+                        .toList();
+
+
+                UserDetails userDetails = new User(username, "", authorities); // Crea un objeto UserDetails con el nombre de usuario y sin contraseña pero con sus roles
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); // Crea un objeto UsernamePasswordAuthenticationToken con el usuario autenticado, sin credenciales y con los roles del usuario
+                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities); // Crea un objeto UsernamePasswordAuthenticationToken con el usuario autenticado, sin credenciales y con los roles del usuario
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // Añade detalles adicionales sobre la solicitud HTTP, como la dirección IP y el navegador del cliente (Crhome)
 

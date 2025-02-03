@@ -3,8 +3,10 @@ package org.example.apirest.controller;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.apirest.dto.role.RoleDto;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.security.JwtKeyProvider;
 import org.example.apirest.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController // Todos los métodos devolverán respuestas HTTP. Por defecto, todos los métodos devolverán un estado 200 y en formato JSON.
@@ -41,15 +44,23 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         Optional<UserDto> userOptional = userService.findByUserName(username);
+
+
         if (userOptional.isPresent()) {
             UserDto user = userOptional.get();
             // Verifica si la contraseña coincide
             if (passwordEncoder.matches(password, user.getPassword())) {
+
+
+                // Extraer los nombres de los roles como cadenas
+                List<String> roleNames = user.getRoles().stream()
+                        .map(role -> role.getRole().getName()) // Obtener solo el nombre del rol
+                        .toList();
+
                 String token = Jwts.builder()
                         .setSubject(user.getUserName())
                         .claim("email", user.getEmail()) // Agregar el email
-                // Pendiente añadir los roles o las funcionalidades
-                        //        .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList())) // Agregar roles
+                        .claim("roles", roleNames) // Agregar nombres de roles al token
                         .setIssuedAt(new Date()) // Fecha de creacion del token
                         .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas expiración del token
                         .signWith(getSigningKey()) // Firma el token con la clave secreta
