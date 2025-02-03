@@ -2,6 +2,7 @@ package org.example.apirest;
 
 import org.example.apirest.model.*;
 import org.example.apirest.repository.*;
+import org.example.apirest.service.s3.S3Service;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

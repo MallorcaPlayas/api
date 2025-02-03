@@ -16,7 +16,7 @@ public class S3Service {
 
     public final S3Client s3Client;
 
-    public void uploadFile(String bucketName, String filePath, String key) {
+    public void uploadFile(String bucketName, String key, String filePath) {
         s3Client.putObject(
                 PutObjectRequest.builder()
                         .bucket(bucketName)
@@ -28,6 +28,9 @@ public class S3Service {
     }
 
     public void downloadFile(String bucketName, String key, String downloadPath) {
+        s3Client.serviceClientConfiguration();
+        System.out.println(key);
+        System.out.println(bucketName);
         s3Client.getObject(
                 GetObjectRequest.builder()
                         .bucket(bucketName)
