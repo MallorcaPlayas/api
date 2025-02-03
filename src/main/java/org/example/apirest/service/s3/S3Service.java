@@ -24,13 +24,9 @@ public class S3Service {
                         .build(),
                 RequestBody.fromFile(Paths.get(filePath))
         );
-        System.out.println("Archivo subido a S3 con éxito");
     }
 
     public void downloadFile(String bucketName, String key, String downloadPath) {
-        s3Client.serviceClientConfiguration();
-        System.out.println(key);
-        System.out.println(bucketName);
         s3Client.getObject(
                 GetObjectRequest.builder()
                         .bucket(bucketName)
@@ -38,7 +34,6 @@ public class S3Service {
                         .build(),
                 Paths.get(downloadPath)
         );
-        System.out.println("Archivo descargado con éxito");
     }
 
     public void deleteFile(String bucketName, String key) {
@@ -46,6 +41,5 @@ public class S3Service {
                 .bucket(bucketName)
                 .key(key)
                 .build());
-        System.out.println("Archivo eliminado de S3 con éxito");
     }
 }
