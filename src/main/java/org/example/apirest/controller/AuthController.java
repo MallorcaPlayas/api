@@ -57,10 +57,18 @@ public class AuthController {
                         .map(role -> role.getRole().getName()) // Obtener solo el nombre del rol
                         .toList();
 
+
+                // Extraer las funciones de ese ROL como cadenas
+                List<String> functions = user.getRoles().stream()
+                        .flatMap(role -> role.getRole().getRoleHasFunctions().stream()) // Accede a las funciones del rol
+                        .map(function -> function.getFunction().getName()) // Obtén el nombre de cada función
+                        .toList();
+
                 String token = Jwts.builder()
                         .setSubject(user.getUserName())
                         .claim("email", user.getEmail()) // Agregar el email
                         .claim("roles", roleNames) // Agregar nombres de roles al token
+                        .claim("functions", functions) // Agregar funciones
                         .setIssuedAt(new Date()) // Fecha de creacion del token
                         .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas expiración del token
                         .signWith(getSigningKey()) // Firma el token con la clave secreta
