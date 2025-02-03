@@ -15,5 +15,7 @@ public class Photo implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String bucket;
+
     private String url;
 }

@@ -40,3 +40,5 @@ docker-compose.yml
 
 ### ruta ###
 Maraton-Costitx-Pina-Algaida-Montuiri-Comuna_de_Lloret-Costitx-Llubi .gpx
+
+src/main/resources/application.properties
