@@ -32,11 +32,12 @@ import java.util.Collections;
 //  Este filtro se ejecuta antes de UsernamePasswordAuthenticationFilter, que es el filtro predeterminado de Spring Security para autenticar a los usuarios con nombre de usuario y contraseña
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+
     @Value("${jwt.secret}") // Inyecta el valor de la propiedad jwt.secret del archivo application.properties
     private String SECRET_KEY; // Clave secreta para firmar (cuando se genera) y verificar el token JWT que no ha sido manipulado
 
-    private Key getSigningKey() { // Generar una clave criptográfica (Key) a partir de una clave secreta en Base64.
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+    public Key getSigningKey() {
+        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -76,6 +77,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
         }
 
-        filterChain.doFilter(request, response); // Continúa con el siguiente filtro
+        filterChain.doFilter(request, response); // Permite que la solicitud continúe, pero el usuario no estará autenticado.
     }
 }
