@@ -12,4 +12,5 @@ public class AggregationTypeController extends GeneralizedController<Aggregation
     public AggregationTypeController(AggregationTypeServiceImpl service) {
         super(service);
     }
+    // TODO SE PUEDE BORRAR
 }
