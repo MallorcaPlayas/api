@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
+                        .requestMatchers("/api/auth/**","/usersMongoDB").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
                         .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura la aplicación para no usar sesiones en el servidor (estado STATELESS). En lugar de almacenar información de sesión, to_do se gestiona mediante tokens JWT. En sistemas con JWT, la información del usuario (como su autenticación y roles) está contenida en el token
