@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.security.JwtKeyProvider;
 import org.example.apirest.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,18 +24,17 @@ public class AuthController {
 
     private final UserServiceImpl userService; // servicio para buscar y guardar usuarios en la base de datos
     private final PasswordEncoder passwordEncoder; // Clase de Spring Security para encriptar y verificar contraseñas
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private final JwtKeyProvider jwtKeyProvider;
 
-    public AuthController(UserServiceImpl userService, PasswordEncoder passwordEncoder) {
+
+    public AuthController(UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtKeyProvider jwtKeyProvider) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtKeyProvider = jwtKeyProvider;
     }
 
-
-    public Key getSigningKey() {
-        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private Key getSigningKey() {
+        return jwtKeyProvider.getSigningKey();
     }
 
     // Endpoint para iniciar sesión, y si to_do es correcto se genera un token JWT
