@@ -14,11 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 @Configuration // Le dice a Spring que esta clase contiene la configuración de seguridad
 @RequiredArgsConstructor // Crea un constructor con todos los campos requeridos, en este caso jwtAuthenticationFilter
 // SecurityConfig Decide qué rutas (URLs) son accesibles sin autenticación
 // Define cómo se valida la identidad de un usuario
+@EnableGlobalMethodSecurity(prePostEnabled = true) // Habilita @PreAuthorize y @PostAuthorize para que puedas proteger los métodos de tus controladores
 public class SecurityConfig {
 
     // Con @RequiredArgsConstructor, Lombok crea un constructor con todos los campos requeridos
@@ -32,7 +34,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**","/usersMongoDB").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
-                        .requestMatchers("/api/users/**").hasRole("ADMIN") // Restringir acceso a `/api/users` solo a usuarios con rol ADMIN
+                        // Dejo el codigo de abajo comentado como ejemplo por si en un futuro lo uso
+                     //   .requestMatchers("/api/users/**").hasAuthority("ReadUser") // Restringir acceso a `/api/users` a usuarios con la función ReadUser
                         .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura la aplicación para no usar sesiones en el servidor (estado STATELESS). En lugar de almacenar información de sesión, to_do se gestiona mediante tokens JWT. En sistemas con JWT, la información del usuario (como su autenticación y roles) está contenida en el token
