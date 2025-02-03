@@ -31,7 +31,8 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private Key getSigningKey() {
+
+    public Key getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -39,9 +40,7 @@ public class AuthController {
     // Endpoint para iniciar sesión, y si to_do es correcto se genera un token JWT
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        System.out.println("paso por aqui para hacer el login?");
         Optional<UserDto> userOptional = userService.findByUserName(username);
-
         if (userOptional.isPresent()) {
             UserDto user = userOptional.get();
             // Verifica si la contraseña coincide
@@ -64,7 +63,7 @@ public class AuthController {
     }
 
 
-    // 📝 Endpoint para registrar un usuario
+    // Endpoint para registrar un usuario
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CreateUserDto createUserDto) {
         System.out.println("paso por aqui para hacer el registro?");
