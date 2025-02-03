@@ -3,7 +3,13 @@ package org.example.apirest.controller;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.service.user.UserServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -13,8 +19,45 @@ import org.springframework.web.bind.annotation.*;
 // CreateUserDto: Representa los datos necesarios para crear o actualizar un usuario
 // Si necesitas agregar un endpoint específico para usuarios (por ejemplo, buscar usuarios por rol),
 // puedes sobrescribir o extender los métodos de la clase base
-public class UserController extends GeneralizedController<UserDto, CreateUserDto> {
+public class UserController  {
+
+    private final UserServiceImpl service;
+
     public UserController(UserServiceImpl service) {
-        super(service); // Pasa la instancia del servicio a la clase padre (GeneralizedController).
+        this.service = service;
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('ReadUser')")
+    public ResponseEntity<List<UserDto>> index() {
+        System.out.println("PASO POR AQUI, FUNCIONA?? index123456");
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ReadUser')")
+    public ResponseEntity<UserDto> show(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findOne(id));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('CreateUser')")
+    public ResponseEntity<UserDto> create(@RequestBody CreateUserDto entity) {
+        UserDto newEntity = service.save(entity);
+        return ResponseEntity.ok(newEntity);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UpdateUser')")
+    public ResponseEntity<UserDto> update(@RequestBody CreateUserDto entity, @PathVariable Long id) {
+        UserDto updated = service.update(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DeleteUser')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }
