@@ -34,7 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**","/usersMongoDB", "/api/beaches/**").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
+                        .requestMatchers("/api/auth/**","/usersMongoDB").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
                         // Dejo el codigo de abajo comentado como ejemplo por si en un futuro lo uso
                      //   .requestMatchers("/api/users/**").hasAuthority("ReadUser") // Restringir acceso a `/api/users` a usuarios con la función ReadUser
                         .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
