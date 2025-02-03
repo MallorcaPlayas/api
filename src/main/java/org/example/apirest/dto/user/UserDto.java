@@ -23,6 +23,7 @@ public class UserDto extends BaseDto {
     private String firstSurname;
     private String secondSurname;
     private String email;
+    private String password;
     private Date birthday;
     private String urlPhoto;
     private boolean privatePrivacy;
