@@ -21,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,24 +72,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Estoy haciendo un casting
             // y con "var" estoy diciendo que es una lista de Strings. "var" permite declarar variables locales sin especificar explícitamente su tipo
             // "var" Solo funciona en variables locales, dentro de un mét_odo
+            // Procesar roles como lista de cadenas
+            @SuppressWarnings("unchecked")
             var roles = (List<String>) claims.get("roles"); // Recupera los roles como lista de cadenas
+            // Procesar roles como lista de cadenas
+            @SuppressWarnings("unchecked")
+            var functions = (List<String>) claims.get("functions"); // Recupera funciones
 
-            if (username != null && roles != null) {
+            if (username != null && roles != null && functions != null) {
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // SimpleGrantedAuthority: Almacenar un rol o permiso que puede ser usado por Spring Security para tomar decisiones sobre la autorización. Definir qué rutas o recursos puede acceder un usuario según sus roles.
                         .toList();
 
+// Convertir funciones a autoridades y combinar con roles
+                List<SimpleGrantedAuthority> mutableAuthorities = new ArrayList<>(authorities);
+                functions.forEach(function -> mutableAuthorities.add(new SimpleGrantedAuthority(function)));
 
-                UserDetails userDetails = new User(username, "", authorities); // Crea un objeto UserDetails con el nombre de usuario y sin contraseña pero con sus roles
+                // Crear UserDetails y configurar el contexto de seguridad
+                UserDetails userDetails = new User(username, "", mutableAuthorities);
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities); // Crea un objeto UsernamePasswordAuthenticationToken con el usuario autenticado, sin credenciales y con los roles del usuario
+                        new UsernamePasswordAuthenticationToken(userDetails, null, mutableAuthorities);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // Añade detalles adicionales sobre la solicitud HTTP, como la dirección IP y el navegador del cliente (Crhome)
 
                 SecurityContextHolder.getContext().setAuthentication(authentication); // Es una clase que Spring usa para almacenar información de seguridad (como el usuario autenticado) durante el ciclo de vida de la solicitud
             }
         } catch (Exception e) {
-            System.out.println("JwtAuthenticationFilter: Error al procesar el token JWT -> " + e.getMessage());
+            System.out.println("JwtAuthenticationFilter: Error al procesar el token JWT -> " + e);
+            e.printStackTrace();
+            e.getMessage();
             SecurityContextHolder.clearContext();
         }
 
