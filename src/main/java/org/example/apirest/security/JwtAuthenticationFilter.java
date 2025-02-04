@@ -81,6 +81,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (username != null && roles != null && functions != null) {
                 List<SimpleGrantedAuthority> authorities = roles.stream()
+                        // hay que poner de forma obligatoria el "ROLE_" para poder usar la anotacion "hasRole" de @PreAuthorize("hasRole('ADMIN')")
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // SimpleGrantedAuthority: Almacenar un rol o permiso que puede ser usado por Spring Security para tomar decisiones sobre la autorización. Definir qué rutas o recursos puede acceder un usuario según sus roles.
                         .toList();
 

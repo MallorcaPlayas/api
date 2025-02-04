@@ -28,34 +28,33 @@ public class UserController  {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ReadUser')")
+    @PreAuthorize("hasAuthority('readUser')")
     public ResponseEntity<List<UserDto>> index() {
-        System.out.println("PASO POR AQUI, FUNCIONA?? index123456");
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ReadUser')")
+    @PreAuthorize("hasAuthority('readUser')")
     public ResponseEntity<UserDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(service.findOne(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CreateUser')")
+    @PreAuthorize("hasAuthority('createUser')")
     public ResponseEntity<UserDto> create(@RequestBody CreateUserDto entity) {
         UserDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('UpdateUser')")
+    @PreAuthorize("hasAuthority('updateUser')")
     public ResponseEntity<UserDto> update(@RequestBody CreateUserDto entity, @PathVariable Long id) {
         UserDto updated = service.update(id, entity);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('DeleteUser')")
+    @PreAuthorize("hasAuthority('deleteUser')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
