@@ -42,3 +42,5 @@ docker-compose.yml
 Maraton-Costitx-Pina-Algaida-Montuiri-Comuna_de_Lloret-Costitx-Llubi .gpx
 
 src/main/resources/application.properties
+**/application.properties
+application.properties
