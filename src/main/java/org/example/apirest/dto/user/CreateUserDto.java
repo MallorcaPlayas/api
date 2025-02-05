@@ -22,7 +22,7 @@ public class CreateUserDto extends BaseCreateDto {
     private String email;
     private Date birthday;
     private String password;
-    private String urlPhoto;
+    private String profilePicture;
     private boolean privatePrivacy;
     private boolean state;
     private OrganizationDto organization;
