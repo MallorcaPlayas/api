@@ -99,6 +99,13 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
         return repository.findByUserName(username)
                 .map(user -> dtoConverter.convertDto(user, UserDto.class));
     }
+
+    public Optional<UserDto> findByEmail(String email) {
+        return repository.findByEmail(email)
+                .map(user -> dtoConverter.convertDto(user, UserDto.class));
+    }
+
+
     // Implementación de UserDetailsService para Spring Security
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
