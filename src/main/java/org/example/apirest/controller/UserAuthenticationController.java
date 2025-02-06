@@ -37,7 +37,16 @@ public class UserAuthenticationController {
     // Endpoint para iniciar sesión, y si to_do es correcto se genera un token JWT
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        Optional<UserDto> userOptional = userService.findByUserName(username);
+
+        // comprobar si es username o email
+        Optional<UserDto> userOptional;
+        if (username.contains("@")) {
+            System.out.println("es un email");
+            userOptional = userService.findByEmail(username);
+        } else {
+            System.out.println("es un username");
+            userOptional = userService.findByUserName(username);
+        }
 
 
         if (userOptional.isPresent()) {
