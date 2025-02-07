@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.security.JwtKeyProvider;
+import org.example.apirest.security.JwtService;
 import org.example.apirest.service.user.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,12 +23,14 @@ public class UserAuthenticationController {
     private final UserServiceImpl userService; // servicio para buscar y guardar usuarios en la base de datos
     private final PasswordEncoder passwordEncoder; // Clase de Spring Security para encriptar y verificar contraseñas
     private final JwtKeyProvider jwtKeyProvider;
+    private final JwtService jwtService;
 
 
-    public UserAuthenticationController(UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtKeyProvider jwtKeyProvider) {
+    public UserAuthenticationController(UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtKeyProvider jwtKeyProvider, JwtService jwtService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtKeyProvider = jwtKeyProvider;
+        this.jwtService = jwtService;
     }
 
     private Key getSigningKey() {
@@ -84,6 +87,47 @@ public class UserAuthenticationController {
         return ResponseEntity.status(401).body("Usuario o contraseña incorrectos"); // Si no coincide, retorna error
     }
 
+    // Nota: Codigo para poder hacer la autentificacion por Google de Quasar
+    @PostMapping("/loginGoogleAuth")
+    public ResponseEntity<?> loginGoogleAuth(@RequestParam String tokenGoogle) {
+        // Del token de google, extraer el email
+
+        // Extraer el email del token JWT
+        String email = jwtService.extractEmailFromJwt(tokenGoogle);
+        Optional<UserDto> userOptional = userService.findByEmail(email);
+        System.out.println("paso por aqui para hacer el login? cogiendo el email");
+        System.out.println(userOptional.get().getUserName());
+
+        UserDto user = userOptional.get();
+        // Verifica si la contraseña coincide
+
+
+        // Extraer los nombres de los roles como cadenas
+        List<String> roleNames = user.getRoles().stream()
+                .map(role -> role.getRole().getName()) // Obtener solo el nombre del rol
+                .toList();
+
+
+        // Extraer las funciones de ese ROL como cadenas
+        List<String> functions = user.getRoles().stream()
+                .flatMap(role -> role.getRole().getRoleHasFunctions().stream()) // Accede a las funciones del rol
+                .map(function -> function.getFunction().getName()) // Obtén el nombre de cada función
+                .toList();
+
+        String token = Jwts.builder()
+                .setSubject(user.getUserName())
+                .claim("email", user.getEmail()) // Agregar el email
+                .claim("roles", roleNames) // Agregar nombres de roles al token
+                .claim("functions", functions) // Agregar funciones
+                .setIssuedAt(new Date()) // Fecha de creacion del token
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas expiración del token
+                .signWith(getSigningKey()) // Firma el token con la clave secreta
+                .compact(); // Compacta el token en una cadena
+
+        return ResponseEntity.ok(token);
+
+
+    }
 
     // Endpoint para registrar un usuario
     @PostMapping("/register")
