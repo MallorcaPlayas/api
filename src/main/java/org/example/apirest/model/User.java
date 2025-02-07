@@ -20,7 +20,6 @@ public class User implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
     @Column(name = "user_name") // Ajuste al nombre de la columna en la base de datos
@@ -31,11 +30,8 @@ public class User implements BaseEntity {
 
     @Column(name = "second_surname") // Ajuste al nombre de la columna en la base de datos
     private String secondSurname;
-
     private String email;
-
     private Date birthday;
-
     private String password;
 
     @Column(name = "profile_picture") // Ajuste al nombre de la columna en la base de datos
@@ -43,7 +39,6 @@ public class User implements BaseEntity {
 
     @Column(name = "private_privacy") // Ajuste al nombre de la columna en la base de datos
     private boolean privatePrivacy;
-
     private boolean state;
 
     @ManyToOne

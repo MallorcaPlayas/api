@@ -6,7 +6,7 @@ import org.example.apirest.service.budget.BudgetServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/budgets")
+@RequestMapping("/budgets")
 @CrossOrigin(origins = "*")
 public class BudgetController extends GeneralizedController<BudgetDto, CreateBudgetDto> {
     public BudgetController(BudgetServiceImpl service) {

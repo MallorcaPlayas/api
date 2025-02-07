@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/businesses-horaries")
+@RequestMapping("/businesses-horaries")
 @CrossOrigin(origins = "*")
 public class BusinessHoraryController extends GeneralizedController<BusinessHoraryDto, CreateBusinessHoraryDto> {
     public BusinessHoraryController(BusinessHoraryServiceImpl service) {

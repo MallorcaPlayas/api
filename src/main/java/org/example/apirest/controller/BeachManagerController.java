@@ -6,7 +6,7 @@ import org.example.apirest.service.beachManager.BeachManagerServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/beach-manager")
+@RequestMapping("/beach-manager")
 @CrossOrigin(origins = "*")
 public class BeachManagerController extends GeneralizedController<BeachManagerDto, CreateBeachManagerDto> {
     public BeachManagerController(BeachManagerServiceImpl service) {

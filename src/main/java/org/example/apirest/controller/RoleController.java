@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/roles")
 @CrossOrigin(origins = "*")
 public class RoleController extends GeneralizedController<RoleDto, CreateRoleDto> {
     public RoleController(RoleServiceImpl service) {

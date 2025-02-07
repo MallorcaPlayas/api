@@ -6,7 +6,7 @@ import org.example.apirest.service.horary.HoraryServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/horaries")
+@RequestMapping("/horaries")
 @CrossOrigin(origins = "*")
 public class HoraryController extends GeneralizedController<HoraryDto, CreateHoraryDto> {
     public HoraryController(HoraryServiceImpl service) {

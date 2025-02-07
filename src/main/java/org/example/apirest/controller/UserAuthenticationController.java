@@ -3,13 +3,16 @@ package org.example.apirest.controller;
 import io.jsonwebtoken.Jwts;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.security.JwtKeyProvider;
 import org.example.apirest.security.JwtService;
 import org.example.apirest.service.user.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;

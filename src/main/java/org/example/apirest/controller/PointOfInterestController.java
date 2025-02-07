@@ -6,7 +6,7 @@ import org.example.apirest.service.pointOfInterest.PointOfInterestServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/points-of-interest")
+@RequestMapping("/points-of-interest")
 @CrossOrigin(origins = "*")
 public class PointOfInterestController extends GeneralizedController<PointOfInterestDto, CreatePointOfInterestDto> {
     public PointOfInterestController(PointOfInterestServiceImpl service) {

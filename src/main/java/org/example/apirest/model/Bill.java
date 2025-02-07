@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -20,7 +22,7 @@ public class Bill implements BaseEntity {
     private String userName;
     private String firstSurname;
     private String secondSurname;
-    private Date birthDate;
+    private LocalDateTime birthDate;
     private String email;
     private Double amount;
     private Date amountDate;

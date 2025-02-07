@@ -5,7 +5,6 @@ import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.service.route.RouteServiceImpl;
 import org.example.apirest.utils.RouteHandler;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -64,8 +63,8 @@ public class RouteController {
 
     @PostMapping("upload")
     @PreAuthorize("hasAuthority('uploadRoute')")
-    public ResponseEntity<RouteDto> upload(@RequestPart MultipartFile gpxFile) throws ParserConfigurationException, SAXException, IOException, ParserConfigurationException, IOException {
-        RouteDto newEntity = routeService.upload(gpxFile);
-        return ResponseEntity.ok(newEntity);
+    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles){
+        List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
+        return ResponseEntity.ok(routeDtos);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/beach-has-service")
+@RequestMapping("/beach-has-service")
 @CrossOrigin(origins = "*")
 @PreAuthorize("hasRole('ADMIN')")
 public class BeachHasServiceController  extends GeneralizedController<BeachHasServiceDto, CreateBeachHasServiceDto> {

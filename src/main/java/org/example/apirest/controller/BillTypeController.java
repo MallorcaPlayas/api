@@ -6,7 +6,7 @@ import org.example.apirest.service.billType.BillTypeServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/billtypes")
+@RequestMapping("/billtypes")
 @CrossOrigin(origins = "*")
 public class BillTypeController extends GeneralizedController<BillTypeDto, CreateBillTypeDto> {
     public BillTypeController(BillTypeServiceImpl service) {

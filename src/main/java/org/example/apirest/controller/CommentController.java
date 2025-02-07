@@ -6,7 +6,7 @@ import org.example.apirest.service.comment.CommentServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/comments")
 @CrossOrigin(origins = "*")
 public class CommentController extends GeneralizedController<CommentDto, CreateCommentDto> {
     public CommentController(CommentServiceImpl service) {

@@ -1,6 +1,7 @@
 package org.example.apirest.service.route;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
@@ -57,17 +58,27 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
         return dtoConverter.convertDto(repository.save(route),RouteDto.class);
     }
 
-    public RouteDto upload(MultipartFile multipartFile) throws IOException, SAXException {
+    @SneakyThrows
+    public RouteDto upload(MultipartFile multipartFile){
         RouteHandler routeHandler = new RouteHandler();
+
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
         CreateRouteDto createRouteDto = routeHandler.getRoute();
+
         Route route = dtoConverter.convertToEntityFromCreateDto(createRouteDto,Route.class);
+
         List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(createRouteDto.getLocations(),Location.class);
-        System.out.println(locations);
+
         for(Location location : locations){
             location.setRoute(route);
         }
+
         route.setLocations(locations);
         return dtoConverter.convertDto(repository.save(route),RouteDto.class);
+    }
+
+    @SneakyThrows
+    public List<RouteDto> uploadList(List<MultipartFile> files) {
+        return files.stream().map(this::upload).toList();
     }
 }

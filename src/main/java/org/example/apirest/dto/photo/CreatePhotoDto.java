@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class CreatePhotoDto{
+    private String bucket;
     private String url;
 }

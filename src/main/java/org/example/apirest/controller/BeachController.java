@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/beaches")
+@RequestMapping("/beaches")
 @CrossOrigin(origins = "*")
 public class BeachController{
     private final BeachServiceImpl service;

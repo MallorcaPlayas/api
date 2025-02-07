@@ -25,7 +25,7 @@ public class UserDto extends BaseDto {
     private String email;
     private String password;
     private Date birthday;
-    private String urlPhoto;
+    private String profilePicture;
     private boolean privatePrivacy;
     private boolean state;
     private OrganizationDto organization;

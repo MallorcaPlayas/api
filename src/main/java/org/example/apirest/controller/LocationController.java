@@ -6,7 +6,7 @@ import org.example.apirest.service.location.LocationServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/locations")
+@RequestMapping("/locations")
 @CrossOrigin(origins = "*")
 public class LocationController extends GeneralizedController<LocationDto, CreateLocationDto> {
     public LocationController(LocationServiceImpl service) {

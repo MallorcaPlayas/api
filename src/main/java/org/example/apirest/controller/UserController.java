@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @CrossOrigin(origins = "*")
 // UserController: Maneja las operaciones CRUD de usuarios (registro, actualización, eliminación, etc.).
 // UserDto: Representa un usuario cuando se devuelve desde la API (por ejemplo, al consultar un usuario).
