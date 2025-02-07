@@ -1,22 +1,20 @@
 package org.example.apirest.service.beachManager;
 
-import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.beach.BeachDto;
-import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
+import org.example.apirest.model.beach.Beach;
 import org.example.apirest.repository.*;
+import org.example.apirest.repository.beach.BeachManagerRepository;
+import org.example.apirest.repository.beach.BeachRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class BeachManagerServiceImpl extends GeneralizedServiceImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto,BeachManagerRepository> {
+public class BeachManagerServiceImpl extends GeneralizedServiceImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto, BeachManagerRepository> {
 
     private final BeachRepository beachRepository;
     private final UserRepository userRepository;

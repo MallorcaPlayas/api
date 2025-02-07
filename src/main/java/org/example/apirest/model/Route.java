@@ -23,7 +23,9 @@ public class Route implements BaseEntity {
     private boolean isPrivate;
     private double distance;
     private double duration;
+    @Column(name = "elevation_asc")
     private double elevationAsc;
+    @Column(name = "elevation_desc")
     private double elevationDesc;
 
 

@@ -1,18 +1,21 @@
-package org.example.apirest.model;
+package org.example.apirest.model.beach;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.apirest.model.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table  (name = "beaches")
+@Table(name = "beaches")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Beach implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +46,10 @@ public class Beach implements BaseEntity {
 
     @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<BeachManager> usersInCharge;
+
+    @Override
+    public String toString() {
+        return "Beach{id=" + id + ", name='" + name + "', description='" + description + "'}";
+    }
+
 }

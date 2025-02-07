@@ -17,7 +17,7 @@ public class TranslationServiceMongoDB {
 
 
     public void save(TranslationMongoDB translationMongoDB) {
-        log.info("Saving translation" + translationMongoDB.getKey());
+        log.info("guardando traducciones" + translationMongoDB.getKey());
         translationRepositoryMongoDB.save(translationMongoDB);
     }
 

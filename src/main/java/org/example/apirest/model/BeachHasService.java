@@ -1,17 +1,20 @@
 package org.example.apirest.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.apirest.model.beach.Beach;
 
 import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "beach_has_service")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class BeachHasService implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +33,11 @@ public class BeachHasService implements BaseEntity {
 
     //@Column(name= "end_time")
     private LocalTime endTime;
+
+
+    // ❗ Definimos `toString()` manualmente para evitar recursión infinita
+    @Override
+    public String toString() {
+        return "BeachHasService{id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + "}";
+    }
 }

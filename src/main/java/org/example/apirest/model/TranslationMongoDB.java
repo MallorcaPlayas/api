@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Data
-@Document(collection = "traduccion")
+@Document(collection = "beaches")
 public class TranslationMongoDB {
     @Id
     String key;

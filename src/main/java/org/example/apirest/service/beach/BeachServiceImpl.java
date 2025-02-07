@@ -1,5 +1,6 @@
 package org.example.apirest.service.beach;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
@@ -11,38 +12,96 @@ import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
-import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
-import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
-import org.example.apirest.repository.*;
+import org.example.apirest.model.beach.Beach;
+import org.example.apirest.model.beach.BeachTranslation;
+import org.example.apirest.repository.TranslationRepositoryMongoDB;
+import org.example.apirest.repository.beach.BeachRepository;
+import org.example.apirest.repository.beach.BeachTranslationRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.service.beachManager.BeachManagerServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+
+@Slf4j // Sirve para poder hacer logs y verlos en consola
 
 @Service
 public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, CreateBeachDto, BeachRepository> {
+
     private final DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager;
     private final DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService;
     private final DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
     private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
 
-    public BeachServiceImpl(BeachRepository repository, 
+    private final BeachRepository beachRepository;
+    private final TranslationRepositoryMongoDB translationRepositoryMongoDB;
+
+    private final BeachTranslationRepository beachTranslationRepository;
+
+    public BeachServiceImpl(BeachRepository repository,
                             DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
                             DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
                             DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
                             DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
-                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach) {
+                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach, BeachTranslationRepository beachTranslationRepository, TranslationRepositoryMongoDB translationRepositoryMongoDB, BeachTranslationRepository beachTranslationRepository1) {
 
         super(repository, dtoConverter, Beach.class, BeachDto.class);
         this.dtoBeachManager = dtoBeachManager;
         this.dtoBeachHasService = dtoBeachHasService;
         this.dtoCamera = dtoCamera;
         this.dtoTypeBeach = dtoTypeBeach;
+        this.beachRepository = repository;
+        this.translationRepositoryMongoDB = translationRepositoryMongoDB;
+        this.beachTranslationRepository = beachTranslationRepository1;
+    }
+
+
+    public Optional<Beach> findBeachWithTranslation(Long id, String language) {
+
+        // Buscar la playa en MySQL
+        Optional<Beach> beach = beachRepository.findById(id);
+
+        System.out.println("Que playa Beach: " + beach);
+
+        if (beach.isPresent()) {
+            // Buscar la traducción en MongoDB
+            TranslationMongoDB translation = translationRepositoryMongoDB.findById("Prueba2").orElse(null);
+
+            System.out.println("Que playa translation: " + translation);
+
+            if (translation != null) {
+                // Buscar el idioma solicitado
+                LanguageMongoDb languageTranslation = translation.getLanguages()
+                        .stream()
+                        .filter(lang -> lang.getId().equalsIgnoreCase(language))
+                        .findFirst()
+                        .orElse(null);
+
+                System.out.println("Que playa languageTranslation: " + languageTranslation);
+                if (languageTranslation != null) {
+                    // Reemplazar la descripción de la playa con la traducción
+                    beach.get().setDescription(languageTranslation.getTranslate());
+                }
+            }
+        }
+        System.out.println("Que devuelvo Beach metodo findBeach " + beach);
+        return beach;
+    }
+
+    @Override
+    public BeachDto findOne(Long id) {
+        BeachDto beach = super.findOne(id);
+
+        // Buscar traducciones en MongoDB
+        BeachTranslation translation = beachTranslationRepository.findByBeachId(String.valueOf(id));
+        if (translation != null) {
+            beach.setTranslations(translation.getTranslations());
+        }
+
+        return beach;
     }
 
     @Override
@@ -81,6 +140,8 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         return dtoConverter.convertDto(repository.save(entityToInsert), BeachDto.class);
 
     }
+
+
 
     @Override
     public BeachDto update(Long id, CreateBeachDto entity) {

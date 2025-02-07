@@ -13,6 +13,7 @@ import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.model.BeachHasService;
+import org.example.apirest.model.LanguageMongoDb;
 import org.example.apirest.model.User;
 
 import java.util.List;
@@ -27,4 +28,5 @@ public class BeachDto extends BaseDto {
     private List<BeachManagerDto> usersInCharge;
     @JsonProperty("services")
     private List<BeachHasServiceDto> beachHasServiceBeach;
+    private List<LanguageMongoDb> translations; // Para devolver las traducciones
 }
