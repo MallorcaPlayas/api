@@ -17,6 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
+
 @Configuration // Le dice a Spring que esta clase contiene la configuración de seguridad
 @RequiredArgsConstructor // Crea un constructor con todos los campos requeridos, en este caso jwtAuthenticationFilter
 // SecurityConfig Decide qué rutas (URLs) son accesibles sin autenticación
@@ -32,7 +37,10 @@ public class SecurityConfig {
     @Bean
     // Este mét_odo configura cómo manejar las solicitudes entrantes
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración de CORS
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**","/usersMongoDB", "/tranduccionMongoDB", "/list").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
                         // Dejo el codigo de abajo comentado como ejemplo por si en un futuro lo uso
@@ -43,6 +51,21 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Añade un filtro llamado jwtAuthenticationFilter que intercepta todas las solicitudes y valida el token JWT antes de permitir que lleguen al resto de la aplicación. El filtro se ejecuta antes de UsernamePasswordAuthenticationFilter, que es el filtro predeterminado de Spring Security para autenticar a los usuarios con nombre de usuario y contraseña
 
         return http.build(); // Para que sirve? -> Construye la configuración de seguridad y la devuelve. Spring Security la usará para proteger la aplicación cuando se inicie la aplicación en el servidor
+    }
+
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:81")); // Dominios permitidos
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
+        configuration.setAllowedHeaders(List.of("*")); // Encabezados permitidos
+        configuration.setAllowCredentials(true); // Permitir credenciales (ej. Authorization)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
