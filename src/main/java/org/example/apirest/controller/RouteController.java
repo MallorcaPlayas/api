@@ -5,6 +5,7 @@ import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.service.route.RouteServiceImpl;
 import org.example.apirest.utils.RouteHandler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ import java.util.List;
 public class RouteController {
     private final RouteServiceImpl routeService;
 
-   public RouteController(RouteServiceImpl service) {
+    public RouteController(RouteServiceImpl service) {
         this.routeService = service;
     }
 
@@ -63,7 +64,7 @@ public class RouteController {
 
     @PostMapping("upload")
     @PreAuthorize("hasAuthority('uploadRoute')")
-    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles){
+    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles) {
         List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
         return ResponseEntity.ok(routeDtos);
     }
