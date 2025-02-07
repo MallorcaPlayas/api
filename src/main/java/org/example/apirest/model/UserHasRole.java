@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_has_rol")
+@Table(name = "user_has_role")
 public class UserHasRole implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
