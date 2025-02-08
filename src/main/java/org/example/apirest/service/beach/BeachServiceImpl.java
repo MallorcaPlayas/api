@@ -11,19 +11,17 @@ import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
-import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
-import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
+import org.example.apirest.model.beach.Beach;
+import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.*;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.service.TranslationServiceMongoDB;
-import org.example.apirest.service.beachManager.BeachManagerServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, CreateBeachDto, BeachRepository> {
@@ -54,40 +52,28 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
 
-        // Obtener todas las traducciones de MongoDB
-        List<TranslationMongoDB> translations = translationServiceMongoDB.findAll();
-
-        System.out.println("Estoy cogiendo todas las traducciones de MongoDB:");
-        for (TranslationMongoDB translation : translations) {
-            System.out.println("TranslationMongoDB: " + translation);
-        }
-
-        // Agrega logs para depuración
-        System.out.println("Buscando la playa con id: " + id);
-        System.out.println("TranslationKey de la playa: " + beach.getTranslationKey());
-
-        // Filtrar traducción específica basada en la TranslationKey de la playa
+        // Buscar la traducción específica en MongoDB para esta playa
         if (beach.getTranslationKey() != null) {
-            TranslationMongoDB translation = translations.stream()
-                    .filter(t -> t.getKey().equals(beach.getTranslationKey())) // Filtrar por clave
-                    .findFirst()
-                    .orElse(null);
-
+            BeachTranslationMongoDB translation = translationServiceMongoDB.findByKey(beach.getTranslationKey());
             if (translation != null) {
                 System.out.println("Traducción específica encontrada en MongoDB: " + translation);
 
-                // Filtrar y buscar la traducción basada en el idioma (ejemplo: "fr")
-                LanguageMongoDb translationLanguage = translation.getLanguages()
-                        .stream()
-                        .filter(lang -> lang.getId() != null && lang.getId().equals("fr")) // Cambiar idioma según necesidad
-                        .findFirst()
-                        .orElse(null);
+                // Obtener la traducción de 'description' para el idioma requerido (ejemplo: 'fr')
+                List<LanguageMongoDb> descriptionTranslations = translation.getTranslations().get("description");
+                if (descriptionTranslations != null) {
+                    LanguageMongoDb translationLanguage = descriptionTranslations.stream()
+                            .filter(lang -> lang.getId() != null && lang.getId().equals("ger")) // Cambiar idioma según necesidad
+                            .findFirst()
+                            .orElse(null);
 
-                if (translationLanguage != null) {
-                    System.out.println("Traducción en idioma 'fr': " + translationLanguage.getTranslate());
-                    beachDto.setDescription(translationLanguage.getTranslate());
+                    if (translationLanguage != null) {
+                        System.out.println("Traducción en idioma 'fr' para 'description': " + translationLanguage.getTranslate());
+                        beachDto.setDescription(translationLanguage.getTranslate());
+                    } else {
+                        System.out.println("No se encontró traducción para el idioma 'fr' en 'description'");
+                    }
                 } else {
-                    System.out.println("No se encontró traducción para el idioma 'fr'");
+                    System.out.println("'description' no tiene traducciones en el documento de MongoDB.");
                 }
             } else {
                 System.out.println("No se encontró una traducción en MongoDB para la clave: " + beach.getTranslationKey());
