@@ -17,6 +17,7 @@ import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.repository.*;
 import org.example.apirest.service.GeneralizedServiceImpl;
+import org.example.apirest.service.TranslationServiceMongoDB;
 import org.example.apirest.service.beachManager.BeachManagerServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
@@ -31,18 +32,71 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     private final DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
     private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
 
-    public BeachServiceImpl(BeachRepository repository, 
+    private final TranslationServiceMongoDB translationServiceMongoDB;
+
+    public BeachServiceImpl(BeachRepository repository,
                             DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
                             DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
                             DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
                             DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
-                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach) {
+                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach, TranslationServiceMongoDB translationServiceMongoDB) {
 
         super(repository, dtoConverter, Beach.class, BeachDto.class);
         this.dtoBeachManager = dtoBeachManager;
         this.dtoBeachHasService = dtoBeachHasService;
         this.dtoCamera = dtoCamera;
         this.dtoTypeBeach = dtoTypeBeach;
+        this.translationServiceMongoDB = translationServiceMongoDB;
+    }
+
+    @Override
+    public BeachDto findOne(Long id) {
+        Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
+        BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+
+        // Obtener todas las traducciones de MongoDB
+        List<TranslationMongoDB> translations = translationServiceMongoDB.findAll();
+
+        System.out.println("Estoy cogiendo todas las traducciones de MongoDB:");
+        for (TranslationMongoDB translation : translations) {
+            System.out.println("TranslationMongoDB: " + translation);
+        }
+
+        // Agrega logs para depuración
+        System.out.println("Buscando la playa con id: " + id);
+        System.out.println("TranslationKey de la playa: " + beach.getTranslationKey());
+
+        // Filtrar traducción específica basada en la TranslationKey de la playa
+        if (beach.getTranslationKey() != null) {
+            TranslationMongoDB translation = translations.stream()
+                    .filter(t -> t.getKey().equals(beach.getTranslationKey())) // Filtrar por clave
+                    .findFirst()
+                    .orElse(null);
+
+            if (translation != null) {
+                System.out.println("Traducción específica encontrada en MongoDB: " + translation);
+
+                // Filtrar y buscar la traducción basada en el idioma (ejemplo: "fr")
+                LanguageMongoDb translationLanguage = translation.getLanguages()
+                        .stream()
+                        .filter(lang -> lang.getId() != null && lang.getId().equals("fr")) // Cambiar idioma según necesidad
+                        .findFirst()
+                        .orElse(null);
+
+                if (translationLanguage != null) {
+                    System.out.println("Traducción en idioma 'fr': " + translationLanguage.getTranslate());
+                    beachDto.setDescription(translationLanguage.getTranslate());
+                } else {
+                    System.out.println("No se encontró traducción para el idioma 'fr'");
+                }
+            } else {
+                System.out.println("No se encontró una traducción en MongoDB para la clave: " + beach.getTranslationKey());
+            }
+        } else {
+            System.out.println("La playa no tiene TranslationKey");
+        }
+
+        return beachDto;
     }
 
     @Override
