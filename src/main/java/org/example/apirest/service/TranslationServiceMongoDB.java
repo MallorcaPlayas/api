@@ -2,7 +2,7 @@ package org.example.apirest.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.apirest.model.TranslationMongoDB;
+import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.TranslationRepositoryMongoDB;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,16 @@ public class TranslationServiceMongoDB {
     private final TranslationRepositoryMongoDB translationRepositoryMongoDB;
 
 
-    public void save(TranslationMongoDB translationMongoDB) {
+    public void save(BeachTranslationMongoDB translationMongoDB) {
         log.info("Saving translation" + translationMongoDB.getKey());
         translationRepositoryMongoDB.save(translationMongoDB);
     }
 
-    public List<TranslationMongoDB> findAll() {
+    public List<BeachTranslationMongoDB> findAll() {
         return translationRepositoryMongoDB.findAll();
+    }
+
+    public BeachTranslationMongoDB findByKey(String key) {
+        return translationRepositoryMongoDB.findByKey(key);
     }
 }

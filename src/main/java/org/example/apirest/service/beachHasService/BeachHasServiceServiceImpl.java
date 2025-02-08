@@ -1,17 +1,15 @@
 package org.example.apirest.service.beachHasService;
 
-import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
 import org.example.apirest.dto.beachHasService.CreateBeachHasServiceDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
+import org.example.apirest.model.beach.Beach;
 import org.example.apirest.repository.*;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BeachHasServiceServiceImpl extends GeneralizedServiceImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto, BeachHasServiceRepository> {

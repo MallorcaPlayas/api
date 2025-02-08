@@ -6,9 +6,6 @@ import org.example.apirest.dto.BaseDto;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.user.UserDto;
-import org.example.apirest.model.Beach;
-import org.example.apirest.model.Route;
-import org.example.apirest.model.User;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
