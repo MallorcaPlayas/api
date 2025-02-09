@@ -46,41 +46,28 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         this.beachTranslationMongoService = translationServiceMongoDB;
     }
 
-    @Override
-    public BeachDto findOne(Long id) {
+
+    public BeachDto findOneTranslate(Long id, String requestedLanguage) {
         Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
-
         // Buscar la traducción específica en MongoDB para esta playa
-        if (beach.getTranslationKey() != null) {
-            BeachTranslationMongoDB translation = translationServiceMongoDB.findByKey(beach.getTranslationKey());
-            if (translation != null) {
-                System.out.println("Traducción específica encontrada en MongoDB: " + translation);
+        // Indico el id de la playa para buscar la traducción específica en MongoDB
+        // todos los documentos en MongoDB tienen la clave 'beach_' + id
+        BeachTranslationMongoDB beachTranslationData = beachTranslationMongoService.findByKey("beach_" + id);
+        if (beachTranslationData != null) {
+            // Obtener la traducción de 'description' para el idioma requerido (ejemplo: 'ger')
+            List<LanguageMongoDb> descriptionTranslations = beachTranslationData.getTranslations().get("description");
+            if (descriptionTranslations != null) {
+                LanguageMongoDb translationLanguage = descriptionTranslations.stream()
+                        .filter(lang -> lang.getId() != null && lang.getId().equals(requestedLanguage)) // Cambiar idioma según necesidad
+                        .findFirst()
+                        .orElse(null);
 
-                // Obtener la traducción de 'description' para el idioma requerido (ejemplo: 'fr')
-                List<LanguageMongoDb> descriptionTranslations = translation.getTranslations().get("description");
-                if (descriptionTranslations != null) {
-                    LanguageMongoDb translationLanguage = descriptionTranslations.stream()
-                            .filter(lang -> lang.getId() != null && lang.getId().equals("ger")) // Cambiar idioma según necesidad
-                            .findFirst()
-                            .orElse(null);
-
-                    if (translationLanguage != null) {
-                        System.out.println("Traducción en idioma 'fr' para 'description': " + translationLanguage.getTranslate());
-                        beachDto.setDescription(translationLanguage.getTranslate());
-                    } else {
-                        System.out.println("No se encontró traducción para el idioma 'fr' en 'description'");
-                    }
-                } else {
-                    System.out.println("'description' no tiene traducciones en el documento de MongoDB.");
+                if (translationLanguage != null) {
+                    beachDto.setDescription(translationLanguage.getTranslate());
                 }
-            } else {
-                System.out.println("No se encontró una traducción en MongoDB para la clave: " + beach.getTranslationKey());
             }
-        } else {
-            System.out.println("La playa no tiene TranslationKey");
         }
-
         return beachDto;
     }
 

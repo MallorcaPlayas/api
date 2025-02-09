@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/beaches")
 @CrossOrigin(origins = "*")
-public class BeachController{
+public class BeachController {
     private final BeachServiceImpl service;
 
     public BeachController(BeachServiceImpl service) {
@@ -27,10 +27,11 @@ public class BeachController{
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("/{id}")
+    // para usarlo en postman: 127.0.0.1:8080/beaches/1/translated?language=en
+    @GetMapping("/{id}/translated")
     @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<BeachDto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
+    public ResponseEntity<BeachDto> show(@PathVariable Long id, @RequestParam String requestedLanguage) {
+        return ResponseEntity.ok(service.findOneTranslate(id, requestedLanguage));
     }
 
     @PostMapping
