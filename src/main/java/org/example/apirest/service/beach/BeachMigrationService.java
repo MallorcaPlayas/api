@@ -25,7 +25,7 @@ public class BeachMigrationService {
     public void migrateMySQLToMongo() {
         String mysqlUrl = "jdbc:mysql://localhost:3306/mallorca-playas";
         String mysqlUser = "root";
-        String mysqlPassword = "password";
+        String mysqlPassword = "root";
 
         try (Connection connection = DriverManager.getConnection(mysqlUrl, mysqlUser, mysqlPassword)) {
             String query = "SELECT id, description FROM beaches";
