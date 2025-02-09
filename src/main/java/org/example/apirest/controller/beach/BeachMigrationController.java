@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class BeachMigrationController {
     private final BeachMigrationService beachMigrationService;
 
+    // Sirve para coger todos los datos de la base de datos MySQL y pasarlos a la base de datos MongoDB
+    // En este caso solo vamos a migrar las descripciones
     @GetMapping("/migrate")
     public String migrateData() {
         beachMigrationService.migrateMySQLToMongo();
