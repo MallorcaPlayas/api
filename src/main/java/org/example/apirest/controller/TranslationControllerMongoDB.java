@@ -2,11 +2,8 @@ package org.example.apirest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.model.LanguageMongoDb;
-import org.example.apirest.model.TranslationMongoDB;
-import org.example.apirest.model.UserMongoDB;
-import org.example.apirest.repository.TranslationRepositoryMongoDB;
+import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.service.TranslationServiceMongoDB;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +21,7 @@ public class TranslationControllerMongoDB {
     // TODO en mongo puedo guardar un Json con los idiomas y las traducciones
     @GetMapping("/tranduccionMongoDB")
     public ResponseEntity<String> desar(){
-        TranslationMongoDB translationMongoDB = new TranslationMongoDB();
+        BeachTranslationMongoDB translationMongoDB = new BeachTranslationMongoDB();
 
         translationMongoDB.setKey("Prueba2");
 
@@ -47,7 +44,7 @@ public class TranslationControllerMongoDB {
         idiomas.add(traduccioEN);
         idiomas.add(traduccioCat);
 
-        translationMongoDB.setLanguages(idiomas);
+//        translationMongoDB.setLanguages(idiomas);
 
 
         translationServiceMongoDB.save(translationMongoDB);
@@ -56,7 +53,7 @@ public class TranslationControllerMongoDB {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<TranslationMongoDB>> list(){
+    public ResponseEntity<List<BeachTranslationMongoDB>> list(){
 
         return ResponseEntity.ok(translationServiceMongoDB.findAll());
     }
