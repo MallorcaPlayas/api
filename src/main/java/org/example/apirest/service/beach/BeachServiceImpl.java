@@ -21,6 +21,7 @@ import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, CreateBeachDto, BeachRepository> {
@@ -70,6 +71,41 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         }
         return beachDto;
     }
+
+
+    public List<BeachDto> findAllTranslate(String requestedLanguage) {
+        // Obtener todas las playas desde MySQL
+        List<Beach> beaches = repository.findAll();
+
+        // Convertir las playas a DTOs y añadir traducciones
+        List<BeachDto> translatedBeaches = beaches.stream().map(beach -> {
+            BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+
+            // Buscar la traducción específica en MongoDB para esta playa
+            String translationKey = "beach_" + beach.getId(); // Clave en MongoDB
+            BeachTranslationMongoDB beachTranslationData = beachTranslationMongoService.findByKey(translationKey);
+
+            if (beachTranslationData != null) {
+                // Obtener la traducción de 'description' para el idioma requerido
+                List<LanguageMongoDb> descriptionTranslations = beachTranslationData.getTranslations().get("description");
+                if (descriptionTranslations != null) {
+                    LanguageMongoDb translationLanguage = descriptionTranslations.stream()
+                            .filter(lang -> lang.getId() != null && lang.getId().equals(requestedLanguage))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (translationLanguage != null) {
+                        beachDto.setDescription(translationLanguage.getTranslate());
+                    }
+                }
+            }
+
+            return beachDto; // Retornar la playa con la descripción traducida
+        }).collect(Collectors.toList());
+
+        return translatedBeaches; // Lista de todas las playas con descripciones traducidas
+    }
+
 
     @Override
     public BeachDto save(CreateBeachDto entity) {
