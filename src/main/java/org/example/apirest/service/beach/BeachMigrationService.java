@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 import java.util.Map;
 
@@ -18,14 +19,22 @@ import java.util.Map;
 public class BeachMigrationService {
     private final BeachTranslationMongoRepository beachTranslationMongoRepository;
 
+
+    @Value("${spring.datasource.url}")
+    private String mysqlUrl;
+
+    @Value("${spring.datasource.username}")
+    private String mysqlUser;
+
+    @Value("${spring.datasource.password}")
+    private String mysqlPassword;
+
     public BeachMigrationService(BeachTranslationMongoRepository beachTranslationMongoRepository) {
         this.beachTranslationMongoRepository = beachTranslationMongoRepository;
     }
 
     public void migrateMySQLToMongo() {
-        String mysqlUrl = "jdbc:mysql://localhost:3306/mallorca-playas";
-        String mysqlUser = "root";
-        String mysqlPassword = "root";
+
 
         try (Connection connection = DriverManager.getConnection(mysqlUrl, mysqlUser, mysqlPassword)) {
             String query = "SELECT id, description FROM beaches";
