@@ -1,9 +1,9 @@
-package org.example.apirest.service;
+package org.example.apirest.service.beach;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
-import org.example.apirest.repository.TranslationRepositoryMongoDB;
+import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,21 +11,21 @@ import java.util.List;
 @Slf4j // Sirve para poder hacer logs y verlos en consola
 @Service
 @RequiredArgsConstructor
-public class TranslationServiceMongoDB {
+public class BeachTranslationMongoService {
 
-    private final TranslationRepositoryMongoDB translationRepositoryMongoDB;
+    private final BeachTranslationMongoRepository beachTranslationMongoRepository;
 
 
     public void save(BeachTranslationMongoDB translationMongoDB) {
         log.info("Saving translation" + translationMongoDB.getKey());
-        translationRepositoryMongoDB.save(translationMongoDB);
+        beachTranslationMongoRepository.save(translationMongoDB);
     }
 
     public List<BeachTranslationMongoDB> findAll() {
-        return translationRepositoryMongoDB.findAll();
+        return beachTranslationMongoRepository.findAll();
     }
 
     public BeachTranslationMongoDB findByKey(String key) {
-        return translationRepositoryMongoDB.findByKey(key);
+        return beachTranslationMongoRepository.findByKey(key);
     }
 }

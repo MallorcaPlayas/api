@@ -1,10 +1,10 @@
-package org.example.apirest.repository;
+package org.example.apirest.repository.beach;
 
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TranslationRepositoryMongoDB extends MongoRepository<BeachTranslationMongoDB, String> {
+public interface BeachTranslationMongoRepository extends MongoRepository<BeachTranslationMongoDB, String> {
     BeachTranslationMongoDB findByKey(String key);
 }

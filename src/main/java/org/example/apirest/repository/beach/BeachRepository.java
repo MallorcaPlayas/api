@@ -1,4 +1,4 @@
-package org.example.apirest.repository;
+package org.example.apirest.repository.beach;
 
 import org.example.apirest.model.beach.Beach;
 import org.springframework.data.jpa.repository.JpaRepository;

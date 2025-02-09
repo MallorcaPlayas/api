@@ -15,9 +15,8 @@ import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.model.beach.Beach;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
-import org.example.apirest.repository.*;
+import org.example.apirest.repository.beach.BeachRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.service.TranslationServiceMongoDB;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
@@ -30,21 +29,21 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     private final DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
     private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
 
-    private final TranslationServiceMongoDB translationServiceMongoDB;
+    private final BeachTranslationMongoService beachTranslationMongoService;
 
     public BeachServiceImpl(BeachRepository repository,
                             DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
                             DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
                             DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
                             DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
-                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach, TranslationServiceMongoDB translationServiceMongoDB) {
+                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach, BeachTranslationMongoService translationServiceMongoDB) {
 
         super(repository, dtoConverter, Beach.class, BeachDto.class);
         this.dtoBeachManager = dtoBeachManager;
         this.dtoBeachHasService = dtoBeachHasService;
         this.dtoCamera = dtoCamera;
         this.dtoTypeBeach = dtoTypeBeach;
-        this.translationServiceMongoDB = translationServiceMongoDB;
+        this.beachTranslationMongoService = translationServiceMongoDB;
     }
 
     @Override

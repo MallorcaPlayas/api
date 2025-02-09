@@ -7,6 +7,8 @@ import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.model.beach.Beach;
 import org.example.apirest.repository.*;
+import org.example.apirest.repository.beach.BeachHasServiceRepository;
+import org.example.apirest.repository.beach.BeachRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
