@@ -1,10 +1,11 @@
-package org.example.apirest.model;
+package org.example.apirest.model.beach;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.apirest.model.*;
 
 import java.util.List;
 
