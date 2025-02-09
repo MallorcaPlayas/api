@@ -69,7 +69,7 @@ public class BeachMigrationService {
         }
     }
 
-    public void translateDescriptionsToEnglish() {
+    public void translateDescriptionsToLanguage(String languageToTranslate) {
         // Recuperar todos los documentos desde MongoDB
         List<BeachTranslationMongoDB> allBeaches = beachTranslationMongoRepository.findAll();
 
@@ -87,12 +87,12 @@ public class BeachMigrationService {
                     String textToTranslate = spanishDescription.getTranslate();
 
                     // Traducir al inglés usando TraductorService
-                    String translatedText = traductorService.translateText(textToTranslate, "es", "en");
+                    String translatedText = traductorService.translateText(textToTranslate, "es", languageToTranslate);
 
                     if (translatedText != null && !translatedText.isEmpty()) {
                         // Crear el objeto para la traducción al inglés
                         LanguageMongoDb englishDescription = new LanguageMongoDb();
-                        englishDescription.setId("en");
+                        englishDescription.setId(languageToTranslate);
                         englishDescription.setTranslate(translatedText);
 
                         // Agregar la traducción al campo 'description'
