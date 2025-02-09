@@ -27,15 +27,18 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
-        AwsCredentials credentials = AwsSessionCredentials.create(
+        return S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials()))
+                .build();
+    }
+
+    @Bean
+    public AwsCredentials awsCredentials() {
+        return AwsSessionCredentials.create(
                 accessKey,
                 secretKey,
                 sessionToken
         );
-
-        return S3Client.builder()
-                .region(Region.of(region))
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .build();
     }
 }

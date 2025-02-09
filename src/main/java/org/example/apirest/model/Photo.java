@@ -17,5 +17,5 @@ public class Photo implements BaseEntity {
 
     private String bucket;
 
-    private String url;
+    private String path;
 }
