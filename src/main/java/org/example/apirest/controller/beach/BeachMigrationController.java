@@ -17,4 +17,11 @@ public class BeachMigrationController {
         beachMigrationService.migrateMySQLToMongo();
         return "Datos migrados exitosamente de MySQL a MongoDB.";
     }
+
+
+    @GetMapping("/translate-descriptions")
+    public String translateDescriptionsToEnglish() {
+        beachMigrationService.translateDescriptionsToEnglish();
+        return "Traducciones al inglés completadas.";
+    }
 }
