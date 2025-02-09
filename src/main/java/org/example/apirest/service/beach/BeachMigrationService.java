@@ -1,18 +1,16 @@
 package org.example.apirest.service.beach;
 
-import lombok.RequiredArgsConstructor;
 import org.example.apirest.model.LanguageMongoDb;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
 import org.example.apirest.service.TraductorService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 import java.util.Map;
 
@@ -79,8 +77,9 @@ public class BeachMigrationService {
             if (beach.getTranslations() != null && beach.getTranslations().containsKey("description")) {
                 // Obtener la traducción en español
                 List<LanguageMongoDb> descriptions = beach.getTranslations().get("description");
+
                 LanguageMongoDb spanishDescription = descriptions.stream()
-                        .filter(desc -> "es".equals(desc.getId())) // Encontrar la descripción en español
+                        .filter(language -> "es".equals(language.getId())) // Encontrar la descripción en español
                         .findFirst()
                         .orElse(null);
 
