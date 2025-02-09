@@ -3,6 +3,7 @@ package org.example.apirest.service;
 
 import org.example.apirest.model.LanguageMongoDb;
 import org.example.apirest.model.Lenguaje;
+import org.example.apirest.model.TranslationRequestBody;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,7 +21,6 @@ public class TraductorService {
     private final String baseUrl = "https://theteacher.codiblau.com";
 
     public String translateText(String text, String origen, String translated) {
-        System.out.println("Traduciendo: " + text + " de " + origen + " a " + translated);
 
         if (text == null || text.isEmpty()) {
             return "";
@@ -47,40 +47,4 @@ public class TraductorService {
         return restTemplate.postForObject(url, request, String.class);
     }
 
-    // Clase interna para representar el cuerpo de la solicitud
-    private static class TranslationRequestBody {
-        private String languageFrom;
-        private String languageTo;
-        private String text;
-
-        public TranslationRequestBody(String languageFrom, String languageTo, String text) {
-            this.languageFrom = languageFrom;
-            this.languageTo = languageTo;
-            this.text = text;
-        }
-
-        public String getLanguageFrom() {
-            return languageFrom;
-        }
-
-        public void setLanguageFrom(String languageFrom) {
-            this.languageFrom = languageFrom;
-        }
-
-        public String getLanguageTo() {
-            return languageTo;
-        }
-
-        public void setLanguageTo(String languageTo) {
-            this.languageTo = languageTo;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-    }
 }

@@ -18,6 +18,8 @@ public class TraductorController {
         this.translatorService = translatorService;
     }
 
+    // Ejemplo de uso en postman:
+    // 127.0.0.1:8080/translator/translate?text=Hola&origen=es&translated=en
     @GetMapping("/translate")
     public String translate(
             @RequestParam String text,
