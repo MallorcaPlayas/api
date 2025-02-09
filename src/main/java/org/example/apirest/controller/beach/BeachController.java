@@ -54,10 +54,11 @@ public class BeachController {
         return ResponseEntity.ok(updated);
     }
 
+    // Puedes borrar el registro de mysql y mongo
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('deleteBeach')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        service.delete(id);
+        service.deleteTranslate(id);
     }
 }

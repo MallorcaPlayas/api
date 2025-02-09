@@ -186,4 +186,14 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
         return dtoConverter.convertDto(repository.save(old), BeachDto.class);
     }
+
+    public void deleteTranslate(Long id) {
+        // Eliminar el registro en MySQL
+        Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
+        repository.delete(beach);
+
+        // Eliminar el documento relacionado en MongoDB
+        String mongoKey = "beach_" + id; // Construir la clave utilizada en MongoDB
+        beachTranslationMongoService.deleteByKey(mongoKey); // Llama al servicio de Mongo para eliminar el documento
+    }
 }

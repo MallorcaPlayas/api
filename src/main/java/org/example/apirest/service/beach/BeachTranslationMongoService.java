@@ -28,4 +28,11 @@ public class BeachTranslationMongoService {
     public BeachTranslationMongoDB findByKey(String key) {
         return beachTranslationMongoRepository.findByKey(key);
     }
+
+    public void deleteByKey(String key) {
+        BeachTranslationMongoDB document = beachTranslationMongoRepository.findByKey(key);
+        if (document != null) {
+            beachTranslationMongoRepository.delete(document);
+        }
+    }
 }
