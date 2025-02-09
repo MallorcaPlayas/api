@@ -144,6 +144,53 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
     }
 
+
+    public BeachDto saveWithTranslate(CreateBeachDto createBeachDto) {
+        // Convertir la DTO de entrada en una entidad `Beach`
+        Beach entityToInsert = dtoConverter.convertToEntityFromCreateDto(createBeachDto, Beach.class);
+
+        // Configurar relaciones (tipos, usuarios, servicios, cámaras)
+        if (createBeachDto.getTypes() != null) {
+            List<TypeBeach> typeBeaches = dtoTypeBeach.convertToEntityListFromDto(createBeachDto.getTypes(), TypeBeach.class);
+            entityToInsert.setTypes(typeBeaches);
+        }
+
+        if (createBeachDto.getUsersInCharge() != null) {
+            List<BeachManager> managers = dtoBeachManager.convertToEntityListFromCreateDto(createBeachDto.getUsersInCharge(), BeachManager.class);
+            for (BeachManager manager : managers) {
+                manager.setBeach(entityToInsert);
+            }
+            entityToInsert.setUsersInCharge(managers);
+        }
+
+        if (createBeachDto.getBeachHasServiceBeach() != null) {
+            List<BeachHasService> services = dtoBeachHasService.convertToEntityListFromCreateDto(createBeachDto.getBeachHasServiceBeach(), BeachHasService.class);
+            for (BeachHasService service : services) {
+                service.setBeach(entityToInsert);
+            }
+            entityToInsert.setBeachHasServiceBeach(services);
+        }
+
+        if (createBeachDto.getCameras() != null) {
+            List<Camera> cameras = dtoCamera.convertToEntityListFromCreateDto(createBeachDto.getCameras(), Camera.class);
+            for (Camera camera : cameras) {
+                camera.setBeach(entityToInsert);
+            }
+            entityToInsert.setCameras(cameras);
+        }
+
+        // Guardar la playa en MySQL
+        Beach savedEntity = repository.save(entityToInsert);
+
+        // Crear las traducciones en MongoDB
+        beachTranslationMongoService.createTranslationsInMongoForEnglishAndGerman(savedEntity);
+
+        // Convertir la entidad guardada en DTO y devolverla
+        return dtoConverter.convertDto(savedEntity, BeachDto.class);
+    }
+
+
+
     @Override
     public BeachDto update(Long id, CreateBeachDto entity) {
         Beach old = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));

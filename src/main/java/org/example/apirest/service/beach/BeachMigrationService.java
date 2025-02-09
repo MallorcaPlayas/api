@@ -69,7 +69,7 @@ public class BeachMigrationService {
         }
     }
 
-    public void translateDescriptionsToLanguage(String languageToTranslate) {
+    public void translateDescriptionsForAllBeachesToLanguage(String languageToTranslate) {
         // Recuperar todos los documentos desde MongoDB
         List<BeachTranslationMongoDB> allBeaches = beachTranslationMongoRepository.findAll();
 

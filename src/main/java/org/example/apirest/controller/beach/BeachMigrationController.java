@@ -25,7 +25,7 @@ public class BeachMigrationController {
     // 127.0.0.1:8080/translate-descriptions?targetLanguage=de
     @GetMapping("/translate-descriptions")
     public String translateDescriptions(@RequestParam String targetLanguage) {
-        beachMigrationService.translateDescriptionsToLanguage(targetLanguage);
+        beachMigrationService.translateDescriptionsForAllBeachesToLanguage(targetLanguage);
         return "Traducciones al " + targetLanguage + " completadas.";
     }
 }

@@ -43,7 +43,7 @@ public class BeachController {
     @PostMapping
     @PreAuthorize("hasAuthority('createBeach')")
     public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto entity) {
-        BeachDto newEntity = service.save(entity);
+        BeachDto newEntity = service.saveWithTranslate(entity);
         return ResponseEntity.ok(newEntity);
     }
 
