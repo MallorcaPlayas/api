@@ -66,6 +66,9 @@ public class RouteHandler extends DefaultHandler {
                 this.route.getLocations().add(this.currentLocation);
                 break;
             case ELEVATION:
+                if (this.currentLocation == null) {
+                    return;
+                }
                 currentLocation.setElevation(Double.parseDouble(elementValue.toString()));
                 break;
             case TIME:

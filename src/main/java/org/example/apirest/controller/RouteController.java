@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/routes")
+@RequestMapping("/routes")
 @CrossOrigin(origins = "*")
 public class RouteController {
     private final RouteServiceImpl routeService;
