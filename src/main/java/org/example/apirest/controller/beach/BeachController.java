@@ -1,4 +1,4 @@
-package org.example.apirest.controller;
+package org.example.apirest.controller.beach;
 
 
 import org.example.apirest.dto.beach.BeachDto;
