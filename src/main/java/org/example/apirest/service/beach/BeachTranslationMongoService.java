@@ -1,5 +1,6 @@
 package org.example.apirest.service.beach;
 
+import com.fasterxml.jackson.databind.type.LogicalType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.apirest.model.LanguageMongoDb;
@@ -76,5 +77,92 @@ public class BeachTranslationMongoService {
 
         // Guardar la traducción en MongoDB
         beachTranslationMongoRepository.save(beachTranslation);
+    }
+
+    public void updateTranslationsInMongo(Long beachId, String newDescription) {
+        String mongoKey = "beach_" + beachId;
+
+        // Recuperar el documento relacionado en MongoDB
+        BeachTranslationMongoDB mongoTranslation = beachTranslationMongoRepository.findByKey(mongoKey);
+
+        System.out.println("He recuperado la info de mongo? " + mongoTranslation);
+        if (mongoTranslation != null) {
+            // Actualizar la traducción en español
+            List<LanguageMongoDb> descriptions = mongoTranslation.getTranslations().get("description");
+            if (descriptions != null) {
+                LanguageMongoDb spanishTranslation = descriptions.stream()
+                        .filter(lang -> "es".equals(lang.getId()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (spanishTranslation != null) {
+                    spanishTranslation.setTranslate(newDescription);
+                } else {
+                    // Crear una nueva traducción en español si no existe
+                    spanishTranslation = new LanguageMongoDb();
+                    spanishTranslation.setId("es");
+                    spanishTranslation.setTranslate(newDescription);
+                    descriptions.add(spanishTranslation);
+                }
+
+                // Actualizar las traducciones en otros idiomas
+                LanguageMongoDb englishTranslation = descriptions.stream()
+                        .filter(lang -> "en".equals(lang.getId()))
+                        .findFirst()
+                        .orElse(null);
+                if (englishTranslation != null) {
+                    englishTranslation.setTranslate(traductorService.translateText(newDescription, "es", "en"));
+                } else {
+                    englishTranslation = new LanguageMongoDb();
+                    englishTranslation.setId("en");
+                    englishTranslation.setTranslate(traductorService.translateText(newDescription, "es", "en"));
+                    descriptions.add(englishTranslation);
+                }
+
+                LanguageMongoDb germanTranslation = descriptions.stream()
+                        .filter(lang -> "de".equals(lang.getId()))
+                        .findFirst()
+                        .orElse(null);
+                if (germanTranslation != null) {
+                    germanTranslation.setTranslate(traductorService.translateText(newDescription, "es", "de"));
+                }else {
+                    germanTranslation = new LanguageMongoDb();
+                    germanTranslation.setId("de");
+                    germanTranslation.setTranslate(traductorService.translateText(newDescription, "es", "de"));
+                    descriptions.add(germanTranslation);
+
+                    System.out.println("He traducido correctamente al aleman? " + germanTranslation.getTranslate());
+                }
+
+                // Guardar los cambios en MongoDB
+                mongoTranslation.getTranslations().put("description", descriptions);
+                beachTranslationMongoRepository.save(mongoTranslation);
+
+            }
+        } else {
+            // Si no existe el documento en MongoDB, crearlo
+            BeachTranslationMongoDB newTranslation = new BeachTranslationMongoDB();
+            newTranslation.setKey(mongoKey);
+            newTranslation.setValue("updated translation");
+
+            LanguageMongoDb spanishTranslation = new LanguageMongoDb();
+            spanishTranslation.setId("es");
+            spanishTranslation.setTranslate(newDescription);
+
+            LanguageMongoDb englishTranslation = new LanguageMongoDb();
+            englishTranslation.setId("en");
+            englishTranslation.setTranslate(traductorService.translateText(newDescription, "es", "en"));
+
+            LanguageMongoDb germanTranslation = new LanguageMongoDb();
+            germanTranslation.setId("de");
+            germanTranslation.setTranslate(traductorService.translateText(newDescription, "es", "de"));
+
+            newTranslation.setTranslations(Map.of(
+                    "description", List.of(spanishTranslation, englishTranslation, germanTranslation)
+            ));
+
+            // Guardar el nuevo documento en MongoDB
+            beachTranslationMongoRepository.save(newTranslation);
+        }
     }
 }

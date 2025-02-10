@@ -50,7 +50,7 @@ public class BeachController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('updateBeach')")
     public ResponseEntity<BeachDto> update(@RequestBody CreateBeachDto entity, @PathVariable Long id) {
-        BeachDto updated = service.update(id, entity);
+        BeachDto updated = service.updateWithTranslate(id, entity);
         return ResponseEntity.ok(updated);
     }
 

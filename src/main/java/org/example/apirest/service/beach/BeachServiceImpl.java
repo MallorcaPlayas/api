@@ -191,10 +191,13 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
 
 
-    @Override
-    public BeachDto update(Long id, CreateBeachDto entity) {
+    public BeachDto updateWithTranslate(Long id, CreateBeachDto entity) {
         Beach old = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         Beach newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
+
+        if (!old.getDescription().equals(entity.getDescription())) {
+            beachTranslationMongoService.updateTranslationsInMongo(id, entity.getDescription());
+        }
 
         UtilsClass.updateFields(old, newEntity);
 
