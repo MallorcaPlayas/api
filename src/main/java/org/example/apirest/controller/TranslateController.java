@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/translator")
 public class TranslateController {
 
-    private final TranslatorProvider translatorService;
+    private final TranslatorProvider translatorProvider;
 
     public TranslateController(TranslatorProvider translatorService) {
-        this.translatorService = translatorService;
+        this.translatorProvider = translatorService;
     }
 
     // Ejemplo de uso en postman:
@@ -24,6 +24,6 @@ public class TranslateController {
             @RequestParam String text,
             @RequestParam String origen,
             @RequestParam String translated) {
-        return translatorService.translateText(text, origen, translated);
+        return translatorProvider.translateText(text, origen, translated);
     }
 }
