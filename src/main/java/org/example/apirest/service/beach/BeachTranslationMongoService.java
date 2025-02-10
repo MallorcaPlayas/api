@@ -6,7 +6,7 @@ import org.example.apirest.model.LanguageMongoDb;
 import org.example.apirest.model.beach.Beach;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
-import org.example.apirest.service.TraductorService;
+import org.example.apirest.service.TranslatorProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class BeachTranslationMongoService {
 
     private final BeachTranslationMongoRepository beachTranslationMongoRepository;
-    private final TraductorService traductorService;
+    private final TranslatorProvider traductorService;
 
 
     public void save(BeachTranslationMongoDB translationMongoDB) {

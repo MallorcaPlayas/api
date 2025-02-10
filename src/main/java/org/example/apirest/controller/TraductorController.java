@@ -1,7 +1,7 @@
 package org.example.apirest.controller;
 
 
-import org.example.apirest.service.TraductorService;
+import org.example.apirest.service.TranslatorProvider;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/translator")
 public class TraductorController {
 
-    private final TraductorService translatorService;
+    private final TranslatorProvider translatorService;
 
-    public TraductorController(TraductorService translatorService) {
+    public TraductorController(TranslatorProvider translatorService) {
         this.translatorService = translatorService;
     }
 

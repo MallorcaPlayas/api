@@ -3,7 +3,7 @@ package org.example.apirest.service.beach;
 import org.example.apirest.model.LanguageMongoDb;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
-import org.example.apirest.service.TraductorService;
+import org.example.apirest.service.TranslatorProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class BeachMigrationService {
     private final BeachTranslationMongoRepository beachTranslationMongoRepository;
-    private final TraductorService traductorService;
+    private final TranslatorProvider traductorService;
 
 
     @Value("${spring.datasource.url}")
@@ -29,7 +29,7 @@ public class BeachMigrationService {
     @Value("${spring.datasource.password}")
     private String mysqlPassword;
 
-    public BeachMigrationService(BeachTranslationMongoRepository beachTranslationMongoRepository, TraductorService traductorService) {
+    public BeachMigrationService(BeachTranslationMongoRepository beachTranslationMongoRepository, TranslatorProvider traductorService) {
         this.beachTranslationMongoRepository = beachTranslationMongoRepository;
         this.traductorService = traductorService;
     }
@@ -63,7 +63,7 @@ public class BeachMigrationService {
                 beachTranslationMongoRepository.save(beachTranslation);
             }
 
-            System.out.println("Datos migrados exitosamente de MySQL a MongoDB.");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class TraductorService {
+public class TranslatorProvider {
 
     private final String baseUrl = "https://theteacher.codiblau.com";
 
