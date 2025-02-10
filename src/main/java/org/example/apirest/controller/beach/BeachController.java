@@ -21,8 +21,8 @@ public class BeachController {
         this.service = service;
     }
 
-    // para usarlo en postman: 127.0.0.1:8080/beaches/?language=de
-    @GetMapping("/")
+    // para usarlo en postman: 127.0.0.1:8080/beaches?language=es
+    @GetMapping
 //    @PreAuthorize("hasAuthority('readBeach')")
     public ResponseEntity<List<BeachDto>> index( @RequestParam(defaultValue = "de") String language) {
         return ResponseEntity.ok(service.findAllTranslate(language));
