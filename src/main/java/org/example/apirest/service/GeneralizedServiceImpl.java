@@ -6,6 +6,7 @@ import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
 import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.BaseEntity;
+import org.example.apirest.model.Photo;
 import org.example.apirest.model.UserHasRole;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 @RequiredArgsConstructor
-    public class GeneralizedServiceImpl<Entity extends BaseEntity,Dto,CreateDto, R extends JpaRepository<Entity,Long>>
+    public class  GeneralizedServiceImpl<Entity extends BaseEntity,Dto,CreateDto, R extends JpaRepository<Entity,Long>>
         implements GeneralizedService<Dto,CreateDto> {
 
     protected final R repository;

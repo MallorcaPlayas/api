@@ -1,8 +1,11 @@
 package org.example.apirest.dto.location;
 
 import lombok.Data;
+import org.example.apirest.dto.photo.CreatePhotoDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class CreateLocationDto{
@@ -11,4 +14,6 @@ public class CreateLocationDto{
     private Double elevation;
     private LocalDateTime time;
     private Long routeId;
+    private Long beachId;
+    private List<CreatePhotoDto> photos;
 }

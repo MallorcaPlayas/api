@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -13,10 +14,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "locations")
 public class Location implements BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Double latitude;
     private Double longitude;
     private Double elevation;
@@ -25,4 +26,11 @@ public class Location implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "route_id")
     private Route route;
+
+    @OneToOne
+    @JoinColumn(name = "beach_id")
+    private Beach beach;
+
+    @OneToMany(mappedBy = "location")
+    private List<Photo> photos;
 }

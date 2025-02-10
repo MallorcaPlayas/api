@@ -23,8 +23,8 @@ import java.util.List;
 @Service
 public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, CreatePhotoDto, PhotoRepository> {
 
-    private final String PUBLIC_BUCKET = "mallorca-playas-public";
-    private final String PRIVATE_BUCKET = "mallorca-playas-private";
+    private static final String PUBLIC_BUCKET = "mallorca-playas-public";
+    private static final String PRIVATE_BUCKET = "mallorca-playas-private";
 
 
     private final S3Service s3Service;
@@ -34,36 +34,49 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
         this.s3Service = s3Service;
     }
 
-    public PhotoDto uploadPublic(MultipartFile file) throws IOException {
-        return upload(this.PUBLIC_BUCKET , file);
-    }
+//    public PhotoDto uploadPublic(MultipartFile file) throws IOException {
+//        return upload(PUBLIC_BUCKET , file);
+//    }
+//
+//    public PhotoDto uploadPrivate(MultipartFile file) throws IOException {
+//        return upload(PRIVATE_BUCKET , file);
+//    }
 
-    public PhotoDto uploadPrivate(MultipartFile file) throws IOException {
-        return upload(this.PRIVATE_BUCKET , file);
-    }
-
-
-
-    public PhotoDto getPrivate(Long id) throws IOException {
-        Photo photo = repository.findById(id).orElse(null);
-
-        if(photo == null) return null;
-
-        PhotoDto photoDto = dtoConverter.convertDto(photo, PhotoDto.class);
-        photoDto.setUrl(s3Service.temporalUrlGenerator(photo.getBucket() , photo.getPath()));
-
-        return photoDto;
-    }
-
-    private PhotoDto upload(String bucket , MultipartFile file) throws IOException {
-        String fileNameS3 = s3Service.uploadFile(bucket , "" , file);
-
-        Photo photo = new Photo(null,bucket,fileNameS3);
-
-        PhotoDto photoDto = dtoConverter.convertDto(repository.save(photo), PhotoDto.class);
-
-        photoDto.setUrl(s3Service.urlGenerator(photo.getBucket() , photo.getPath()));
-
-        return photoDto;
-    }
+//    @Override
+//    public PhotoDto findOne(Long id) {
+//        Photo photo = repository.findById(id).orElse(null);
+//
+//        PhotoDto photoDto = dtoConverter.convertDto(photo, PhotoDto.class);
+//
+//        photoDto.setUrl(s3Service.urlGenerator(photo.getBucket(), photo.getPath()));
+//
+//        return photoDto;
+//    }
+//
+//
+//
+//
+//    public PhotoDto getPrivate(Long id) throws IOException {
+//        Photo photo = repository.findById(id).orElse(null);
+//
+//        if(photo == null) return null;
+//
+//        PhotoDto photoDto = dtoConverter.convertDto(photo, PhotoDto.class);
+//        photoDto.setUrl(s3Service.temporalUrlGenerator(photo.getBucket() , photo.getPath()));
+//
+//        return photoDto;
+//    }
+//
+//    private PhotoDto upload(String bucket , MultipartFile file) throws IOException {
+//        String fileNameS3 = s3Service.uploadFile(bucket , "" , file);
+//
+////        Photo photo = new Photo(null,bucket,fileNameS3,null,null,null);
+//
+////        PhotoDto photoDto = dtoConverter.convertDto(repository.save(photo), PhotoDto.class);
+//
+////        photoDto.setUrl(s3Service.urlGenerator(photo.getBucket() , photo.getPath()));
+//
+////        return photoDto;
+//        return null;
+//    }
 }

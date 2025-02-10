@@ -22,19 +22,19 @@ public class BeachController{
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('readBeach')")
+//    @PreAuthorize("hasAuthority('readBeach')")
     public ResponseEntity<List<BeachDto>> index() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('readBeach')")
+//    @PreAuthorize("hasAuthority('readBeach')")
     public ResponseEntity<BeachDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(service.findOne(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('createBeach')")
+//    @PreAuthorize("hasAuthority('createBeach')")
     public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto entity) {
         BeachDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);

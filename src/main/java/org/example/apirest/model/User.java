@@ -75,4 +75,7 @@ public class User implements BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Complaint> complaints;
+
+//    @OneToOne
+//    private Photo photo;
 }
