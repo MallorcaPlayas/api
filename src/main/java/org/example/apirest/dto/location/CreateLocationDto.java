@@ -13,7 +13,5 @@ public class CreateLocationDto{
     private Double latitude;
     private Double elevation;
     private LocalDateTime time;
-    private Long routeId;
     private Long beachId;
-    private List<CreatePhotoDto> photos;
 }

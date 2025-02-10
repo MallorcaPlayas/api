@@ -21,8 +21,8 @@ public class Photo implements BaseEntity {
     private String path;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    @JoinColumn(name = "beach_id")
+    private Beach beach;
 
 //    @ManyToOne
 //    @JoinColumn(name = "comment_id")

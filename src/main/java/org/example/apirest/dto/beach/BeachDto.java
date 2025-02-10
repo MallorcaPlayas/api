@@ -10,6 +10,7 @@ import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.comment.CommentDto;
 import org.example.apirest.dto.complaint.ComplaintDto;
 import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.service.ServiceBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.dto.user.UserDto;
@@ -29,5 +30,6 @@ public class BeachDto extends BaseDto {
     private List<BeachManagerDto> usersInCharge;
     @JsonProperty("services")
     private List<BeachHasServiceDto> beachHasServiceBeach;
+    private List<PhotoDto> photos;
     private LocationDto location;
 }

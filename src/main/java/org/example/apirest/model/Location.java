@@ -30,7 +30,4 @@ public class Location implements BaseEntity {
     @OneToOne
     @JoinColumn(name = "beach_id")
     private Beach beach;
-
-    @OneToMany(mappedBy = "location")
-    private List<Photo> photos;
 }

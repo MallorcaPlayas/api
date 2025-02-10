@@ -3,7 +3,7 @@ package org.example.apirest.utils;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-public class UtilsClass {
+public class    UtilsClass {
     public static void updateFields(Object oldObject, Object objectToInsert) {
         Class<?> clazz = oldObject.getClass();
         Field[] fields = clazz.getDeclaredFields();

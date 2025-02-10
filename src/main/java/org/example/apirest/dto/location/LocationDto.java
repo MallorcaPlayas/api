@@ -15,5 +15,4 @@ public class LocationDto extends BaseDto {
     private Double latitude;
     private Double elevation;
     private LocalDateTime time;
-    private List<PhotoDto> photos;
 }

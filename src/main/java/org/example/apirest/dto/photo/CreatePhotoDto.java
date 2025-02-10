@@ -6,5 +6,4 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class CreatePhotoDto{
     private MultipartFile file;
-
 }

@@ -28,7 +28,7 @@ import java.util.UUID;
 public class S3Service {
 
     private final S3Client s3Client;
-    private final AwsCredentials credentials;
+    private final S3Presigner presigner;
 
     public String uploadFile(String bucketName, String prefix, MultipartFile file) throws IOException {
         String key = generateKey(prefix , file);
@@ -63,11 +63,6 @@ public class S3Service {
     }
 
     public String temporalUrlGenerator(String bucket , String key){
-        S3Presigner presigner = S3Presigner.builder()
-                .region(Region.US_EAST_1)
-                .credentialsProvider(StaticCredentialsProvider.create(this.credentials))
-                .build();
-
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
@@ -76,7 +71,7 @@ public class S3Service {
 
         PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(r -> r
                 .getObjectRequest(getObjectRequest)
-                .signatureDuration(Duration.ofMinutes(1))
+                .signatureDuration(Duration.ofSeconds(10))
         );
 
         URL url = presignedRequest.url();

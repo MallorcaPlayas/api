@@ -31,12 +31,6 @@ public class LocationServiceImpl extends GeneralizedServiceImpl<Location, Locati
         this.photoService = photoService;
     }
 
-    @Override
-    public LocationDto findOne(Long id) {
-        LocationDto locationDto = super.findOne(id);
-        photoService.generateUrl(locationDto.getPhotos())
-    }
-
     //    @Override
 //    public LocationDto save(CreateLocationDto createLocationDto){
 //        Location location = dtoConverter.convertToEntityFromCreateDto(createLocationDto,Location.class);
