@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Map;
-
 @Service
 public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, CreateBeachDto, BeachRepository> {
 
@@ -186,7 +184,7 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         Beach savedEntity = repository.save(entityToInsert);
 
         // Crear las traducciones en MongoDB
-        beachTranslationMongoService.createTranslationsInMongoForEnglishAndGerman(savedEntity);
+        beachTranslationMongoService.createTranslationsInMongoForLanguages(savedEntity, List.of("de", "en", "es"));
 
         // Convertir la entidad guardada en DTO y devolverla
         return dtoConverter.convertDto(savedEntity, BeachDto.class);

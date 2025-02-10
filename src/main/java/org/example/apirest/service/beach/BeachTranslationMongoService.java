@@ -1,6 +1,5 @@
 package org.example.apirest.service.beach;
 
-import com.fasterxml.jackson.databind.type.LogicalType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.apirest.model.LanguageMongoDb;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j // Sirve para poder hacer logs y verlos en consola
 @Service
@@ -42,41 +42,34 @@ public class BeachTranslationMongoService {
         }
     }
 
-    public void createTranslationsInMongoForEnglishAndGerman(Beach savedEntity) {
+    public void createTranslationsInMongoForLanguages(Beach savedEntity, List<String> languages) {
 
         String beachId = "beach_" + savedEntity.getId();
 
-
-
         // Crear la estructura de traducciones
-        BeachTranslationMongoDB beachTranslation = new BeachTranslationMongoDB();
-        beachTranslation.setKey(beachId);
-        beachTranslation.setValue("pending translation");
+        BeachTranslationMongoDB beachMongo = new BeachTranslationMongoDB();
+        beachMongo.setKey(beachId);
+        beachMongo.setValue("successful translation");
 
-        // guardar la "traducción" en español
-        LanguageMongoDb spanishTranslation = new LanguageMongoDb();
-        spanishTranslation.setId("es");
-        spanishTranslation.setTranslate(savedEntity.getDescription());
-
-        // Traducción al inglés
-        LanguageMongoDb englishTranslation = new LanguageMongoDb();
-        englishTranslation.setId("en");
-        // metodo para traducir en inglés
-        englishTranslation.setTranslate(traductorService.translateText(savedEntity.getDescription(), "es", "en"));
-
-        // Traducción al alemán
-        LanguageMongoDb germanTranslation = new LanguageMongoDb();
-        germanTranslation.setId("de");
-        // metodo para traducir en alemán
-        germanTranslation.setTranslate(traductorService.translateText(savedEntity.getDescription(), "es", "de"));
+        // Generar traducciones para todos los idiomas
+        List<LanguageMongoDb> translations = languages.stream()
+                .map(lang -> createLanguageTranslation(savedEntity.getDescription(), lang))
+                .collect(Collectors.toList());
 
         // Configurar las traducciones para 'description'
-        beachTranslation.setTranslations(Map.of(
-                "description", List.of(spanishTranslation, englishTranslation, germanTranslation)
-        ));
+        beachMongo.setTranslations(Map.of("description", translations));
 
         // Guardar la traducción en MongoDB
-        beachTranslationMongoRepository.save(beachTranslation);
+        beachTranslationMongoRepository.save(beachMongo);
+    }
+
+    private LanguageMongoDb createLanguageTranslation(String text, String languageCode) {
+        LanguageMongoDb translation = new LanguageMongoDb();
+        translation.setId(languageCode);
+
+        // TODO doy por supuesto que el idioma origen es español
+        translation.setTranslate(languageCode.equals("es") ? text : traductorService.translateText(text, "es", languageCode));
+        return translation;
     }
 
     public void updateTranslationsInMongo(Long beachId, String newDescription) {
@@ -85,7 +78,6 @@ public class BeachTranslationMongoService {
         // Recuperar el documento relacionado en MongoDB
         BeachTranslationMongoDB mongoTranslation = beachTranslationMongoRepository.findByKey(mongoKey);
 
-        System.out.println("He recuperado la info de mongo? " + mongoTranslation);
         if (mongoTranslation != null) {
             // Actualizar la traducción en español
             List<LanguageMongoDb> descriptions = mongoTranslation.getTranslations().get("description");
