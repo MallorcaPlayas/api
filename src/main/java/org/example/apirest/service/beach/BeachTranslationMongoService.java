@@ -63,14 +63,6 @@ public class BeachTranslationMongoService {
         beachTranslationMongoRepository.save(beachMongo);
     }
 
-    private LanguageMongoDb createLanguageTranslation(String text, String languageCode) {
-        LanguageMongoDb translation = new LanguageMongoDb();
-        translation.setId(languageCode);
-
-        // TODO doy por supuesto que el idioma origen es español
-        translation.setTranslate(languageCode.equals("es") ? text : traductorService.translateText(text, "es", languageCode));
-        return translation;
-    }
 
     public void updateTranslationsInMongo(Long beachId, String newDescription) {
         String mongoKey = "beach_" + beachId;
@@ -79,82 +71,75 @@ public class BeachTranslationMongoService {
         BeachTranslationMongoDB mongoTranslation = beachTranslationMongoRepository.findByKey(mongoKey);
 
         if (mongoTranslation != null) {
-            // Actualizar la traducción en español
-            List<LanguageMongoDb> descriptions = mongoTranslation.getTranslations().get("description");
-            if (descriptions != null) {
-                LanguageMongoDb spanishTranslation = descriptions.stream()
-                        .filter(lang -> "es".equals(lang.getId()))
-                        .findFirst()
-                        .orElse(null);
-
-                if (spanishTranslation != null) {
-                    spanishTranslation.setTranslate(newDescription);
-                } else {
-                    // Crear una nueva traducción en español si no existe
-                    spanishTranslation = new LanguageMongoDb();
-                    spanishTranslation.setId("es");
-                    spanishTranslation.setTranslate(newDescription);
-                    descriptions.add(spanishTranslation);
-                }
-
-                // Actualizar las traducciones en otros idiomas
-                LanguageMongoDb englishTranslation = descriptions.stream()
-                        .filter(lang -> "en".equals(lang.getId()))
-                        .findFirst()
-                        .orElse(null);
-                if (englishTranslation != null) {
-                    englishTranslation.setTranslate(traductorService.translateText(newDescription, "es", "en"));
-                } else {
-                    englishTranslation = new LanguageMongoDb();
-                    englishTranslation.setId("en");
-                    englishTranslation.setTranslate(traductorService.translateText(newDescription, "es", "en"));
-                    descriptions.add(englishTranslation);
-                }
-
-                LanguageMongoDb germanTranslation = descriptions.stream()
-                        .filter(lang -> "de".equals(lang.getId()))
-                        .findFirst()
-                        .orElse(null);
-                if (germanTranslation != null) {
-                    germanTranslation.setTranslate(traductorService.translateText(newDescription, "es", "de"));
-                }else {
-                    germanTranslation = new LanguageMongoDb();
-                    germanTranslation.setId("de");
-                    germanTranslation.setTranslate(traductorService.translateText(newDescription, "es", "de"));
-                    descriptions.add(germanTranslation);
-
-                    System.out.println("He traducido correctamente al aleman? " + germanTranslation.getTranslate());
-                }
-
-                // Guardar los cambios en MongoDB
-                mongoTranslation.getTranslations().put("description", descriptions);
-                beachTranslationMongoRepository.save(mongoTranslation);
-
-            }
+            // Actualizar el documento existente
+            updateExistingTranslations(mongoTranslation, newDescription);
         } else {
-            // Si no existe el documento en MongoDB, crearlo
-            BeachTranslationMongoDB newTranslation = new BeachTranslationMongoDB();
-            newTranslation.setKey(mongoKey);
-            newTranslation.setValue("updated translation");
-
-            LanguageMongoDb spanishTranslation = new LanguageMongoDb();
-            spanishTranslation.setId("es");
-            spanishTranslation.setTranslate(newDescription);
-
-            LanguageMongoDb englishTranslation = new LanguageMongoDb();
-            englishTranslation.setId("en");
-            englishTranslation.setTranslate(traductorService.translateText(newDescription, "es", "en"));
-
-            LanguageMongoDb germanTranslation = new LanguageMongoDb();
-            germanTranslation.setId("de");
-            germanTranslation.setTranslate(traductorService.translateText(newDescription, "es", "de"));
-
-            newTranslation.setTranslations(Map.of(
-                    "description", List.of(spanishTranslation, englishTranslation, germanTranslation)
-            ));
-
-            // Guardar el nuevo documento en MongoDB
-            beachTranslationMongoRepository.save(newTranslation);
+            // Crear un nuevo documento si no existe
+            createNewTranslations(mongoKey, newDescription);
         }
     }
+
+    private void updateExistingTranslations(BeachTranslationMongoDB beachTranslationMongoDB, String newDescription) {
+        List<TranslatedLanguageMongoDb> listDescriptions = beachTranslationMongoDB.getTranslations()
+                .getOrDefault("description", List.of());
+
+        // Actualizar o agregar traducciones
+        updateOrAddTranslation(listDescriptions, "es", newDescription);
+        updateOrAddTranslation(listDescriptions, "en", traductorService.translateText(newDescription, "es", "en"));
+        updateOrAddTranslation(listDescriptions, "de", traductorService.translateText(newDescription, "es", "de"));
+
+        // Guardar los cambios en MongoDB
+        beachTranslationMongoDB.getTranslations().put("description", listDescriptions);
+        beachTranslationMongoRepository.save(beachTranslationMongoDB);
+    }
+
+    private void createNewTranslations(String mongoKey, String newDescription) {
+        BeachTranslationMongoDB newTranslation = new BeachTranslationMongoDB();
+        newTranslation.setKey(mongoKey);
+        newTranslation.setValue("updated translation");
+
+        // Crear traducciones para español, inglés y alemán
+        List<TranslatedLanguageMongoDb> translations = List.of(
+                createLanguageTranslation2("es", newDescription),
+                createLanguageTranslation2("en", traductorService.translateText(newDescription, "es", "en")),
+                createLanguageTranslation2("de", traductorService.translateText(newDescription, "es", "de"))
+        );
+
+        newTranslation.setTranslations(Map.of("description", translations));
+
+        // Guardar el nuevo documento en MongoDB
+        beachTranslationMongoRepository.save(newTranslation);
+    }
+
+    private void updateOrAddTranslation(List<TranslatedLanguageMongoDb> descriptions, String languageCode, String translatedText) {
+        TranslatedLanguageMongoDb translation = descriptions.stream()
+                .filter(idLang -> languageCode.equals(idLang.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (translation != null) {
+            // Actualizar la traducción existente
+            translation.setTranslate(translatedText);
+        } else {
+            // Agregar una nueva traducción
+            descriptions.add(createLanguageTranslation2(languageCode, translatedText));
+        }
+    }
+
+    private TranslatedLanguageMongoDb createLanguageTranslation(String text, String languageCode) {
+        TranslatedLanguageMongoDb translation = new TranslatedLanguageMongoDb();
+        translation.setId(languageCode);
+
+        // TODO doy por supuesto que el idioma origen es español
+        translation.setTranslate(languageCode.equals("es") ? text : traductorService.translateText(text, "es", languageCode));
+        return translation;
+    }
+
+    private TranslatedLanguageMongoDb createLanguageTranslation2(String languageCode, String translatedText) {
+        TranslatedLanguageMongoDb translation = new TranslatedLanguageMongoDb();
+        translation.setId(languageCode);
+        translation.setTranslate(translatedText);
+        return translation;
+    }
+
 }
