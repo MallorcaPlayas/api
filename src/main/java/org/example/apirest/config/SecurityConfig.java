@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración de CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**","/usersMongoDB", "/tranduccionMongoDB", "/list").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
+                        .requestMatchers( "/**", "/auth/**","/usersMongoDB", "/tranduccionMongoDB", "/list").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
                         // Dejo el codigo de abajo comentado como ejemplo por si en un futuro lo uso
                     //  .requestMatchers("/api/users/**").hasAuthority("ReadUser") // Restringir acceso a `/api/users` a usuarios con la función ReadUser
                         .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
