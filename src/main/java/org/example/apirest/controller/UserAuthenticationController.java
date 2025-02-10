@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController // Todos los métodos devolverán respuestas HTTP. Por defecto, todos los métodos devolverán un estado 200 y en formato JSON.
-@RequestMapping("/api/auth") // Todos los endpoints de este controlador tendrán la ruta /api/auth
+@RequestMapping("/auth") // Todos los endpoints de este controlador tendrán la ruta /api/auth
 @CrossOrigin(origins = "*") // Permite que los endpoints de este controlador puedan ser accedidos por cualquier dominio
 public class UserAuthenticationController {
 
