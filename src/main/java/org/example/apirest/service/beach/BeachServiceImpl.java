@@ -58,9 +58,9 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         BeachTranslationMongoDB beachTranslationData = beachTranslationMongoService.findByKey("beach_" + id);
         if (beachTranslationData != null) {
             // Obtener la traducción de 'description' para el idioma requerido (ejemplo: 'ger')
-            List<LanguageMongoDb> descriptionTranslations = beachTranslationData.getTranslations().get("description");
+            List<TranslatedLanguageMongoDb> descriptionTranslations = beachTranslationData.getTranslations().get("description");
             if (descriptionTranslations != null) {
-                LanguageMongoDb translationLanguage = descriptionTranslations.stream()
+                TranslatedLanguageMongoDb translationLanguage = descriptionTranslations.stream()
                         .filter(lang -> lang.getId() != null && lang.getId().equals(requestedLanguage)) // Cambiar idioma según necesidad
                         .findFirst()
                         .orElse(null);
@@ -88,9 +88,9 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
             if (beachTranslationData != null) {
                 // Obtener la traducción de 'description' para el idioma requerido
-                List<LanguageMongoDb> descriptionTranslations = beachTranslationData.getTranslations().get("description");
+                List<TranslatedLanguageMongoDb> descriptionTranslations = beachTranslationData.getTranslations().get("description");
                 if (descriptionTranslations != null) {
-                    LanguageMongoDb translationLanguage = descriptionTranslations.stream()
+                    TranslatedLanguageMongoDb translationLanguage = descriptionTranslations.stream()
                             .filter(lang -> lang.getId() != null && lang.getId().equals(requestedLanguage))
                             .findFirst()
                             .orElse(null);

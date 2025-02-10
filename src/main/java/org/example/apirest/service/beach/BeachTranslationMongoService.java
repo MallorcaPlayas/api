@@ -2,7 +2,7 @@ package org.example.apirest.service.beach;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.apirest.model.LanguageMongoDb;
+import org.example.apirest.model.TranslatedLanguageMongoDb;
 import org.example.apirest.model.beach.Beach;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
@@ -52,7 +52,7 @@ public class BeachTranslationMongoService {
         beachMongo.setValue("successful translation");
 
         // Generar traducciones para todos los idiomas
-        List<LanguageMongoDb> translations = languages.stream()
+        List<TranslatedLanguageMongoDb> translations = languages.stream()
                 .map(lang -> createLanguageTranslation(savedEntity.getDescription(), lang))
                 .collect(Collectors.toList());
 

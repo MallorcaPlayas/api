@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
-public class LanguageMongoDb {
+public class TranslatedLanguageMongoDb {
     @Field("id") // Mapea el campo "id" de MongoDB a este atributo, sino luego sale null
     String id;
 

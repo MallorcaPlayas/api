@@ -2,7 +2,7 @@ package org.example.apirest.model.beach;
 
 
 import lombok.Data;
-import org.example.apirest.model.LanguageMongoDb;
+import org.example.apirest.model.TranslatedLanguageMongoDb;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,6 +15,6 @@ public class BeachTranslationMongoDB {
     @Id
     String key;
     String value;
-    private Map<String, List<LanguageMongoDb>> translations;
+    private Map<String, List<TranslatedLanguageMongoDb>> translations;
 
 }

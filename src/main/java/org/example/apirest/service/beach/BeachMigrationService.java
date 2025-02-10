@@ -1,6 +1,6 @@
 package org.example.apirest.service.beach;
 
-import org.example.apirest.model.LanguageMongoDb;
+import org.example.apirest.model.TranslatedLanguageMongoDb;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
 import org.example.apirest.service.TranslatorProvider;
@@ -52,7 +52,7 @@ public class BeachMigrationService {
                 beachTranslation.setValue("pending translation");
 
                 // Agrega la traducción en español
-                LanguageMongoDb spanishTranslation = new LanguageMongoDb();
+                TranslatedLanguageMongoDb spanishTranslation = new TranslatedLanguageMongoDb();
                 spanishTranslation.setId("es");
                 spanishTranslation.setTranslate(description);
 
@@ -76,9 +76,9 @@ public class BeachMigrationService {
         for (BeachTranslationMongoDB beach : allBeaches) {
             if (beach.getTranslations() != null && beach.getTranslations().containsKey("description")) {
                 // Obtener la traducción en español
-                List<LanguageMongoDb> descriptions = beach.getTranslations().get("description");
+                List<TranslatedLanguageMongoDb> descriptions = beach.getTranslations().get("description");
 
-                LanguageMongoDb spanishDescription = descriptions.stream()
+                TranslatedLanguageMongoDb spanishDescription = descriptions.stream()
                         .filter(language -> "es".equals(language.getId())) // Encontrar la descripción en español
                         .findFirst()
                         .orElse(null);
@@ -91,7 +91,7 @@ public class BeachMigrationService {
 
                     if (translatedText != null && !translatedText.isEmpty()) {
                         // Crear el objeto para la traducción al inglés
-                        LanguageMongoDb englishDescription = new LanguageMongoDb();
+                        TranslatedLanguageMongoDb englishDescription = new TranslatedLanguageMongoDb();
                         englishDescription.setId(languageToTranslate);
                         englishDescription.setTranslate(translatedText);
 
