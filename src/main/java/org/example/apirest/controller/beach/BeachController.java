@@ -27,6 +27,8 @@ public class BeachController {
         return ResponseEntity.ok(service.findAll());
     // para usarlo en postman: 127.0.0.1:8080/beaches/translated?language=de
     @GetMapping("/translated")
+    // para usarlo en postman: 127.0.0.1:8080/beaches/?language=de
+    @GetMapping("/")
     public ResponseEntity<List<BeachDto>> index( @RequestParam(defaultValue = "de") String language) {
         return ResponseEntity.ok(service.findAllTranslate(language));
     }
@@ -36,6 +38,8 @@ public class BeachController {
     @PreAuthorize("hasAuthority('readBeach')")
     public ResponseEntity<BeachDto> show(@PathVariable Long id, @RequestParam String requestedLanguage) {
         return ResponseEntity.ok(service.findOneTranslate(id, requestedLanguage));
+    // para usarlo en postman: 127.0.0.1:8080/beaches/2/?language=de
+    @GetMapping("/{id}/")
     public ResponseEntity<BeachDto> show(@PathVariable Long id, @RequestParam String language) {
         return ResponseEntity.ok(service.findOneTranslate(id, language));
     }
