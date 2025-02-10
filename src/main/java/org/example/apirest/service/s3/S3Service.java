@@ -1,6 +1,8 @@
 package org.example.apirest.service.s3;
 
 import lombok.RequiredArgsConstructor;
+import org.example.apirest.error.NotFoundException;
+import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
@@ -19,8 +21,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,6 +31,46 @@ public class S3Service {
 
     private final S3Client s3Client;
     private final S3Presigner presigner;
+
+
+    rotected final R repository;
+
+    @Override
+    public List<Dto> findAll() {
+        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    }
+
+    @Override
+    public Dto findOne(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        return dtoConverter.convertDto(entity, dtoClass);
+    }
+
+    @Override
+    public Dto save(CreateDto entity) {
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
+        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    }
+
+    @Override
+    public Dto update(Long id, CreateDto createEntity) {
+        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        UtilsClass.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        repository.delete(entity);
+    }
 
     public String uploadFile(String bucketName, String prefix, MultipartFile file) throws IOException {
         String key = generateKey(prefix , file);

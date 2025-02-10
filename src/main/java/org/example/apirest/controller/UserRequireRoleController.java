@@ -13,11 +13,38 @@ import java.util.List;
 @RestController
 @RequestMapping("/user-require-role")
 @CrossOrigin(origins = "*")
-public class UserRequireRoleController extends GeneralizedController<UserRequireRoleDto, CreateUserRequireRoleDto> {
-    public UserRequireRoleController(UserRequireRoleServiceImpl  service) {
-        super(service);
-    }
+public class UserRequireRoleController{
     // TODO esta clase sirve para denegar o aceptar solicitudes de roles
+
+    protected final GeneralizedService<Dto,CreateDto> service;
+
+    @GetMapping
+    public ResponseEntity<List<Dto>> index() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Dto> show(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findOne(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
+        Dto newEntity = service.save(entity);
+        return ResponseEntity.ok(newEntity);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
+        Dto updated = service.update(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('readRole')")

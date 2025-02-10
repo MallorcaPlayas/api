@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -12,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "businesses")
-public class Business implements BaseEntity {
+public class Business{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

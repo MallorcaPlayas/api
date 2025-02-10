@@ -1,50 +1,58 @@
 package org.example.apirest.service.excursion;
 
-import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.beach.BeachDto;
-import org.example.apirest.dto.beach.CreateBeachDto;
-import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
-import org.example.apirest.dto.beachHasService.CreateBeachHasServiceDto;
-import org.example.apirest.dto.beachManager.BeachManagerDto;
-import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
-import org.example.apirest.dto.camera.CameraDto;
-import org.example.apirest.dto.camera.CreateCameraDto;
-import org.example.apirest.dto.complaint.ComplaintDto;
-import org.example.apirest.dto.complaint.CreateComplaintDto;
 import org.example.apirest.dto.excursion.ExcursionDto;
 import org.example.apirest.dto.excursion.CreateExcursionDto;
-import org.example.apirest.dto.excursionTicketDetails.CreateExcursionTicketDetailsDto;
-import org.example.apirest.dto.excursionTicketDetails.ExcursionTicketDetailsDto;
-import org.example.apirest.dto.route.CreateRouteDto;
-import org.example.apirest.dto.route.RouteDto;
-import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
-import org.example.apirest.dto.typeBeach.TypeBeachDto;
-import org.example.apirest.dto.user.CreateUserDto;
-import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
-import org.example.apirest.repository.ComplaintRepository;
-import org.example.apirest.repository.ExcursionRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ExcursionServiceImpl extends GeneralizedServiceImpl<Excursion, ExcursionDto, CreateExcursionDto, ExcursionRepository> {
-    private final DtoConverterImpl<User, UserDto, CreateUserDto> dtoUser;
-    private final DtoConverterImpl<ExcursionTicketDetails, ExcursionTicketDetailsDto, CreateExcursionTicketDetailsDto> dtoExcursionTicketDetails;
-    private final DtoConverterImpl<Route, RouteDto, CreateRouteDto> dtoRoute;
-    public ExcursionServiceImpl(ExcursionRepository repository, DtoConverterImpl<Excursion,ExcursionDto,CreateExcursionDto> dtoConverter, DtoConverterImpl<User, UserDto, CreateUserDto> dtoUser, DtoConverterImpl<ExcursionTicketDetails, ExcursionTicketDetailsDto, CreateExcursionTicketDetailsDto> dtoExcursionTicketDetails, DtoConverterImpl<Route, RouteDto, CreateRouteDto> dtoRoute) {
-        super(repository, dtoConverter, Excursion.class, ExcursionDto.class);
-        this.dtoUser = dtoUser;
-        this.dtoExcursionTicketDetails = dtoExcursionTicketDetails;
-        this.dtoRoute = dtoRoute;
+public class ExcursionServiceImpl{
+
+    rotected final R repository;
+
+    @Override
+    public List<Dto> findAll() {
+        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
     }
 
     @Override
+    public Dto findOne(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        return dtoConverter.convertDto(entity, dtoClass);
+    }
+
+    @Override
+    public Dto save(CreateDto entity) {
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
+        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    }
+
+    @Override
+    public Dto update(Long id, CreateDto createEntity) {
+        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        UtilsClass.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        repository.delete(entity);
+    }
+
+
     public ExcursionDto save(CreateExcursionDto entity) {
         Excursion entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, Excursion.class);
 
@@ -70,7 +78,6 @@ public class ExcursionServiceImpl extends GeneralizedServiceImpl<Excursion, Excu
 
     }
 
-    @Override
     public ExcursionDto update(Long id, CreateExcursionDto entity) {
         Excursion old = repository.findById(id).orElseThrow(() -> new NotFoundException(Excursion.class, id));
         Excursion newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Excursion.class);

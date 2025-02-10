@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table //(name = "type_beaches")
-public class TypeBeach implements BaseEntity{
+public class TypeBeach{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

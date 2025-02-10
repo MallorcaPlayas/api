@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table // (name = "beaches")
-public class Camera implements BaseEntity {
+public class Camera{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

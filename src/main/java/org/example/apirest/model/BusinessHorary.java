@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "businesses_horary")
-public class BusinessHorary implements BaseEntity {
+public class BusinessHorary{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

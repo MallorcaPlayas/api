@@ -1,25 +1,49 @@
 package org.example.apirest.service.camera;
 
-import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.businessType.BusinessTypeDto;
-import org.example.apirest.dto.businessType.CreateBusinessTypeDto;
-import org.example.apirest.dto.camera.CameraDto;
-import org.example.apirest.dto.camera.CreateCameraDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.BusinessType;
-import org.example.apirest.model.Camera;
-import org.example.apirest.repository.BusinessTypeRepository;
-import org.example.apirest.repository.CameraRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CameraServiceImpl extends GeneralizedServiceImpl<Camera, CameraDto, CreateCameraDto, CameraRepository> {
-    public CameraServiceImpl(CameraRepository repository, DtoConverterImpl<Camera,CameraDto,CreateCameraDto> dtoConverter) {
-        super(repository, dtoConverter, Camera.class, CameraDto.class);
+public class CameraServiceImpl {
+    rotected final R repository;
+
+    @Override
+    public List<Dto> findAll() {
+        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    }
+
+    @Override
+    public Dto findOne(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        return dtoConverter.convertDto(entity, dtoClass);
+    }
+
+    @Override
+    public Dto save(CreateDto entity) {
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
+        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    }
+
+    @Override
+    public Dto update(Long id, CreateDto createEntity) {
+        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        UtilsClass.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        repository.delete(entity);
     }
 }

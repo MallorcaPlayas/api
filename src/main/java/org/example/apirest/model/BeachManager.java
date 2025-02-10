@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "beach_manager")
-public class BeachManager implements BaseEntity {
+public class BeachManager{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

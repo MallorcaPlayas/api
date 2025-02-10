@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "tickets")
-public class Ticket implements BaseEntity {
+public class Ticket{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

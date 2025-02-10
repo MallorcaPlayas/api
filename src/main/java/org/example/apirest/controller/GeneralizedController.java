@@ -2,7 +2,6 @@ package org.example.apirest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.BaseDto;
-import org.example.apirest.service.GeneralizedService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

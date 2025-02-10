@@ -1,14 +1,12 @@
 package org.example.apirest.dto.businessHorary;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.example.apirest.dto.BaseDto;
 
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class BusinessHoraryDto extends BaseDto {
+public class BusinessHoraryDto{
+    private Long id;
     private Date date;
     private boolean isOpen;
     private Long businessId;

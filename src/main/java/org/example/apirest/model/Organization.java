@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "organizations")
-public class Organization implements BaseEntity {
+public class Organization{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

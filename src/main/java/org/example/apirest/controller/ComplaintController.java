@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.complaint.ComplaintDto;
 import org.example.apirest.dto.complaint.CreateComplaintDto;
 import org.example.apirest.service.complaint.ComplaintServiceImpl;
@@ -13,12 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/complaints")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ComplaintController {
 
     private final ComplaintServiceImpl service;
-    public ComplaintController(ComplaintServiceImpl service) {
-        this.service = service;
-    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('readComplaint')")

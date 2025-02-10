@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "road_type")
-public class RoadType implements BaseEntity {
+public class RoadType{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

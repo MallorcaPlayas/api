@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "points_of_interest")
-public class PointOfInterest implements BaseEntity {
+public class PointOfInterest{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

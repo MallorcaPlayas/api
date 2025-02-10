@@ -1,8 +1,6 @@
 package org.example.apirest.dto.excursion;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.example.apirest.dto.BaseDto;
 import org.example.apirest.dto.excursionTicketDetails.CreateExcursionTicketDetailsDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.user.UserDto;

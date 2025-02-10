@@ -1,7 +1,6 @@
 package org.example.apirest.dto.complaint;
 
 import lombok.Data;
-import org.example.apirest.dto.BaseCreateDto;
 
 @Data
 public class CreateComplaintDto {

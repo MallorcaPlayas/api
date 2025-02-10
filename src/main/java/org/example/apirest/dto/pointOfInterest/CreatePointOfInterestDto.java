@@ -1,12 +1,10 @@
 package org.example.apirest.dto.pointOfInterest;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.example.apirest.dto.BaseCreateDto;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class CreatePointOfInterestDto extends BaseCreateDto {
+public class CreatePointOfInterestDto{
+    private Long id;
     private String description;
     private String url;
     private Long pointOfInterestId;

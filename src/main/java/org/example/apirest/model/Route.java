@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "routes")
-public class Route implements BaseEntity {
+public class Route{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,4 +41,7 @@ public class Route implements BaseEntity {
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Location> locations;
+
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Photo> photos;
 }

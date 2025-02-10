@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "role_has_function")
-public class RoleHasFunction implements BaseEntity {
+public class RoleHasFunction{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

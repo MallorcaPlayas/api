@@ -80,8 +80,7 @@ public class SecurityConfig {
     // UserDetailsService: Un servicio que proporciona la información del usuario (nombre de usuario, contraseña y roles) al AuthenticationManager.
     // @Qualifier: Le dice a Spring cuál de las implementaciones de UserDetailsService usar.
     // @Bean: Le dice a Spring que guarde el resultado de este mét_odo para que pueda ser inyectado en otras partes de la aplicación.
-    public AuthenticationManager authenticationManager(
-            @Qualifier("userServiceImpl") UserDetailsService userDetailsService) { // UserDetailsService es una interfaz que Spring Security usa para interactuar con la base de datos y obtener información del usuario y con @Qualifier("userServiceImpl") le decimos a Spring que use la implementación UserServiceImpl de UserDetailsService
+    public AuthenticationManager authenticationManager(@Qualifier("userServiceImpl") UserDetailsService userDetailsService) { // UserDetailsService es una interfaz que Spring Security usa para interactuar con la base de datos y obtener información del usuario y con @Qualifier("userServiceImpl") le decimos a Spring que use la implementación UserServiceImpl de UserDetailsService
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService); // UserDetailsService: Un servicio que proporciona la información del usuario (nombre de usuario, contraseña y roles) al AuthenticationManager.
         provider.setPasswordEncoder(passwordEncoder()); // PasswordEncoder: Una herramienta para verificar que la contraseña que ingresó el usuario coincide con la encriptada en la base de datos.

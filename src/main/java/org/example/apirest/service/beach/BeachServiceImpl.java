@@ -1,63 +1,63 @@
 package org.example.apirest.service.beach;
 
-import org.example.apirest.dto.DtoConverterImpl;
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
-import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
-import org.example.apirest.dto.beachHasService.CreateBeachHasServiceDto;
-import org.example.apirest.dto.beachManager.BeachManagerDto;
-import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
-import org.example.apirest.dto.camera.CameraDto;
-import org.example.apirest.dto.camera.CreateCameraDto;
-import org.example.apirest.dto.location.CreateLocationDto;
-import org.example.apirest.dto.location.LocationDto;
-import org.example.apirest.dto.photo.DtoConverterPhoto;
 import org.example.apirest.dto.photo.PhotoDto;
-import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
-import org.example.apirest.dto.typeBeach.TypeBeachDto;
-import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
-import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.repository.*;
-import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.service.beachManager.BeachManagerServiceImpl;
-import org.example.apirest.service.photo.PhotoServiceImpl;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, CreateBeachDto, BeachRepository> {
-    private final DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager;
-    private final DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService;
-    private final DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
-    private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
-    private final DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoLocation;
-    private final DtoConverterPhoto dtoConverterPhoto;
+@RequiredArgsConstructor
+public class BeachServiceImpl{
 
-    public BeachServiceImpl(BeachRepository repository,
-                            DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
-                            DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
-                            DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
-                            DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
-                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach,
-                            DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoLocation,
-                            DtoConverterPhoto dtoConverterPhoto) {
+    private final ModelMapper modelMapper;
 
-        super(repository, dtoConverter, Beach.class, BeachDto.class);
-        this.dtoBeachManager = dtoBeachManager;
-        this.dtoBeachHasService = dtoBeachHasService;
-        this.dtoCamera = dtoCamera;
-        this.dtoTypeBeach = dtoTypeBeach;
-        this.dtoLocation = dtoLocation;
-        this.dtoConverterPhoto = dtoConverterPhoto;
+    rotected final R repository;
+
+    @Override
+    public List<Dto> findAll() {
+        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
     }
 
     @Override
+    public Dto findOne(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        return dtoConverter.convertDto(entity, dtoClass);
+    }
+
+    @Override
+    public Dto save(CreateDto entity) {
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
+        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    }
+
+    @Override
+    public Dto update(Long id, CreateDto createEntity) {
+        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        UtilsClass.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        repository.delete(entity);
+    }
+
     public BeachDto findOne(Long id) {
         Beach beach = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
         List<Photo> photos = beach.getPhotos();
@@ -67,7 +67,6 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         return beachDto;
     }
 
-    @Override
     public List<BeachDto> findAll() {
         List<Beach> beachs = repository.findAll();
         List<BeachDto> beachDtos = new ArrayList<>();
@@ -82,8 +81,6 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         return beachDtos;
     }
 
-
-    @Override
     public BeachDto save(CreateBeachDto entity) {
         Beach entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
 
@@ -129,7 +126,6 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
     }
 
-    @Override
     public BeachDto update(Long id, CreateBeachDto entity) {
         Beach old = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         Beach newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);

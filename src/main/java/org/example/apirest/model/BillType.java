@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "bill_types")
-public class BillType implements BaseEntity {
+public class BillType{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

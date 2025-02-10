@@ -1,16 +1,51 @@
 package org.example.apirest.service.roleHasFunction;
 
-import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.role_has_function.CreateRoleHasFunctionDto;
-import org.example.apirest.dto.role_has_function.RoleHasFunctionDto;
-import org.example.apirest.model.RoleHasFunction;
-import org.example.apirest.repository.RoleHasFunctionRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
+import org.example.apirest.error.NotFoundException;
+import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class RoleHasFunctionServiceImpl extends GeneralizedServiceImpl<RoleHasFunction, RoleHasFunctionDto, CreateRoleHasFunctionDto, RoleHasFunctionRepository> {
-    public RoleHasFunctionServiceImpl(RoleHasFunctionRepository repository, DtoConverterImpl<RoleHasFunction,RoleHasFunctionDto,CreateRoleHasFunctionDto> dtoConverter) {
-        super(repository, dtoConverter, RoleHasFunction.class, RoleHasFunctionDto.class);
+public class RoleHasFunctionServiceImpl {
+
+    rotected final R repository;
+
+    @Override
+    public List<Dto> findAll() {
+        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
     }
+
+    @Override
+    public Dto findOne(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        return dtoConverter.convertDto(entity, dtoClass);
+    }
+
+    @Override
+    public Dto save(CreateDto entity) {
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
+        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    }
+
+    @Override
+    public Dto update(Long id, CreateDto createEntity) {
+        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        UtilsClass.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        repository.delete(entity);
+    }
+
 }

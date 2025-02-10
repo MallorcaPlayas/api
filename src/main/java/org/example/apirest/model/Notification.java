@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "notifications")
-public class Notification implements BaseEntity {
+public class Notification{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

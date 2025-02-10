@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_has_role")
-public class UserHasRole implements BaseEntity{
+public class UserHasRole{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

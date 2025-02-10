@@ -1,41 +1,65 @@
 package org.example.apirest.service.photo;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.organization.CreateOrganizationDto;
-import org.example.apirest.dto.organization.OrganizationDto;
 import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.photo.CreatePhotoDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.Organization;
 import org.example.apirest.model.Photo;
-import org.example.apirest.repository.OrganizationRepository;
 import org.example.apirest.repository.PhotoRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.service.s3.S3Service;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, CreatePhotoDto, PhotoRepository> {
+@RequiredArgsConstructor
+public class PhotoServiceImpl{
 
     private static final String PUBLIC_BUCKET = "mallorca-playas-public";
     private static final String PRIVATE_BUCKET = "mallorca-playas-private";
 
-
     private final S3Service s3Service;
 
-    public PhotoServiceImpl(PhotoRepository repository, DtoConverterImpl<Photo,PhotoDto,CreatePhotoDto> dtoConverter , S3Service s3Service) {
-        super(repository, dtoConverter, Photo.class, PhotoDto.class);
-        this.s3Service = s3Service;
+    rotected final R repository;
+
+    @Override
+    public List<Dto> findAll() {
+        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
     }
 
     @Override
+    public Dto findOne(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        return dtoConverter.convertDto(entity, dtoClass);
+    }
+
+    @Override
+    public Dto save(CreateDto entity) {
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
+        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    }
+
+    @Override
+    public Dto update(Long id, CreateDto createEntity) {
+        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
+        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        UtilsClass.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        repository.delete(entity);
+    }
+
     public PhotoDto findOne(Long id) {
         Photo photo = super.repository.findById(id).orElse(null);
         PhotoDto photoDto = super.dtoConverter.convertDto(photo, PhotoDto.class);
@@ -43,7 +67,6 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
         return photoDto;
     }
 
-    @Override
     public List<PhotoDto> findAll(){
         List<Photo> photos  = super.repository.findAll();
         List<PhotoDto> photoDtos = new ArrayList<>();

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_require_rol")
-public class UserRequireRole implements BaseEntity{
+public class UserRequireRole{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

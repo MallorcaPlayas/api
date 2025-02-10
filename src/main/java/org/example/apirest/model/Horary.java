@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "horaries")
-public class Horary implements BaseEntity {
+public class Horary{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

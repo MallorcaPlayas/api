@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "beach_has_service")
-public class BeachHasService implements BaseEntity {
+public class BeachHasService{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
