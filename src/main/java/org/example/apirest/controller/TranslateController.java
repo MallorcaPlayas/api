@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/translator")
-public class TranslateteController {
+public class TranslateController {
 
     private final TranslatorProvider translatorService;
 
-    public TranslateteController(TranslatorProvider translatorService) {
+    public TranslateController(TranslatorProvider translatorService) {
         this.translatorService = translatorService;
     }
 
