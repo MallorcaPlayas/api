@@ -56,8 +56,12 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
         return photoDtos;
     }
 
+    @Override
+    public PhotoDto save(CreatePhotoDto entity) {
+        return super.save(entity);
+    }
 
-//    public PhotoDto uploadPublic(MultipartFile file) throws IOException {
+    //    public PhotoDto uploadPublic(MultipartFile file) throws IOException {
 //        return upload(PUBLIC_BUCKET , file);
 //    }
 //

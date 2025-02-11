@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.model.BaseEntity;
 import org.example.apirest.model.Photo;
+import org.example.apirest.service.photo.PhotoServiceImpl;
 import org.example.apirest.service.s3.S3Service;
 import org.modelmapper.ModelMapper;
 import org.neo4j.cypherdsl.core.Create;
@@ -17,6 +18,7 @@ public class DtoConverterPhoto implements DtoConverter<Photo, PhotoDto, CreatePh
 
     private final ModelMapper modelMapper;
     private final S3Service s3Service;
+    private final PhotoServiceImpl photoServiceImpl;
 
     @Override
     public PhotoDto convertDto(Photo entity, Class<PhotoDto> dtoClass) {
@@ -37,6 +39,7 @@ public class DtoConverterPhoto implements DtoConverter<Photo, PhotoDto, CreatePh
 
     @Override
     public Photo convertToEntityFromCreateDto(CreatePhotoDto createDto, Class<Photo> entityClass) {
+
         Photo entity = modelMapper.map(createDto, entityClass);
         entity.setId(null);
         return entity;

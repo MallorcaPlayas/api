@@ -69,17 +69,18 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
     @Override
     public List<BeachDto> findAll() {
-        List<Beach> beachs = repository.findAll();
+        List<Beach> beaches = repository.findAll();
         List<BeachDto> beachDtos = new ArrayList<>();
-        for (Beach beach : beachs) {
-            List<Photo> photos = beach.getPhotos();
-            List<PhotoDto> photoDtos = photos.stream().map(photo -> dtoConverterPhoto.convertDto(photo, PhotoDto.class)).toList();
-            BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
-            beachDto.setPhotos(photoDtos);
-            beachDtos.add(beachDto);
-        }
 
-        return beachDtos;
+        return beaches.stream()
+                .map(beach -> {
+                    List<Photo> photos = beach.getPhotos();
+                    List<PhotoDto> photoDtos = photos.stream().map(photo -> dtoConverterPhoto.convertDto(photo, PhotoDto.class)).toList();
+                    BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+                    beachDto.setPhotos(photoDtos);
+                    return beachDto;
+                })
+                .toList();
     }
 
 
@@ -123,6 +124,7 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
         if(entity.getPhotos() != null){
             List<Photo> photos = dtoConverterPhoto.convertToEntityListFromCreateDto(entity.getPhotos(),Photo.class);
+            entityToInsert.setPhotos(photos);
         }
 
         return dtoConverter.convertDto(repository.save(entityToInsert), BeachDto.class);

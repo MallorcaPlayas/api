@@ -5,5 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CreatePhotoDto{
+    private Long beachId;
     private MultipartFile file;
 }
