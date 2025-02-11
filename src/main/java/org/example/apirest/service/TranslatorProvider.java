@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.Map;
+
 @Service
 public class TranslatorProvider {
 
@@ -44,35 +46,36 @@ public class TranslatorProvider {
         return restTemplate.postForObject(url, request, String.class);
     }
 
-    public String translateJsonAsText(Object json, String origen, String translated) {
-        if (json == null) {
-            return "";
+    public String translateJsonAsText(Map<String, Object> json, String origen, String translated) {
+        if (json == null || json.isEmpty()) {
+            return "{}";
         }
 
-        String endpoint = "/public/google/translate";
-        String url = baseUrl + endpoint;
+        // Recorrer y traducir solo los valores del JSON
+        Map<String, Object> translatedJson = translateValues(json, origen, translated);
 
-        // Convertir JSON a String para enviarlo como texto plano
-        String jsonString;
+        // Convertir el JSON de vuelta a string y devolverlo
         try {
-            jsonString = objectMapper.writeValueAsString(json);
+            return objectMapper.writeValueAsString(translatedJson);
         } catch (Exception e) {
-            throw new RuntimeException("Error al serializar el JSON", e);
+            throw new RuntimeException("Error al serializar el JSON traducido", e);
         }
+    }
 
-        // Crear la solicitud con el JSON en formato de texto
-        TranslationRequestBody requestBody = new TranslationRequestBody(origen, translated, jsonString);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<TranslationRequestBody> request = new HttpEntity<>(requestBody, headers);
-
-        // Llamar a la API y recibir la respuesta como String
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.postForObject(url, request, String.class);
-
-        // 🔥 DECODIFICAR caracteres HTML antes de devolver la respuesta
-        return HtmlUtils.htmlUnescape(response);
+    /**
+     * Recorre un JSON recursivamente y traduce solo los valores, dejando las claves intactas.
+     */
+    private Map<String, Object> translateValues(Map<String, Object> json, String origen, String translated) {
+        for (Map.Entry<String, Object> entry : json.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                // Si es un String, traducir
+                entry.setValue(translateText((String) entry.getValue(), origen, translated));
+            } else if (entry.getValue() instanceof Map) {
+                // Si es otro objeto JSON, llamar recursivamente
+                entry.setValue(translateValues((Map<String, Object>) entry.getValue(), origen, translated));
+            }
+        }
+        return json;
     }
 
 

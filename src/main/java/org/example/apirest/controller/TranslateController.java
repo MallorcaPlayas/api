@@ -4,6 +4,8 @@ package org.example.apirest.controller;
 import org.example.apirest.service.TranslatorProvider;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/translator")
 public class TranslateController {
@@ -25,7 +27,7 @@ public class TranslateController {
     }
 
     @PostMapping("/translateJsonAsText")
-    public String translateJsonAsText(@RequestBody Object json,
+    public String translateJsonAsText(@RequestBody Map<String, Object> json,
                                       @RequestParam String origen,
                                       @RequestParam String translated) {
         return translatorProvider.translateJsonAsText(json, origen, translated);
