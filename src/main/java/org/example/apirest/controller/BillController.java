@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.bill.BillDto;
 import org.example.apirest.dto.bill.CreateBillDto;
 import org.example.apirest.service.bill.BillServiceImpl;
@@ -12,28 +13,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/bills")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class BillController{
-    protected final GeneralizedService<Dto,CreateDto> service;
+    private final BillServiceImpl service;
 
     @GetMapping
-    public ResponseEntity<List<Dto>> index() {
+    public ResponseEntity<List<BillDto>> index() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
+    public ResponseEntity<BillDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(service.findOne(id));
     }
 
     @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
+    public ResponseEntity<BillDto> create(@RequestBody CreateBillDto entity) {
+        BillDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
+    public ResponseEntity<BillDto> update(@RequestBody CreateBillDto entity, @PathVariable Long id) {
+        BillDto updated = service.update(id, entity);
         return ResponseEntity.ok(updated);
     }
 

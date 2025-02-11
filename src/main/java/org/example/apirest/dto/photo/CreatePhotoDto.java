@@ -10,4 +10,5 @@ public class CreatePhotoDto{
     private Long userId;
     private Long commentId;
     private MultipartFile file;
+    private Boolean isPrivate;
 }

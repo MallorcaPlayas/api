@@ -20,6 +20,10 @@ public class Photo{
 
     private String path;
 
+    private Boolean isPrivate;
+
+    private String url;
+
     @ManyToOne
     @JoinColumn(name = "beach_id")
     private Beach beach;

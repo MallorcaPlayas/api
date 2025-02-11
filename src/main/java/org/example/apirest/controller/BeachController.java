@@ -40,14 +40,14 @@ public class BeachController{
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('updateBeach')")
+//    @PreAuthorize("hasAuthority('updateBeach')")
     public ResponseEntity<BeachDto> update(@RequestBody CreateBeachDto entity, @PathVariable Long id) {
-        BeachDto updated = service.update(id, entity);
+        BeachDto updated = service.update(entity,id);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('deleteBeach')")
+//    @PreAuthorize("hasAuthority('deleteBeach')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
