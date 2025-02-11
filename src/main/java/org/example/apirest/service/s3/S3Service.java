@@ -28,6 +28,7 @@ public class S3Service {
     public String uploadFile(String bucketName, String prefix, MultipartFile file) throws IOException {
         String key = generateKey(prefix , file);
         String contentType = file.getContentType();
+        System.out.println("AQUI!!! :" + contentType);
         s3Client.putObject(
                 PutObjectRequest.builder()
                         .bucket(bucketName)

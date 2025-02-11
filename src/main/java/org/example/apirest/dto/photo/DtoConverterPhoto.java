@@ -15,12 +15,10 @@ import java.util.List;
 public class DtoConverterPhoto implements DtoConverter<Photo, PhotoDto, CreatePhotoDto> {
 
     private final ModelMapper modelMapper;
-    private final S3Service s3Service;
 
     @Override
     public PhotoDto convertDto(Photo entity, Class<PhotoDto> dtoClass) {
         PhotoDto photoDto = modelMapper.map(entity, dtoClass);
-        photoDto.setUrl(s3Service.generateUrl(entity.getBucket(),entity.getPath()));
         return photoDto;
     }
 

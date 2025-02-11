@@ -10,6 +10,6 @@ public class CreatePhotoDto{
     private Long routeId;
     private Long userId;
     private Long excursionId;
-    private Boolean isPrivate;
+    private Boolean isPrivate = false;
     private MultipartFile file;
 }

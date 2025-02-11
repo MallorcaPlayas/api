@@ -25,7 +25,7 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
     private final DtoConverterPhoto dtoConverterPhoto;
 
     public PhotoServiceImpl(PhotoRepository repository,
-                            DtoConverterImpl<Photo,PhotoDto,CreatePhotoDto> dtoConverter ,
+                            DtoConverterImpl<Photo, PhotoDto, CreatePhotoDto> dtoConverter,
                             S3Service s3Service,
                             DtoConverterPhoto dtoConverterPhoto) {
         super(repository, dtoConverter, Photo.class, PhotoDto.class);
@@ -36,8 +36,8 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
     @Override
     public PhotoDto findOne(Long id) {
         Photo photo = super.repository.findById(id).orElse(null);
-        PhotoDto photoDto = super.dtoConverter.convertDto(photo, PhotoDto.class);
-        if(photo.getIsPrivate()){
+        PhotoDto photoDto = dtoConverterPhoto.convertDto(photo, PhotoDto.class);
+        if (photo.getIsPrivate()) {
             photoDto.setUrl(this.s3Service.generateTeamporalUrl(photo.getBucket(), photo.getPath()));
         }
 
@@ -45,11 +45,11 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
     }
 
     @Override
-    public List<PhotoDto> findAll(){
-        List<Photo> photos  = super.repository.findAll();
+    public List<PhotoDto> findAll() {
+        List<Photo> photos = super.repository.findAll();
         return photos.stream().map(photo -> {
             PhotoDto photoDto = super.dtoConverter.convertDto(photo, PhotoDto.class);
-            if(photo.getIsPrivate()){
+            if (photo.getIsPrivate()) {
                 photoDto.setUrl(this.s3Service.generateTeamporalUrl(photo.getBucket(), photo.getPath()));
             }
             return photoDto;
@@ -62,10 +62,20 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
         String bucket = entity.getIsPrivate() ? PRIVATE_BUCKET : PUBLIC_BUCKET;
         Photo photo = super.dtoConverter.convertToEntityFromCreateDto(entity, Photo.class);
         photo.setBucket(bucket);
+        photo.setPath("");
         String fileName = s3Service.uploadFile(bucket, photo.getPath(), entity.getFile());
         photo.setPath(fileName);
-        if(!photo.getIsPrivate()) photo.setUrl(s3Service.generateUrl(bucket, fileName));
-        return dtoConverterPhoto.convertDto(super.repository.save(photo),PhotoDto.class);
+        if (!photo.getIsPrivate()) photo.setUrl(s3Service.generateUrl(bucket, fileName));
+        return dtoConverterPhoto.convertDto(super.repository.save(photo), PhotoDto.class);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Photo photo = super.repository.findById(id).orElse(null);
+        if(photo != null){
+            s3Service.deleteFile(photo.getBucket(), photo.getPath());
+            super.repository.deleteById(id);
+        }
     }
 
     //    public PhotoDto uploadPublic(MultipartFile file) throws IOException {
