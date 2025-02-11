@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -49,17 +50,17 @@ public class TranslatorProvider {
         return HtmlUtils.htmlUnescape(response);
     }
 
-    public String translateJsonAsText(Map<String, Object> json, String origen, String translated) {
+    public Map<String, Object>  translateJsonAsText(Map<String, Object> json, String origen, String translated) {
         if (json == null || json.isEmpty()) {
-            return "{}";
+            return new HashMap<>(); // Retornar un JSON vacío en formato Map
         }
 
-        // Recorrer y traducir solo los valores del JSON
-        Map<String, Object> translatedJson = translateValues(json, origen, translated);
 
-        // Convertir el JSON de vuelta a string y devolverlo
         try {
-            return objectMapper.writeValueAsString(translatedJson);
+            Map<String, Object> translatedJson = translateValues(json, origen, translated);
+
+            // Devolver el JSON traducido directamente como un Map
+            return translatedJson;
         } catch (Exception e) {
             throw new RuntimeException("Error al serializar el JSON traducido", e);
         }

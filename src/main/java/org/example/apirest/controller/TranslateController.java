@@ -28,7 +28,7 @@ public class TranslateController {
 
     // http://localhost:8080/translator/translateJsonAsText?origen=es&translated=en
     @PostMapping("/translateJsonAsText")
-    public String translateJsonAsText(@RequestBody Map<String, Object> json,
+    public Map<String, Object> translateJsonAsText(@RequestBody Map<String, Object> json,
                                       @RequestParam String origen,
                                       @RequestParam String translated) {
         // Map<String, Object> sirve para convertir un JSON recibido en una estructura de datos manejable en Java
