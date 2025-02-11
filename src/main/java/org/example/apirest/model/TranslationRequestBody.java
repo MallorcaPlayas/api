@@ -9,6 +9,6 @@ import lombok.Data;
 public class TranslationRequestBody {
     private String languageFrom;
     private String languageTo;
-    private String text;
+    private Object text;
 
 }
