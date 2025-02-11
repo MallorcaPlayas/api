@@ -1,6 +1,7 @@
 package org.example.apirest.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.service.beach.BeachServiceImpl;
@@ -14,12 +15,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/beaches")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class BeachController{
-    private final BeachServiceImpl service;
 
-    public BeachController(BeachServiceImpl service) {
-        this.service = service;
-    }
+    private final BeachServiceImpl service;
 
     @GetMapping
 //    @PreAuthorize("hasAuthority('readBeach')")
