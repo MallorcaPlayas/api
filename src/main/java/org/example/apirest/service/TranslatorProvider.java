@@ -43,7 +43,10 @@ public class TranslatorProvider {
 
         // Enviar la solicitud usando RestTemplate
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.postForObject(url, request, String.class);
+        String response = restTemplate.postForObject(url, request, String.class);
+
+        // 🔥 Desescapar caracteres HTML antes de devolver la respuesta
+        return HtmlUtils.htmlUnescape(response);
     }
 
     public String translateJsonAsText(Map<String, Object> json, String origen, String translated) {
@@ -68,10 +71,9 @@ public class TranslatorProvider {
     private Map<String, Object> translateValues(Map<String, Object> json, String origen, String translated) {
         for (Map.Entry<String, Object> entry : json.entrySet()) {
             if (entry.getValue() instanceof String) {
-                // Si es un String, traducir
-                entry.setValue(translateText((String) entry.getValue(), origen, translated));
+                // 🔥 Desescapar caracteres HTML en cada traducción
+                entry.setValue(HtmlUtils.htmlUnescape(translateText((String) entry.getValue(), origen, translated)));
             } else if (entry.getValue() instanceof Map) {
-                // Si es otro objeto JSON, llamar recursivamente
                 entry.setValue(translateValues((Map<String, Object>) entry.getValue(), origen, translated));
             }
         }
