@@ -26,10 +26,15 @@ public class TranslateController {
         return translatorProvider.translateText(text, origen, translated);
     }
 
+    // http://localhost:8080/translator/translateJsonAsText?origen=es&translated=en
     @PostMapping("/translateJsonAsText")
     public String translateJsonAsText(@RequestBody Map<String, Object> json,
                                       @RequestParam String origen,
                                       @RequestParam String translated) {
+        // Map<String, Object> sirve para convertir un JSON recibido en una estructura de datos manejable en Java
+        // Aqui el Map<String, Object> json es un JSON que se envia en el cuerpo de la solicitud
+
+
         return translatorProvider.translateJsonAsText(json, origen, translated);
     }
 }

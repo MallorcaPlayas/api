@@ -45,7 +45,7 @@ public class TranslatorProvider {
         RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.postForObject(url, request, String.class);
 
-        // 🔥 Desescapar caracteres HTML antes de devolver la respuesta
+        //  Desescapar caracteres HTML antes de devolver la respuesta
         return HtmlUtils.htmlUnescape(response);
     }
 
@@ -69,10 +69,13 @@ public class TranslatorProvider {
      * Recorre un JSON recursivamente y traduce solo los valores, dejando las claves intactas.
      */
     private Map<String, Object> translateValues(Map<String, Object> json, String origen, String translated) {
+
         for (Map.Entry<String, Object> entry : json.entrySet()) {
             if (entry.getValue() instanceof String) {
-                // 🔥 Desescapar caracteres HTML en cada traducción
+                // Desescapar caracteres HTML en cada traducción
                 entry.setValue(HtmlUtils.htmlUnescape(translateText((String) entry.getValue(), origen, translated)));
+
+                //Si el valor es otro Map (anidado), llama recursivamente al mismo méto_do para traducirlo también.
             } else if (entry.getValue() instanceof Map) {
                 entry.setValue(translateValues((Map<String, Object>) entry.getValue(), origen, translated));
             }
