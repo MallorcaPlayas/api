@@ -2,10 +2,7 @@ package org.example.apirest.controller;
 
 
 import org.example.apirest.service.TranslatorProvider;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/translator")
@@ -25,5 +22,12 @@ public class TranslateController {
             @RequestParam String origen,
             @RequestParam String translated) {
         return translatorProvider.translateText(text, origen, translated);
+    }
+
+    @PostMapping("/translateJsonAsText")
+    public String translateJsonAsText(@RequestBody Object json,
+                                      @RequestParam String origen,
+                                      @RequestParam String translated) {
+        return translatorProvider.translateJsonAsText(json, origen, translated);
     }
 }
