@@ -1,23 +1,16 @@
 package org.example.apirest.service.photo;
 
-import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.organization.CreateOrganizationDto;
-import org.example.apirest.dto.organization.OrganizationDto;
+import org.example.apirest.dto.photo.DtoConverterPhoto;
 import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.photo.CreatePhotoDto;
-import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.Organization;
 import org.example.apirest.model.Photo;
-import org.example.apirest.repository.OrganizationRepository;
 import org.example.apirest.repository.PhotoRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.service.s3.S3Service;
-import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,36 +22,50 @@ public class PhotoServiceImpl extends GeneralizedServiceImpl<Photo, PhotoDto, Cr
 
 
     private final S3Service s3Service;
+    private final DtoConverterPhoto dtoConverterPhoto;
 
-    public PhotoServiceImpl(PhotoRepository repository, DtoConverterImpl<Photo,PhotoDto,CreatePhotoDto> dtoConverter , S3Service s3Service) {
+    public PhotoServiceImpl(PhotoRepository repository,
+                            DtoConverterImpl<Photo,PhotoDto,CreatePhotoDto> dtoConverter ,
+                            S3Service s3Service,
+                            DtoConverterPhoto dtoConverterPhoto) {
         super(repository, dtoConverter, Photo.class, PhotoDto.class);
         this.s3Service = s3Service;
+        this.dtoConverterPhoto = dtoConverterPhoto;
     }
 
     @Override
     public PhotoDto findOne(Long id) {
         Photo photo = super.repository.findById(id).orElse(null);
         PhotoDto photoDto = super.dtoConverter.convertDto(photo, PhotoDto.class);
-        photoDto.setUrl(this.s3Service.urlGenerator(photo.getBucket(), photo.getPath()));
+        if(photo.getIsPrivate()){
+            photoDto.setUrl(this.s3Service.generateTeamporalUrl(photo.getBucket(), photo.getPath()));
+        }
+
         return photoDto;
     }
 
     @Override
     public List<PhotoDto> findAll(){
         List<Photo> photos  = super.repository.findAll();
-        List<PhotoDto> photoDtos = new ArrayList<>();
-        for(Photo photo : photos){
+        return photos.stream().map(photo -> {
             PhotoDto photoDto = super.dtoConverter.convertDto(photo, PhotoDto.class);
-            String url = this.s3Service.urlGenerator(photo.getBucket(), photo.getPath());
-            photoDto.setUrl(url);
-            photoDtos.add(photoDto);
-        }
-        return photoDtos;
+            if(photo.getIsPrivate()){
+                photoDto.setUrl(this.s3Service.generateTeamporalUrl(photo.getBucket(), photo.getPath()));
+            }
+            return photoDto;
+        }).toList();
     }
 
     @Override
+    @SneakyThrows
     public PhotoDto save(CreatePhotoDto entity) {
-        return super.save(entity);
+        String bucket = entity.getIsPrivate() ? PRIVATE_BUCKET : PUBLIC_BUCKET;
+        Photo photo = super.dtoConverter.convertToEntityFromCreateDto(entity, Photo.class);
+        photo.setBucket(bucket);
+        String fileName = s3Service.uploadFile(bucket, photo.getPath(), entity.getFile());
+        photo.setPath(fileName);
+        if(!photo.getIsPrivate()) photo.setUrl(s3Service.generateUrl(bucket, fileName));
+        return dtoConverterPhoto.convertDto(super.repository.save(photo),PhotoDto.class);
     }
 
     //    public PhotoDto uploadPublic(MultipartFile file) throws IOException {

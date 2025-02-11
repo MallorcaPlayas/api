@@ -5,6 +5,7 @@ import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.service.beach.BeachServiceImpl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,9 @@ public class BeachController{
         return ResponseEntity.ok(service.findOne(id));
     }
 
-    @PostMapping
+    @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
 //    @PreAuthorize("hasAuthority('createBeach')")
-    public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto entity) {
+    public ResponseEntity<BeachDto> create(@ModelAttribute CreateBeachDto entity) {
         BeachDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }

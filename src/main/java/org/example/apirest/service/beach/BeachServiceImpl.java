@@ -1,5 +1,6 @@
 package org.example.apirest.service.beach;
 
+import lombok.SneakyThrows;
 import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
@@ -11,6 +12,7 @@ import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.CreatePhotoDto;
 import org.example.apirest.dto.photo.DtoConverterPhoto;
 import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
@@ -23,9 +25,11 @@ import org.example.apirest.repository.*;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.service.beachManager.BeachManagerServiceImpl;
 import org.example.apirest.service.photo.PhotoServiceImpl;
+import org.example.apirest.service.s3.S3Service;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +42,7 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
     private final DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoLocation;
     private final DtoConverterPhoto dtoConverterPhoto;
+    private final S3Service s3Service;
 
     public BeachServiceImpl(BeachRepository repository,
                             DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
@@ -46,7 +51,8 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
                             DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
                             DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach,
                             DtoConverterImpl<Location, LocationDto, CreateLocationDto> dtoLocation,
-                            DtoConverterPhoto dtoConverterPhoto) {
+                            DtoConverterPhoto dtoConverterPhoto,
+                            S3Service s3Service) {
 
         super(repository, dtoConverter, Beach.class, BeachDto.class);
         this.dtoBeachManager = dtoBeachManager;
@@ -55,11 +61,12 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         this.dtoTypeBeach = dtoTypeBeach;
         this.dtoLocation = dtoLocation;
         this.dtoConverterPhoto = dtoConverterPhoto;
+        this.s3Service = s3Service;
     }
 
     @Override
     public BeachDto findOne(Long id) {
-        Beach beach = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
         List<Photo> photos = beach.getPhotos();
         List<PhotoDto> photoDtos = photos.stream().map(photo -> dtoConverterPhoto.convertDto(photo, PhotoDto.class)).toList();
         BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
@@ -117,13 +124,29 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
             entityToInsert.setCameras(cameras);
         }
 
-        if(entity.getLocation() != null){
-            Location location = dtoLocation.convertToEntityFromCreateDto(entity.getLocation(),Location.class);
+        if (entity.getLocation() != null) {
+            Location location = dtoLocation.convertToEntityFromCreateDto(entity.getLocation(), Location.class);
             entityToInsert.setLocation(location);
         }
 
-        if(entity.getPhotos() != null){
-            List<Photo> photos = dtoConverterPhoto.convertToEntityListFromCreateDto(entity.getPhotos(),Photo.class);
+        if (entity.getPhotos() != null) {
+            List<CreatePhotoDto> createPhotoDtos = entity.getPhotos();
+            List<Photo> photos = createPhotoDtos
+                    .stream()
+                    .map(createPhotoDto -> {
+                        try {
+                            Photo photo = dtoConverterPhoto.convertToEntityFromCreateDto(createPhotoDto, Photo.class);
+                            photo.setBucket("mallorca-playas-public");
+                            photo.setPath("");
+                            String fileName = s3Service.uploadFile(photo.getBucket(), photo.getPath(), createPhotoDto.getFile());
+                            photo.setPath(fileName);
+                            if (!photo.getIsPrivate()) photo.setUrl(s3Service.generateUrl(photo.getBucket(), fileName));
+                            return photo;
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    }).toList();
             entityToInsert.setPhotos(photos);
         }
 

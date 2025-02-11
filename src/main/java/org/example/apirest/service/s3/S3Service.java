@@ -3,11 +3,7 @@ package org.example.apirest.service.s3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Utilities;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -19,7 +15,6 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -51,7 +46,7 @@ public class S3Service {
                 .build());
     }
 
-    public String urlGenerator(String bucket , String key){
+    public String generateUrl(String bucket , String key){
         S3Utilities s3Utilities = s3Client.utilities();
 
         URL url = s3Utilities.getUrl(GetUrlRequest.builder()
@@ -62,7 +57,7 @@ public class S3Service {
         return url.toExternalForm();
     }
 
-    public String temporalUrlGenerator(String bucket , String key){
+    public String generateTeamporalUrl(String bucket , String key){
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)

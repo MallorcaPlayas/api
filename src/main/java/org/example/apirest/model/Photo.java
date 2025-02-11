@@ -20,15 +20,27 @@ public class Photo implements BaseEntity {
 
     private String path;
 
+    private Boolean isPrivate;
+
+    private String url;
+
     @ManyToOne
     @JoinColumn(name = "beach_id")
     private Beach beach;
 
-//    @ManyToOne
-//    @JoinColumn(name = "comment_id")
-//    private Comment comment;
-//
-//    @OneToOne
-//    @JoinColumn(name="user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+    @OneToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name="route_id")
+    private Route route;
+
+    @OneToOne
+    @JoinColumn(name="excursion_id")
+    private Excursion excursion;
 }
