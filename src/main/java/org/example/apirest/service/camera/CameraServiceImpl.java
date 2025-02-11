@@ -1,49 +1,79 @@
 package org.example.apirest.service.camera;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.camera.CameraDto;
+import org.example.apirest.dto.camera.CreateCameraDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Camera;
+import org.example.apirest.repository.CameraRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CameraServiceImpl {
-    rotected final R repository;
+@RequiredArgsConstructor
+public class CameraServiceImpl implements DtoConverter<Camera, CameraDto, CreateCameraDto> {
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    private final CameraRepository repository;
+    private final ModelMapper mapper;
+
+    public List<CameraDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public CameraDto findOne(Long id) {
+        Camera camera = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Camera.class, id));
+        return this.toDto(camera);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public CameraDto save(CreateCameraDto createCameraDto) {
+        Camera camera = fromDto(createCameraDto);
+        Camera savedCamera = repository.save(camera);
+        return toDto(savedCamera);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public CameraDto update(Long id, CreateCameraDto createCameraDto) {
+        Camera oldCamera = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Camera.class, id));
+        Camera cameraToUpdate = fromDto(createCameraDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldCamera, cameraToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        Camera savedCamera = repository.save(oldCamera);
+        return toDto(savedCamera);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        Camera camera = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Camera.class, id));
+        repository.delete(camera);
+    }
+
+    @Override
+    public CameraDto toDto(Camera camera) {
+        return mapper.map(camera, CameraDto.class);
+    }
+
+    @Override
+    public List<CameraDto> toDtoList(List<Camera> cameras) {
+        return cameras.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public Camera fromDto(CreateCameraDto createCameraDto) {
+        return mapper.map(createCameraDto, Camera.class);
+    }
+
+    @Override
+    public List<Camera> fromDtoList(List<CreateCameraDto> createCameraDtos) {
+        return createCameraDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

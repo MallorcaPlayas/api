@@ -1,49 +1,79 @@
 package org.example.apirest.service.businessType;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.businessType.BusinessTypeDto;
+import org.example.apirest.dto.businessType.CreateBusinessTypeDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.BusinessType;
+import org.example.apirest.repository.BusinessTypeRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BusinessTypeServiceImpl {
-    rotected final R repository;
+@RequiredArgsConstructor
+public class BusinessTypeServiceImpl implements DtoConverter<BusinessType, BusinessTypeDto, CreateBusinessTypeDto> {
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    private final BusinessTypeRepository repository;
+    private final ModelMapper mapper;
+
+    public List<BusinessTypeDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public BusinessTypeDto findOne(Long id) {
+        BusinessType businessType = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BusinessType.class, id));
+        return this.toDto(businessType);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public BusinessTypeDto save(CreateBusinessTypeDto createBusinessTypeDto) {
+        BusinessType businessType = fromDto(createBusinessTypeDto);
+        BusinessType savedBusinessType = repository.save(businessType);
+        return toDto(savedBusinessType);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public BusinessTypeDto update(Long id, CreateBusinessTypeDto createBusinessTypeDto) {
+        BusinessType oldBusinessType = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BusinessType.class, id));
+        BusinessType businessTypeToUpdate = fromDto(createBusinessTypeDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldBusinessType, businessTypeToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        BusinessType savedBusinessType = repository.save(oldBusinessType);
+        return toDto(savedBusinessType);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        BusinessType businessType = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BusinessType.class, id));
+        repository.delete(businessType);
+    }
+
+    @Override
+    public BusinessTypeDto toDto(BusinessType businessType) {
+        return mapper.map(businessType, BusinessTypeDto.class);
+    }
+
+    @Override
+    public List<BusinessTypeDto> toDtoList(List<BusinessType> businessTypes) {
+        return businessTypes.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public BusinessType fromDto(CreateBusinessTypeDto createBusinessTypeDto) {
+        return mapper.map(createBusinessTypeDto, BusinessType.class);
+    }
+
+    @Override
+    public List<BusinessType> fromDtoList(List<CreateBusinessTypeDto> createBusinessTypeDtos) {
+        return createBusinessTypeDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

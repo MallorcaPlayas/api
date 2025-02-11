@@ -1,50 +1,79 @@
 package org.example.apirest.service.typeBeach;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.typeBeach.TypeBeachDto;
+import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.TypeBeach;
+import org.example.apirest.repository.TypeBeachRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TypeBeachServiceImpl{
+@RequiredArgsConstructor
+public class TypeBeachServiceImpl implements DtoConverter<TypeBeach, TypeBeachDto, CreateTypeBeachDto> {
 
-    rotected final R repository;
+    private final TypeBeachRepository repository;
+    private final ModelMapper mapper;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<TypeBeachDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public TypeBeachDto findOne(Long id) {
+        TypeBeach typeBeach = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TypeBeach.class, id));
+        return this.toDto(typeBeach);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public TypeBeachDto save(CreateTypeBeachDto createTypeBeachDto) {
+        TypeBeach typeBeach = fromDto(createTypeBeachDto);
+        TypeBeach savedTypeBeach = repository.save(typeBeach);
+        return toDto(savedTypeBeach);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public TypeBeachDto update(Long id, CreateTypeBeachDto createTypeBeachDto) {
+        TypeBeach oldTypeBeach = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TypeBeach.class, id));
+        TypeBeach typeBeachToUpdate = fromDto(createTypeBeachDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldTypeBeach, typeBeachToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        TypeBeach savedTypeBeach = repository.save(oldTypeBeach);
+        return toDto(savedTypeBeach);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        TypeBeach typeBeach = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TypeBeach.class, id));
+        repository.delete(typeBeach);
+    }
+
+    @Override
+    public TypeBeachDto toDto(TypeBeach typeBeach) {
+        return mapper.map(typeBeach, TypeBeachDto.class);
+    }
+
+    @Override
+    public List<TypeBeachDto> toDtoList(List<TypeBeach> typeBeaches) {
+        return typeBeaches.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public TypeBeach fromDto(CreateTypeBeachDto createTypeBeachDto) {
+        return mapper.map(createTypeBeachDto, TypeBeach.class);
+    }
+
+    @Override
+    public List<TypeBeach> fromDtoList(List<CreateTypeBeachDto> createTypeBeachDtos) {
+        return createTypeBeachDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

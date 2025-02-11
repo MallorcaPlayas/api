@@ -3,6 +3,7 @@ package org.example.apirest.utils;
 import lombok.Data;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.route.CreateRouteDto;
+import org.example.apirest.model.Location;
 import org.example.apirest.model.Route;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -23,8 +24,8 @@ public class RouteHandler extends DefaultHandler {
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
 
-    private CreateRouteDto route;
-    private CreateLocationDto currentLocation;
+    private Route route;
+    private Location currentLocation;
     private StringBuilder elementValue;
 
     @Override
@@ -38,7 +39,7 @@ public class RouteHandler extends DefaultHandler {
 
     @Override
     public void startDocument() throws SAXException {
-        this.route = new CreateRouteDto();
+        this.route = new Route();
         this.route.setLocations(new ArrayList<>());
     }
 
@@ -46,7 +47,7 @@ public class RouteHandler extends DefaultHandler {
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
         switch (qName) {
             case POINT:
-                this.currentLocation = new CreateLocationDto();
+                this.currentLocation = new Location();
                 this.currentLocation.setLatitude(Double.parseDouble(attr.getValue("lat")));
                 this.currentLocation.setLongitude(Double.parseDouble(attr.getValue("lon")));
                 break;

@@ -1,49 +1,79 @@
 package org.example.apirest.service.excursionTicketDetails;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.excursionTicketDetails.ExcursionTicketDetailsDto;
+import org.example.apirest.dto.excursionTicketDetails.CreateExcursionTicketDetailsDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.ExcursionTicketDetails;
+import org.example.apirest.repository.ExcursionTicketDetailsRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ExcursionTicketDetailsServiceImpl {
-    rotected final R repository;
+@RequiredArgsConstructor
+public class ExcursionTicketDetailsServiceImpl implements DtoConverter<ExcursionTicketDetails, ExcursionTicketDetailsDto, CreateExcursionTicketDetailsDto> {
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    private final ExcursionTicketDetailsRepository repository;
+    private final ModelMapper mapper;
+
+    public List<ExcursionTicketDetailsDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public ExcursionTicketDetailsDto findOne(Long id) {
+        ExcursionTicketDetails excursionTicketDetails = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ExcursionTicketDetails.class, id));
+        return this.toDto(excursionTicketDetails);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public ExcursionTicketDetailsDto save(CreateExcursionTicketDetailsDto createExcursionTicketDetailsDto) {
+        ExcursionTicketDetails excursionTicketDetails = fromDto(createExcursionTicketDetailsDto);
+        ExcursionTicketDetails savedExcursionTicketDetails = repository.save(excursionTicketDetails);
+        return toDto(savedExcursionTicketDetails);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public ExcursionTicketDetailsDto update(Long id, CreateExcursionTicketDetailsDto createExcursionTicketDetailsDto) {
+        ExcursionTicketDetails oldExcursionTicketDetails = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ExcursionTicketDetails.class, id));
+        ExcursionTicketDetails excursionTicketDetailsToUpdate = fromDto(createExcursionTicketDetailsDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldExcursionTicketDetails, excursionTicketDetailsToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        ExcursionTicketDetails savedExcursionTicketDetails = repository.save(oldExcursionTicketDetails);
+        return toDto(savedExcursionTicketDetails);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        ExcursionTicketDetails excursionTicketDetails = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ExcursionTicketDetails.class, id));
+        repository.delete(excursionTicketDetails);
+    }
+
+    @Override
+    public ExcursionTicketDetailsDto toDto(ExcursionTicketDetails excursionTicketDetails) {
+        return mapper.map(excursionTicketDetails, ExcursionTicketDetailsDto.class);
+    }
+
+    @Override
+    public List<ExcursionTicketDetailsDto> toDtoList(List<ExcursionTicketDetails> excursionTicketDetailsList) {
+        return excursionTicketDetailsList.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public ExcursionTicketDetails fromDto(CreateExcursionTicketDetailsDto createExcursionTicketDetailsDto) {
+        return mapper.map(createExcursionTicketDetailsDto, ExcursionTicketDetails.class);
+    }
+
+    @Override
+    public List<ExcursionTicketDetails> fromDtoList(List<CreateExcursionTicketDetailsDto> createExcursionTicketDetailsDtos) {
+        return createExcursionTicketDetailsDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

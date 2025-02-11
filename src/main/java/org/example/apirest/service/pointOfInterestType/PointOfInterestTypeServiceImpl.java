@@ -1,50 +1,76 @@
 package org.example.apirest.service.pointOfInterestType;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.pointOfInterestType.CreatePointOfInterestTypeDto;
+import org.example.apirest.dto.pointOfInterestType.PointOfInterestTypeDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.PointOfInterestType;
+import org.example.apirest.repository.PointOfInterestTypeRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PointOfInterestTypeServiceImpl {
+@RequiredArgsConstructor
+public class PointOfInterestTypeServiceImpl implements DtoConverter<PointOfInterestType, PointOfInterestTypeDto, CreatePointOfInterestTypeDto> {
 
-    rotected final R repository;
+    private final PointOfInterestTypeRepository repository;
+    private final ModelMapper mapper;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<PointOfInterestTypeDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public PointOfInterestTypeDto findOne(Long id) {
+        PointOfInterestType entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PointOfInterestType.class, id));
+        return this.toDto(entity);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public PointOfInterestTypeDto save(CreatePointOfInterestTypeDto dto) {
+        PointOfInterestType entityToInsert = fromDto(dto);
+        return toDto(repository.save(entityToInsert));
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public PointOfInterestTypeDto update(Long id, CreatePointOfInterestTypeDto dto) {
+        PointOfInterestType oldEntity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PointOfInterestType.class, id));
+        PointOfInterestType newEntity = fromDto(dto);
 
-        if (oldEntity == null) {
-            return null;
-        }
-
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        UtilsClass.updateFields(oldEntity, newEntity);
+        return toDto(repository.save(oldEntity));
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        PointOfInterestType entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PointOfInterestType.class, id));
         repository.delete(entity);
+    }
+
+    @Override
+    public PointOfInterestTypeDto toDto(PointOfInterestType entity) {
+        return mapper.map(entity, PointOfInterestTypeDto.class);
+    }
+
+    @Override
+    public List<PointOfInterestTypeDto> toDtoList(List<PointOfInterestType> entities) {
+        return entities.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public PointOfInterestType fromDto(CreatePointOfInterestTypeDto dto) {
+        return mapper.map(dto, PointOfInterestType.class);
+    }
+
+    @Override
+    public List<PointOfInterestType> fromDtoList(List<CreatePointOfInterestTypeDto> dtos) {
+        return dtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

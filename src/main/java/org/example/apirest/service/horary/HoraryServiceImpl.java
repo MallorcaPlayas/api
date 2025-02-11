@@ -1,50 +1,76 @@
 package org.example.apirest.service.horary;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.horary.CreateHoraryDto;
+import org.example.apirest.dto.horary.HoraryDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Horary;
+import org.example.apirest.repository.HoraryRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class HoraryServiceImpl{
+@RequiredArgsConstructor
+public class HoraryServiceImpl implements DtoConverter<Horary, HoraryDto, CreateHoraryDto> {
 
-    rotected final R repository;
+    private final HoraryRepository repository;
+    private final ModelMapper mapper;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<HoraryDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public HoraryDto findOne(Long id) {
+        Horary entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Horary.class, id));
+        return this.toDto(entity);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public HoraryDto save(CreateHoraryDto dto) {
+        Horary entityToInsert = fromDto(dto);
+        return toDto(repository.save(entityToInsert));
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public HoraryDto update(Long id, CreateHoraryDto dto) {
+        Horary oldEntity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Horary.class, id));
+        Horary newEntity = fromDto(dto);
 
-        if (oldEntity == null) {
-            return null;
-        }
-
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        UtilsClass.updateFields(oldEntity, newEntity);
+        return toDto(repository.save(oldEntity));
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        Horary entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Horary.class, id));
         repository.delete(entity);
+    }
+
+    @Override
+    public HoraryDto toDto(Horary entity) {
+        return mapper.map(entity, HoraryDto.class);
+    }
+
+    @Override
+    public List<HoraryDto> toDtoList(List<Horary> entities) {
+        return entities.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public Horary fromDto(CreateHoraryDto dto) {
+        return mapper.map(dto, Horary.class);
+    }
+
+    @Override
+    public List<Horary> fromDtoList(List<CreateHoraryDto> dtos) {
+        return dtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

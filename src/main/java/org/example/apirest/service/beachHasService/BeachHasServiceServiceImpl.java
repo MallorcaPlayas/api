@@ -1,69 +1,99 @@
 package org.example.apirest.service.beachHasService;
 
-import org.example.apirest.dto.DtoConverterImpl;
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
 import org.example.apirest.dto.beachHasService.CreateBeachHasServiceDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.*;
-import org.example.apirest.repository.*;
+import org.example.apirest.model.Beach;
+import org.example.apirest.model.BeachHasService;
+import org.example.apirest.model.ServiceBeach;
+import org.example.apirest.repository.BeachHasServiceRepository;
+import org.example.apirest.repository.BeachRepository;
+import org.example.apirest.repository.ServiceRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BeachHasServiceServiceImpl{
+@RequiredArgsConstructor
+public class BeachHasServiceServiceImpl implements DtoConverter<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> {
 
+    private final BeachHasServiceRepository repository;
     private final BeachRepository beachRepository;
     private final ServiceRepository serviceRepository;
-    private BeachHasServiceRepository repository;
+    private final ModelMapper mapper;
 
     public List<BeachHasServiceDto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+        return this.toDtoList(repository.findAll());
     }
 
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
-    }
-
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
-    }
-
-    public BeachHasServiceServiceImpl(BeachHasServiceRepository repository, DtoConverterImpl<BeachHasService,BeachHasServiceDto,CreateBeachHasServiceDto> dtoConverter, BeachRepository beachRepository, ServiceRepository serviceRepository) {
-        super(repository, dtoConverter, BeachHasService.class, BeachHasServiceDto.class);
-        this.beachRepository = beachRepository;
-        this.serviceRepository = serviceRepository;
+    public BeachHasServiceDto findOne(Long id) {
+        BeachHasService beachHasService = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BeachHasService.class, id));
+        return this.toDto(beachHasService);
     }
 
     public BeachHasServiceDto save(CreateBeachHasServiceDto entity) {
-        BeachHasService entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, BeachHasService.class);
-        Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
-        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach().getId()));
+        BeachHasService entityToInsert = fromDto(entity);
+        Beach beach = beachRepository.findById(entity.getBeach_id())
+                .orElseThrow(() -> new NotFoundException(Beach.class, entity.getBeach_id()));
+        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId())
+                .orElseThrow(() -> new NotFoundException(ServiceBeach.class, entity.getServiceBeach().getId()));
+
         entityToInsert.setBeach(beach);
         entityToInsert.setServiceBeach(service);
-        return dtoConverter.convertDto(repository.save(entityToInsert), BeachHasServiceDto.class);
+
+        return toDto(repository.save(entityToInsert));
     }
 
     public BeachHasServiceDto update(Long id, CreateBeachHasServiceDto entity) {
-        BeachHasService old = repository.findById(id).orElseThrow(()-> new NotFoundException(BeachHasService.class,id));
-        BeachHasService newEntity = dtoConverter.convertToEntityFromCreateDto(entity, BeachHasService.class);
+        BeachHasService oldEntity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BeachHasService.class, id));
+        BeachHasService newEntity = fromDto(entity);
 
-        if (entity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldEntity, newEntity);
 
-        UtilsClass.updateFields(old, newEntity);
+        Beach beach = beachRepository.findById(entity.getBeach_id())
+                .orElseThrow(() -> new NotFoundException(Beach.class, entity.getBeach_id()));
+        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId())
+                .orElseThrow(() -> new NotFoundException(ServiceBeach.class, entity.getServiceBeach().getId()));
 
-        Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
-        ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach().getId()));
-        old.setBeach(beach);
-        old.setServiceBeach(service);
+        oldEntity.setBeach(beach);
+        oldEntity.setServiceBeach(service);
 
-        return dtoConverter.convertDto(repository.save(old), BeachHasServiceDto.class);
+        return toDto(repository.save(oldEntity));
     }
 
-    public BeachHasServiceDto toDto
+    public void delete(Long id) {
+        BeachHasService entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BeachHasService.class, id));
+        repository.delete(entity);
+    }
+
+    @Override
+    public BeachHasServiceDto toDto(BeachHasService entity) {
+        return mapper.map(entity, BeachHasServiceDto.class);
+    }
+
+    @Override
+    public List<BeachHasServiceDto> toDtoList(List<BeachHasService> entities) {
+        return entities.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public BeachHasService fromDto(CreateBeachHasServiceDto dto) {
+        return mapper.map(dto, BeachHasService.class);
+    }
+
+    @Override
+    public List<BeachHasService> fromDtoList(List<CreateBeachHasServiceDto> dtos) {
+        return dtos.stream()
+                .map(this::fromDto)
+                .toList();
+    }
 }

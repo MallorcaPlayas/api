@@ -9,6 +9,7 @@ import org.example.apirest.model.UserHasRole;
 import org.example.apirest.repository.UserHasRoleRepository;
 import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class UserHasRoleServiceImpl implements DtoConverter<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> {
     
     private final UserHasRoleRepository repository;
+    private final ModelMapper mapper;
     
     public List<UserHasRoleDto> findAll() {
         return this.toDtoList(repository.findAll());
@@ -28,23 +30,19 @@ public class UserHasRoleServiceImpl implements DtoConverter<UserHasRole, UserHas
         return this.toDto(entity);
     }
     
-    public UserHasRoleDto save(UserHasRoleDto entity) {
-        UserHasRole entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, UserHasRole.class);
+    public UserHasRoleDto save(CreateUserHasRoleDto entity) {
+        UserHasRole entityToInsert = this.fromDto(entity);
         return this.toDto(repository.save(entityToInsert));
     }
 
    
-    public UserHasRoleDto update(Long id, UserHasRoleDto createEntity) {
+    public UserHasRoleDto update(Long id, CreateUserHasRoleDto createEntity) {
         UserHasRole oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(UserHasRole.class, id));
-        UserHasRole entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, UserHasRole.class);
-
-        if (oldEntity == null) {
-            return null;
-        }
+        UserHasRole entityToInsert = fromDto(createEntity);
 
         UtilsClass.updateFields(oldEntity, entityToInsert);
 
-        return this.toDto(repository.save(oldEntity), dtoClass);
+        return this.toDto(repository.save(oldEntity));
     }
 
     
@@ -55,21 +53,21 @@ public class UserHasRoleServiceImpl implements DtoConverter<UserHasRole, UserHas
 
     @Override
     public UserHasRoleDto toDto(UserHasRole userHasRole) {
-        return null;
+        return mapper.map(userHasRole,UserHasRoleDto.class);
     }
 
     @Override
     public List<UserHasRoleDto> toDtoList(List<UserHasRole> userHasRoles) {
-        return List.of();
+        return userHasRoles.stream().map(this::toDto).toList();
     }
 
     @Override
     public UserHasRole fromDto(CreateUserHasRoleDto createUserHasRoleDto) {
-        return null;
+        return mapper.map(createUserHasRoleDto,UserHasRole.class);
     }
 
     @Override
     public List<UserHasRole> fromDtoList(List<CreateUserHasRoleDto> createUserHasRoleDtos) {
-        return List.of();
+        return createUserHasRoleDtos.stream().map(this::fromDto).toList();
     }
 }

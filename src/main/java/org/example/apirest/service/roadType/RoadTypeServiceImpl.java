@@ -1,50 +1,79 @@
 package org.example.apirest.service.roadType;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.roadType.RoadTypeDto;
+import org.example.apirest.dto.roadType.CreateRoadTypeDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.RoadType;
+import org.example.apirest.repository.RoadTypeRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RoadTypeServiceImpl{
+@RequiredArgsConstructor
+public class RoadTypeServiceImpl implements DtoConverter<RoadType, RoadTypeDto, CreateRoadTypeDto> {
 
-    rotected final R repository;
+    private final RoadTypeRepository repository;
+    private final ModelMapper mapper;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<RoadTypeDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public RoadTypeDto findOne(Long id) {
+        RoadType roadType = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(RoadType.class, id));
+        return this.toDto(roadType);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public RoadTypeDto save(CreateRoadTypeDto createRoadTypeDto) {
+        RoadType roadType = fromDto(createRoadTypeDto);
+        RoadType savedRoadType = repository.save(roadType);
+        return toDto(savedRoadType);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public RoadTypeDto update(Long id, CreateRoadTypeDto createRoadTypeDto) {
+        RoadType oldRoadType = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(RoadType.class, id));
+        RoadType roadTypeToUpdate = fromDto(createRoadTypeDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldRoadType, roadTypeToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        RoadType savedRoadType = repository.save(oldRoadType);
+        return toDto(savedRoadType);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        RoadType roadType = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(RoadType.class, id));
+        repository.delete(roadType);
+    }
+
+    @Override
+    public RoadTypeDto toDto(RoadType roadType) {
+        return mapper.map(roadType, RoadTypeDto.class);
+    }
+
+    @Override
+    public List<RoadTypeDto> toDtoList(List<RoadType> roadTypes) {
+        return roadTypes.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public RoadType fromDto(CreateRoadTypeDto createRoadTypeDto) {
+        return mapper.map(createRoadTypeDto, RoadType.class);
+    }
+
+    @Override
+    public List<RoadType> fromDtoList(List<CreateRoadTypeDto> createRoadTypeDtos) {
+        return createRoadTypeDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

@@ -1,16 +1,17 @@
 package org.example.apirest.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.repository.OrganizationRepository;
 import org.example.apirest.repository.UserRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.service.role.RoleServiceImpl;
 import org.example.apirest.service.userHasRole.UserHasRoleServiceImpl;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,12 +28,13 @@ import java.util.Optional;
 //  UserServiceImpl manejar la lógica relacionada con los usuarios, incluyendo operaciones CRUD
 //  y autenticación para Spring Security.
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService , DtoConverter<User, UserDto, CreateUserDto> {
 
     private final OrganizationRepository organizationRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     private final UserHasRoleServiceImpl userHasRoleService;
+    private final ModelMapper mapper;
 
     public List<UserDto> findAll() {
         return this.toDtoList(repository.findAll());
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserDetailsService {
 
     public UserDto update(Long id, CreateUserDto entity) {
         User old = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class, id));
-        User newEntity = dtoConverter.convertToEntityFromCreateDto(entity, User.class);
+        User newEntity = this.fromDto(entity);
 
         UtilsClass.updateFields(old, newEntity);
 
@@ -87,24 +89,24 @@ public class UserServiceImpl implements UserDetailsService {
 
         if (entity.getRoles() != null) {
             old.getRoles().clear();
-            List<UserHasRole> roles = roleDto.convertToEntityListFromCreateDto(entity.getRoles(), UserHasRole.class);
+            List<UserHasRole> roles = userHasRoleService.fromDtoList(entity.getRoles());
             for (UserHasRole role : roles) {
                 role.setUser(old);
             }
             old.getRoles().addAll(roles);
         }
 
-        return dtoConverter.convertDto(repository.save(old), UserDto.class);
+        return this.toDto(repository.save(old));
     }
 
     public Optional<UserDto> findByUserName(String username) {
         return repository.findByUserName(username)
-                .map(user -> dtoConverter.convertDto(user, UserDto.class));
+                .map(this::toDto);
     }
 
     public Optional<UserDto> findByEmail(String email) {
         return repository.findByEmail(email)
-                .map(user -> dtoConverter.convertDto(user, UserDto.class));
+                .map(this::toDto);
     }
 
 

@@ -1,50 +1,83 @@
-package org.example.apirest.service.notification;
-
-import org.example.apirest.error.NotFoundException;
-import org.example.apirest.utils.UtilsClass;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-@Service
-public class NotificationServiceImpl{
-
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
-    }
-
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
-    }
-
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
-    }
-
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
-        }
-
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
-    }
-
-    @Override
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
-    }
-}
+//package org.example.apirest.service.notification;
+//
+//import lombok.RequiredArgsConstructor;
+//import org.example.apirest.dto.notification.NotificationDto;
+//import org.example.apirest.dto.notification.CreateNotificationDto;
+//import org.example.apirest.error.NotFoundException;
+//import org.example.apirest.model.Notification;
+//import org.example.apirest.repository.NotificationRepository;
+//import org.example.apirest.service.DtoConverter;
+//import org.example.apirest.utils.UtilsClass;
+//import org.modelmapper.ModelMapper;
+//import org.springframework.stereotype.Service;
+//
+//import java.util.List;
+//
+//@Service
+//@RequiredArgsConstructor
+//public class NotificationServiceImpl implements DtoConverter<Notification, NotificationDto, CreateNotificationDto> {
+//
+//    private final NotificationRepository repository;
+//    private final ModelMapper modelMapper;
+//
+//    public List<NotificationDto> findAll() {
+//        return this.toDtoList(repository.findAll());
+//    }
+//
+//    public NotificationDto findOne(Long id) {
+//        Notification notification = repository.findById(id)
+//                .orElseThrow(() -> new NotFoundException(Notification.class, id));
+//        return this.toDto(notification);
+//    }
+//
+//    public NotificationDto save(CreateNotificationDto createNotificationDto) {
+//        Notification notification = fromDto(createNotificationDto);
+//        Notification savedNotification = repository.save(notification);
+//        return toDto(savedNotification);
+//    }
+//
+//    public NotificationDto update(Long id, CreateNotificationDto createNotificationDto) {
+//        Notification oldNotification = repository.findById(id)
+//                .orElseThrow(() -> new NotFoundException(Notification.class, id));
+//        Notification newNotification = fromDto(createNotificationDto);
+//
+//        if (newNotification == null) {
+//            return null;
+//        }
+//
+//        UtilsClass.updateFields(oldNotification, newNotification);
+//
+//        Notification savedNotification = repository.save(oldNotification);
+//        return toDto(savedNotification);
+//    }
+//
+//    public void delete(Long id) {
+//        Notification notification = repository.findById(id)
+//                .orElseThrow(() -> new NotFoundException(Notification.class, id));
+//        repository.delete(notification);
+//    }
+//
+//    @Override
+//    public NotificationDto toDto(Notification notification) {
+//        return modelMapper.map(notification, NotificationDto.class);
+//    }
+//
+//    @Override
+//    public List<NotificationDto> toDtoList(List<Notification> notifications) {
+//        return notifications.stream()
+//                .map(this::toDto)
+//                .toList();
+//    }
+//
+//    @Override
+//    public Notification fromDto(CreateNotificationDto createNotificationDto) {
+//        return modelMapper.map(createNotificationDto, Notification.class);
+//    }
+//
+//    @Override
+//    public List<Notification> fromDtoList(List<CreateNotificationDto> createNotificationDtos) {
+//        return createNotificationDtos.stream()
+//                .map(this::fromDto)
+//                .toList();
+//    }
+//}

@@ -76,7 +76,7 @@ public class RoleServiceImpl implements DtoConverter<Role,RoleDto,CreateRoleDto>
     @Override
     public Role fromDto(CreateRoleDto createRoleDto) {
         Role role = mapper.map(createRoleDto, Role.class);
-        List<RoleHasFunction> functions = roleHasFunctionService.fromDto((createRoleDto.getRoleHasFunctions()));
+        List<RoleHasFunction> functions = roleHasFunctionService.fromDtoList((createRoleDto.getRoleHasFunctions()));
         for (RoleHasFunction function : functions) {
             function.setRole(role);
         }

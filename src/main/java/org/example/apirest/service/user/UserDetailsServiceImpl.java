@@ -1,9 +1,15 @@
 package org.example.apirest.service.user;
 
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.User;
 import org.example.apirest.repository.UserRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,47 +19,68 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+@RequiredArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService, DtoConverter<User, UserDto, CreateUserDto> {
 
     private final UserRepository userRepository;
+    private final ModelMapper mapper;
 
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<UserDto> findAll() {
+        return this.toDtoList(userRepository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public UserDto findOne(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(User.class, id));
+        return this.toDto(user);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public UserDto save(CreateUserDto createUserDto) {
+        User user = fromDto(createUserDto);
+        User savedUser = userRepository.save(user);
+        return toDto(savedUser);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public UserDto update(Long id, CreateUserDto createUserDto) {
+        User oldUser = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(User.class, id));
+        User userToUpdate = fromDto(createUserDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldUser, userToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        User savedUser = userRepository.save(oldUser);
+        return toDto(savedUser);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(User.class, id));
+        userRepository.delete(user);
+    }
+
+    @Override
+    public UserDto toDto(User user) {
+        // You may use a mapper here if you have one, e.g., ModelMapper.
+        return mapper.map(user,UserDto.class); // Adjust as needed
+    }
+
+    @Override
+    public List<UserDto> toDtoList(List<User> users) {
+        return users.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public User fromDto(CreateUserDto createUserDto) {
+        return mapper.map(createUserDto,User.class); // Adjust as needed
+    }
+
+    @Override
+    public List<User> fromDtoList(List<CreateUserDto> createUserDtos) {
+        return createUserDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 
     @Override
@@ -68,3 +95,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         );
     }
 }
+
+
+

@@ -73,9 +73,7 @@ public class RouteServiceImpl implements DtoConverter<Route,RouteDto, CreateRout
         RouteHandler routeHandler = new RouteHandler();
 
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
-        CreateRouteDto createRouteDto = routeHandler.getRoute();
-
-        Route route = this.fromDto(createRouteDto);
+        Route route = routeHandler.getRoute();
 
         return toDto(repository.save(route));
     }
@@ -98,9 +96,14 @@ public class RouteServiceImpl implements DtoConverter<Route,RouteDto, CreateRout
     }
 
     @Override
+    @SneakyThrows
     public Route fromDto(CreateRouteDto dto) {
         Route route = mapper.map(dto, Route.class);
-        List<Location> locations = locationService.fromDto(entity.getLocations());
+        RouteHandler routeHandler = new RouteHandler();
+
+        saxParser.parse(dto.getFile().getInputStream(),routeHandler);
+
+        List<Location> locations = routeHandler.getRoute().getLocations();
 
         for(Location location : locations){
             location.setRoute(route);
