@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.service.user.UserServiceImpl;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 // UserController: Maneja las operaciones CRUD de usuarios (registro, actualización, eliminación, etc.).
 // UserDto: Representa un usuario cuando se devuelve desde la API (por ejemplo, al consultar un usuario).
 // CreateUserDto: Representa los datos necesarios para crear o actualizar un usuario
@@ -22,40 +24,6 @@ import java.util.List;
 public class UserController  {
 
     private final UserServiceImpl service;
-
-    public UserController(UserServiceImpl service) {
-        this.service = service;
-    }
-
-    protected final GeneralizedService<Dto,CreateDto> service;
-
-    @GetMapping
-    public ResponseEntity<List<Dto>> index() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
-        return ResponseEntity.ok(newEntity);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
-        return ResponseEntity.ok(updated);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
-    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('readUser')")

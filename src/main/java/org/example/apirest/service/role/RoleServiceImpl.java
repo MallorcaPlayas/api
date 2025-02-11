@@ -1,87 +1,91 @@
 package org.example.apirest.service.role;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.role.CreateRoleDto;
 import org.example.apirest.dto.role.RoleDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
+import org.example.apirest.repository.RoleRepository;
+import org.example.apirest.service.DtoConverter;
+import org.example.apirest.service.function.FunctionServiceImpl;
+import org.example.apirest.service.roleHasFunction.RoleHasFunctionServiceImpl;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RoleServiceImpl {
+@RequiredArgsConstructor
+public class RoleServiceImpl implements DtoConverter<Role,RoleDto,CreateRoleDto> {
 
-    rotected final R repository;
+    private final RoleRepository repository;
+    private final ModelMapper mapper;
+    private final RoleHasFunctionServiceImpl roleHasFunctionService;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<RoleDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+
+    public RoleDto findOne(Long id) {
+        Role entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
+        return toDto(entity);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
-    }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
-        }
-
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
-    }
-
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        Role entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Role.class,id));
         repository.delete(entity);
     }
 
-
     public RoleDto save(CreateRoleDto entity) {
-        Role entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, Role.class);
-
-        if (entity.getRoleHasFunctions() != null) {
-            List<RoleHasFunction> functions = dtoFunction.convertToEntityListFromCreateDto(entity.getRoleHasFunctions(), RoleHasFunction.class);
-            for (RoleHasFunction function : functions) {
-                function.setRole(entityToInsert);
-            }
-            entityToInsert.setRoleHasFunctions(functions);
-        }
-
-        return dtoConverter.convertDto(repository.save(entityToInsert), RoleDto.class);
+        Role entityToInsert = this.fromDto(entity);
+        return this.toDto(repository.save(entityToInsert));
 
     }
 
-    public RoleDto update(Long id, CreateRoleDto entity) {
-        Role old = repository.findById(id).orElseThrow(() -> new NotFoundException(Role.class, id));
-        Role newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Role.class);
+//    public RoleDto update(Long id, CreateRoleDto entity) {
+//        Role old = repository.findById(id).orElseThrow(() -> new NotFoundException(Role.class, id));
+//        Role newEntity = this.fromDto(entity);
+//
+//        UtilsClass.updateFields(old, newEntity);
+//
+//        if (entity.getRoleHasFunctions() != null) {
+//            old.getRoleHasFunctions().clear();
+//            List<RoleHasFunction> functions = dtoFunction.convertToEntityListFromCreateDto(entity.getRoleHasFunctions(), RoleHasFunction.class);
+//            for (RoleHasFunction function : functions) {
+//                function.setRole(old);
+//            }
+//            old.getRoleHasFunctions().addAll(functions);
+//        }
+//
+//        return dtoConverter.convertDto(repository.save(old), RoleDto.class);
+//    }
 
-        UtilsClass.updateFields(old, newEntity);
+    @Override
+    public RoleDto toDto(Role role) {
+        return mapper.map(role, RoleDto.class);
+    }
 
-        if (entity.getRoleHasFunctions() != null) {
-            old.getRoleHasFunctions().clear();
-            List<RoleHasFunction> functions = dtoFunction.convertToEntityListFromCreateDto(entity.getRoleHasFunctions(), RoleHasFunction.class);
-            for (RoleHasFunction function : functions) {
-                function.setRole(old);
-            }
-            old.getRoleHasFunctions().addAll(functions);
+    @Override
+    public List<RoleDto> toDtoList(List<Role> roles) {
+        return roles.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public Role fromDto(CreateRoleDto createRoleDto) {
+        Role role = mapper.map(createRoleDto, Role.class);
+        List<RoleHasFunction> functions = roleHasFunctionService.fromDto((createRoleDto.getRoleHasFunctions()));
+        for (RoleHasFunction function : functions) {
+            function.setRole(role);
         }
+        role.setRoleHasFunctions(functions);
+        return role;
+    }
 
-        return dtoConverter.convertDto(repository.save(old), RoleDto.class);
+    @Override
+    public List<Role> fromDtoList(List<CreateRoleDto> createRoleDtos) {
+        return createRoleDtos.stream().map(this::fromDto).toList();
     }
 }

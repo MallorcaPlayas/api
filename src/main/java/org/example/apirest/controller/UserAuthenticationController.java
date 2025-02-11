@@ -1,6 +1,7 @@
 package org.example.apirest.controller;
 
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.dto.userHasRole.UserHasRoleDto;
@@ -21,20 +22,13 @@ import java.util.Optional;
 @RestController // Todos los métodos devolverán respuestas HTTP. Por defecto, todos los métodos devolverán un estado 200 y en formato JSON.
 @RequestMapping("/auth") // Todos los endpoints de este controlador tendrán la ruta /api/auth
 @CrossOrigin(origins = "*") // Permite que los endpoints de este controlador puedan ser accedidos por cualquier dominio
+@RequiredArgsConstructor
 public class UserAuthenticationController {
 
     private final UserServiceImpl userService; // servicio para buscar y guardar usuarios en la base de datos
     private final PasswordEncoder passwordEncoder; // Clase de Spring Security para encriptar y verificar contraseñas
     private final JwtKeyProvider jwtKeyProvider;
     private final JwtService jwtService;
-
-
-    public UserAuthenticationController(UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtKeyProvider jwtKeyProvider, JwtService jwtService) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtKeyProvider = jwtKeyProvider;
-        this.jwtService = jwtService;
-    }
 
     private Key getSigningKey() {
         return jwtKeyProvider.getSigningKey();

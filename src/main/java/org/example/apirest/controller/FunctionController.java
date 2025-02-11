@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.function.FunctionDto;
 import org.example.apirest.dto.function.CreateFunctionDto;
 import org.example.apirest.service.function.FunctionServiceImpl;
@@ -12,29 +13,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/functions")
 @CrossOrigin(origins = "*")
-public class FunctionController{
-    protected final GeneralizedService<Dto,CreateDto> service;
+@RequiredArgsConstructor
+public class FunctionController {
+
+    private final FunctionServiceImpl service;
 
     @GetMapping
-    public ResponseEntity<List<Dto>> index() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<FunctionDto>> index() {
+        List<FunctionDto> functions = service.findAll();
+        return ResponseEntity.ok(functions);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
+    public ResponseEntity<FunctionDto> show(@PathVariable Long id) {
+        FunctionDto function = service.findOne(id);
+        return ResponseEntity.ok(function);
     }
 
     @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
-        return ResponseEntity.ok(newEntity);
+    public ResponseEntity<FunctionDto> create(@RequestBody CreateFunctionDto entity) {
+        FunctionDto newFunction = service.save(entity);
+        return ResponseEntity.ok(newFunction);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<FunctionDto> update(@PathVariable Long id, @RequestBody CreateFunctionDto entity) {
+        FunctionDto updatedFunction = service.update(id, entity);
+        return ResponseEntity.ok(updatedFunction);
     }
 
     @DeleteMapping("/{id}")

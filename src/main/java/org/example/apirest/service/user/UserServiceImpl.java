@@ -7,6 +7,9 @@ import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.repository.OrganizationRepository;
+import org.example.apirest.repository.UserRepository;
+import org.example.apirest.service.role.RoleServiceImpl;
+import org.example.apirest.service.userHasRole.UserHasRoleServiceImpl;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,57 +31,36 @@ public class UserServiceImpl implements UserDetailsService {
 
     private final OrganizationRepository organizationRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository repository;
+    private final UserHasRoleServiceImpl userHasRoleService;
 
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<UserDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public UserDto findOne(Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(User.class, id));
+        return this.toDto(user);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
-    }
-
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
-        }
-
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
-    }
-
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        User user = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(User.class, id));
+        repository.delete(user);
     }
 
     public UserDto save(CreateUserDto createUserDto) {
-        User entityToInsert = dtoConverter.convertToEntityFromCreateDto(createUserDto, User.class); // Convertir el CreateUserDto a User para guardarlo en la base de datos
+        User entityToInsert = fromDto(createUserDto); // Convertir el CreateUserDto a User para guardarlo en la base de datos
 
-        if (createUserDto.getOrganization() != null) {
-            Organization org = organizationRepository.findById(createUserDto.getOrganization().getId())
-                    .orElseThrow(() -> new NotFoundException(Organization.class, createUserDto.getOrganization().getId()));
-            entityToInsert.setOrganization(org);
-        }
+//        if (createUserDto.getOrganization() != null) {
+//            Organization org = organizationRepository.findById(createUserDto.getOrganization().getId())
+//                    .orElseThrow(() -> new NotFoundException(Organization.class, createUserDto.getOrganization().getId()));
+//            entityToInsert.setOrganization(org);
+//        }
 
         if (createUserDto.getRoles() != null) {
-            List<UserHasRole> roles = roleDto.convertToEntityListFromCreateDto(createUserDto.getRoles(), UserHasRole.class);
+            List<UserHasRole> roles = userHasRoleService.fromDtoList(createUserDto.getRoles());
             for (UserHasRole role : roles) {
                 role.setUser(entityToInsert);
             }
@@ -88,7 +70,7 @@ public class UserServiceImpl implements UserDetailsService {
         // Codificar la contraseña antes de guardarla en la base de datos
         entityToInsert.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 
-        return dtoConverter.convertDto(repository.save(entityToInsert), UserDto.class);
+        return toDto(repository.save(entityToInsert));
     }
 
     public UserDto update(Long id, CreateUserDto entity) {
@@ -136,5 +118,29 @@ public class UserServiceImpl implements UserDetailsService {
                 user.getPassword(),
                 Collections.emptyList()
         );
+    }
+
+    @Override
+    public UserDto toDto(User user) {
+        return mapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public List<UserDto> toDtoList(List<User> users) {
+        return users.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public User fromDto(CreateUserDto createUserDto) {
+        return mapper.map(createUserDto, User.class);
+    }
+
+    @Override
+    public List<User> fromDtoList(List<CreateUserDto> createUserDtos) {
+        return createUserDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

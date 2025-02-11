@@ -9,6 +9,7 @@ import org.example.apirest.model.User;
 import org.example.apirest.model.Route;
 import org.example.apirest.model.ExcursionTicketDetails;
 import org.example.apirest.repository.ExcursionRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,16 +18,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ExcursionServiceImpl {
+public class ExcursionServiceImpl implements DtoConverter<Excursion,ExcursionDto,CreateExcursionDto> {
 
     private final ExcursionRepository repository;
     private final ModelMapper mapper;
 
     public List<ExcursionDto> findAll() {
         List<Excursion> excursions = repository.findAll();
-        return excursions.stream()
-                .map(this::toDto)
-                .toList();
+        return this.toDtoList(excursions);
     }
 
     public ExcursionDto findOne(Long id) {
@@ -37,34 +36,34 @@ public class ExcursionServiceImpl {
 
     public ExcursionDto save(CreateExcursionDto createDto) {
         // Mapea el DTO a la entidad Excursion
-        Excursion excursion = mapper.map(createDto, Excursion.class);
+        Excursion excursion = this.fromDto(createDto);
 
-        // Procesa la asociación con User si se proporciona
-        if (createDto.getUser() != null) {
-            User user = mapper.map(createDto.getUser(), User.class);
-            excursion.setUser(user);
-        }
-
-        // Procesa la asociación con Route si se proporciona
-        if (createDto.getRoute() != null) {
-            Route route = mapper.map(createDto.getRoute(), Route.class);
-            excursion.setRoute(route);
-        }
-
-        // Procesa la lista de ExcursionTicketDetails si se proporciona
-        if (createDto.getExcursionTicketDetails() != null) {
-            List<ExcursionTicketDetails> ticketDetails = createDto.getExcursionTicketDetails().stream()
-                    .map(dto -> {
-                        ExcursionTicketDetails etd = mapper.map(dto, ExcursionTicketDetails.class);
-                        etd.setExcursion(excursion);
-                        return etd;
-                    })
-                    .toList();
-            excursion.setExcursionTicketDetails(ticketDetails);
-        }
+//        // Procesa la asociación con User si se proporciona
+//        if (createDto.getUser() != null) {
+//            User user = mapper.map(createDto.getUser(), User.class);
+//            excursion.setUser(user);
+//        }
+//
+//        // Procesa la asociación con Route si se proporciona
+//        if (createDto.getRoute() != null) {
+//            Route route = mapper.map(createDto.getRoute(), Route.class);
+//            excursion.setRoute(route);
+//        }
+//
+//        // Procesa la lista de ExcursionTicketDetails si se proporciona
+//        if (createDto.getExcursionTicketDetails() != null) {
+//            List<ExcursionTicketDetails> ticketDetails = createDto.getExcursionTicketDetails().stream()
+//                    .map(dto -> {
+//                        ExcursionTicketDetails etd = mapper.map(dto, ExcursionTicketDetails.class);
+//                        etd.setExcursion(excursion);
+//                        return etd;
+//                    })
+//                    .toList();
+//            excursion.setExcursionTicketDetails(ticketDetails);
+//        }
 
         Excursion savedExcursion = repository.save(excursion);
-        return toDto(savedExcursion);
+        return this.toDto(savedExcursion);
     }
 
 
@@ -72,24 +71,23 @@ public class ExcursionServiceImpl {
         Excursion existing = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Excursion.class, id));
 
-        // Mapea los nuevos datos a una entidad temporal
-        Excursion updatedData = mapper.map(createDto, Excursion.class);
+        Excursion updatedData = this.fromDto(createDto);
 
         // Actualiza los campos modificables de la entidad existente
         UtilsClass.updateFields(existing, updatedData);
 
         // Si se proporcionan ExcursionTicketDetails, actualiza la lista
-        if (createDto.getExcursionTicketDetails() != null) {
-            existing.getExcursionTicketDetails().clear();
-            List<ExcursionTicketDetails> ticketDetails = createDto.getExcursionTicketDetails().stream()
-                    .map(dto -> {
-                        ExcursionTicketDetails etd = mapper.map(dto, ExcursionTicketDetails.class);
-                        etd.setExcursion(existing);
-                        return etd;
-                    })
-                    .toList();
-            existing.getExcursionTicketDetails().addAll(ticketDetails);
-        }
+//        if (createDto.getExcursionTicketDetails() != null) {
+//            existing.getExcursionTicketDetails().clear();
+//            List<ExcursionTicketDetails> ticketDetails = createDto.getExcursionTicketDetails().stream()
+//                    .map(dto -> {
+//                        ExcursionTicketDetails etd = mapper.map(dto, ExcursionTicketDetails.class);
+//                        etd.setExcursion(existing);
+//                        return etd;
+//                    })
+//                    .toList();
+//            existing.getExcursionTicketDetails().addAll(ticketDetails);
+//        }
 
         Excursion savedExcursion = repository.save(existing);
         return toDto(savedExcursion);
@@ -101,7 +99,23 @@ public class ExcursionServiceImpl {
         repository.delete(excursion);
     }
 
-    private ExcursionDto toDto(Excursion excursion) {
+    @Override
+    public ExcursionDto toDto(Excursion excursion) {
         return mapper.map(excursion, ExcursionDto.class);
+    }
+
+    @Override
+    public List<ExcursionDto> toDtoList(List<Excursion> excursions) {
+        return excursions.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public Excursion fromDto(CreateExcursionDto createExcursionDto) {
+        return mapper.map(createExcursionDto, Excursion.class);
+    }
+
+    @Override
+    public List<Excursion> fromDtoList(List<CreateExcursionDto> createExcursionDtos) {
+        return createExcursionDtos.stream().map(this::fromDto).toList();
     }
 }

@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.organization.OrganizationDto;
 import org.example.apirest.dto.organization.CreateOrganizationDto;
 import org.example.apirest.service.organization.OrganizationServiceImpl;
@@ -12,29 +13,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/organizations")
 @CrossOrigin(origins = "*")
-public class OrganizationController{
-    protected final GeneralizedService<Dto,CreateDto> service;
+@RequiredArgsConstructor
+public class OrganizationController {
+
+    private final OrganizationServiceImpl service;
 
     @GetMapping
-    public ResponseEntity<List<Dto>> index() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<OrganizationDto>> index() {
+        List<OrganizationDto> organizations = service.findAll();
+        return ResponseEntity.ok(organizations);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
+    public ResponseEntity<OrganizationDto> show(@PathVariable Long id) {
+        OrganizationDto organization = service.findOne(id);
+        return ResponseEntity.ok(organization);
     }
 
     @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
-        return ResponseEntity.ok(newEntity);
+    public ResponseEntity<OrganizationDto> create(@RequestBody CreateOrganizationDto dto) {
+        OrganizationDto newOrganization = service.save(dto);
+        return ResponseEntity.ok(newOrganization);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<OrganizationDto> update(@PathVariable Long id, @RequestBody CreateOrganizationDto dto) {
+        OrganizationDto updatedOrganization = service.update(id, dto);
+        return ResponseEntity.ok(updatedOrganization);
     }
 
     @DeleteMapping("/{id}")

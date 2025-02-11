@@ -1,50 +1,79 @@
 package org.example.apirest.service.pointOfInterest;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.pointOfInterest.PointOfInterestDto;
+import org.example.apirest.dto.pointOfInterest.CreatePointOfInterestDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.PointOfInterest;
+import org.example.apirest.repository.PointOfInterestRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PointOfInterestServiceImpl{
+@RequiredArgsConstructor
+public class PointOfInterestServiceImpl implements DtoConverter<PointOfInterest, PointOfInterestDto, CreatePointOfInterestDto> {
 
-    rotected final R repository;
+    private final PointOfInterestRepository repository;
+    private final ModelMapper mapper;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<PointOfInterestDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public PointOfInterestDto findOne(Long id) {
+        PointOfInterest pointOfInterest = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PointOfInterest.class, id));
+        return this.toDto(pointOfInterest);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public PointOfInterestDto save(CreatePointOfInterestDto createPointOfInterestDto) {
+        PointOfInterest pointOfInterest = fromDto(createPointOfInterestDto);
+        PointOfInterest savedPointOfInterest = repository.save(pointOfInterest);
+        return toDto(savedPointOfInterest);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public PointOfInterestDto update(Long id, CreatePointOfInterestDto createPointOfInterestDto) {
+        PointOfInterest oldPointOfInterest = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PointOfInterest.class, id));
+        PointOfInterest pointOfInterestToUpdate = fromDto(createPointOfInterestDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldPointOfInterest, pointOfInterestToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        PointOfInterest savedPointOfInterest = repository.save(oldPointOfInterest);
+        return toDto(savedPointOfInterest);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        PointOfInterest pointOfInterest = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PointOfInterest.class, id));
+        repository.delete(pointOfInterest);
+    }
+
+    @Override
+    public PointOfInterestDto toDto(PointOfInterest pointOfInterest) {
+        return mapper.map(pointOfInterest, PointOfInterestDto.class);
+    }
+
+    @Override
+    public List<PointOfInterestDto> toDtoList(List<PointOfInterest> pointOfInterests) {
+        return pointOfInterests.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public PointOfInterest fromDto(CreatePointOfInterestDto createPointOfInterestDto) {
+        return mapper.map(createPointOfInterestDto, PointOfInterest.class);
+    }
+
+    @Override
+    public List<PointOfInterest> fromDtoList(List<CreatePointOfInterestDto> createPointOfInterestDtos) {
+        return createPointOfInterestDtos.stream()
+                .map(this::fromDto)
+                .toList();
     }
 }

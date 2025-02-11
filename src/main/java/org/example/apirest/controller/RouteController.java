@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
@@ -21,39 +22,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/routes")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class RouteController {
+
     private final RouteServiceImpl routeService;
-
-    protected final GeneralizedService<Dto,CreateDto> service;
-
-    @GetMapping
-    public ResponseEntity<List<Dto>> index() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
-        return ResponseEntity.ok(newEntity);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
-        return ResponseEntity.ok(updated);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
-    }
-
 
     @GetMapping
     @PreAuthorize("hasAuthority('readRoute')")

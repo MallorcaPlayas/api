@@ -1,63 +1,79 @@
 package org.example.apirest.service.location;
 
 import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.service.photo.PhotoServiceImpl;
+import org.example.apirest.model.Location;
+import org.example.apirest.repository.LocationRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class LocationServiceImpl{
+public class LocationServiceImpl implements DtoConverter<Location, LocationDto, CreateLocationDto> {
 
-    private final PhotoServiceImpl photoService;
+    private final LocationRepository repository;
+    private final ModelMapper mapper;
 
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<LocationDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public LocationDto findOne(Long id) {
+        Location location = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Location.class, id));
+        return this.toDto(location);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public LocationDto save(CreateLocationDto createLocationDto) {
+        Location location = fromDto(createLocationDto);
+        Location savedLocation = repository.save(location);
+        return toDto(savedLocation);
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public LocationDto update(Long id, CreateLocationDto createLocationDto) {
+        Location oldLocation = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Location.class, id));
+        Location locationToUpdate = fromDto(createLocationDto);
 
-        if (oldEntity == null) {
-            return null;
-        }
+        UtilsClass.updateFields(oldLocation, locationToUpdate);
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        Location savedLocation = repository.save(oldLocation);
+        return toDto(savedLocation);
     }
 
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        Location location = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Location.class, id));
+        repository.delete(location);
     }
 
+    @Override
+    public LocationDto toDto(Location location) {
+        return mapper.map(location, LocationDto.class);
+    }
 
-    //    @Override
-//    public LocationDto save(CreateLocationDto createLocationDto){
-//        Location location = dtoConverter.convertToEntityFromCreateDto(createLocationDto,Location.class);
-//        this.repository.save(location);
-//
-//    }
+    @Override
+    public List<LocationDto> toDtoList(List<Location> locations) {
+        return locations.stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public Location fromDto(CreateLocationDto createLocationDto) {
+        return mapper.map(createLocationDto, Location.class);
+    }
+
+    @Override
+    public List<Location> fromDtoList(List<CreateLocationDto> createLocationDtos) {
+        return createLocationDtos.stream()
+                .map(this::fromDto)
+                .toList();
+    }
 }

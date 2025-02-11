@@ -1,8 +1,8 @@
 package org.example.apirest.controller;
 
-
-import org.example.apirest.dto.service.CreateServiceBeachDto;
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.service.ServiceBeachDto;
+import org.example.apirest.dto.service.CreateServiceBeachDto;
 import org.example.apirest.service.service.ServiceBeachServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,29 +13,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/services")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ServiceBeachController {
-    protected final GeneralizedService<Dto,CreateDto> service;
+
+    private final ServiceBeachServiceImpl service;
 
     @GetMapping
-    public ResponseEntity<List<Dto>> index() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<ServiceBeachDto>> index() {
+        List<ServiceBeachDto> services = service.findAll();
+        return ResponseEntity.ok(services);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
+    public ResponseEntity<ServiceBeachDto> show(@PathVariable Long id) {
+        ServiceBeachDto serviceBeach = service.findOne(id);
+        return ResponseEntity.ok(serviceBeach);
     }
 
     @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
-        return ResponseEntity.ok(newEntity);
+    public ResponseEntity<ServiceBeachDto> create(@RequestBody CreateServiceBeachDto entity) {
+        ServiceBeachDto newServiceBeach = service.save(entity);
+        return ResponseEntity.ok(newServiceBeach);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<ServiceBeachDto> update(@PathVariable Long id, @RequestBody CreateServiceBeachDto entity) {
+        ServiceBeachDto updatedServiceBeach = service.update(id, entity);
+        return ResponseEntity.ok(updatedServiceBeach);
     }
 
     @DeleteMapping("/{id}")
