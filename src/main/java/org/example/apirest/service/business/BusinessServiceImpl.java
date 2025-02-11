@@ -1,49 +1,70 @@
 package org.example.apirest.service.business;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.business.BusinessDto;
+import org.example.apirest.dto.business.CreateBusinessDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Business;
+import org.example.apirest.repository.BusinessRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BusinessServiceImpl {
-    rotected final R repository;
+@RequiredArgsConstructor
+public class BusinessServiceImpl implements DtoConverter<Business,BusinessDto, CreateBusinessDto> {
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    private final BusinessRepository repository;
+    private final ModelMapper mapper;
+
+    public List<BusinessDto> findAll() {
+        return toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public BusinessDto findOne(Long id) {
+        Business entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Business.class,id));
+        return this.toDto(entity);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public BusinessDto save(CreateBusinessDto entity) {
+        Business entityToInsert = this.fromDto(entity);
+        return this.toDto(repository.save(entityToInsert));
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
-        }
+    public BusinessDto update(Long id, CreateBusinessDto createEntity) {
+        Business oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(Business.class, id));
+        Business entityToInsert = this.fromDto(createEntity);
 
         UtilsClass.updateFields(oldEntity, entityToInsert);
 
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        return this.toDto(repository.save(oldEntity));
+    }
+
+    public void delete(Long id) {
+        Business entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Business.class,id));
+        repository.delete(entity);
     }
 
     @Override
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+    public BusinessDto toDto(Business business) {
+        return mapper.map(business,BusinessDto.class);
+    }
+
+    @Override
+    public List<BusinessDto> toDtoList(List<Business> businesses) {
+        return businesses.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public Business fromDto(CreateBusinessDto createBusinessDto) {
+        return mapper.map(createBusinessDto,Business.class);
+    }
+
+    @Override
+    public List<Business> fromDtoList(List<CreateBusinessDto> createBusinessDtos) {
+        return createBusinessDtos.stream().map(this::fromDto).toList();
     }
 }

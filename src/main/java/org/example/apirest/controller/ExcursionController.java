@@ -1,5 +1,6 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.excursion.ExcursionDto;
 import org.example.apirest.dto.excursion.CreateExcursionDto;
 import org.example.apirest.service.excursion.ExcursionServiceImpl;
@@ -12,29 +13,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/excursions")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ExcursionController {
-    protected final GeneralizedService<Dto,CreateDto> service;
+
+    private final ExcursionServiceImpl service;
 
     @GetMapping
-    public ResponseEntity<List<Dto>> index() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<ExcursionDto>> index() {
+        List<ExcursionDto> excursions = service.findAll();
+        return ResponseEntity.ok(excursions);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dto> show(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findOne(id));
+    public ResponseEntity<ExcursionDto> show(@PathVariable Long id) {
+        ExcursionDto excursion = service.findOne(id);
+        return ResponseEntity.ok(excursion);
     }
 
     @PostMapping
-    public ResponseEntity<Dto> create(@RequestBody CreateDto entity) {
-        Dto newEntity = service.save(entity);
-        return ResponseEntity.ok(newEntity);
+    public ResponseEntity<ExcursionDto> create(@RequestBody CreateExcursionDto entity) {
+        ExcursionDto newExcursion = service.save(entity);
+        return ResponseEntity.ok(newExcursion);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dto> update(@RequestBody CreateDto entity, @PathVariable Long id) {
-        Dto updated = service.update(id, entity);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<ExcursionDto> update(@PathVariable Long id, @RequestBody CreateExcursionDto entity) {
+        ExcursionDto updatedExcursion = service.update(id, entity);
+        return ResponseEntity.ok(updatedExcursion);
     }
 
     @DeleteMapping("/{id}")
@@ -43,3 +48,4 @@ public class ExcursionController {
         service.delete(id);
     }
 }
+

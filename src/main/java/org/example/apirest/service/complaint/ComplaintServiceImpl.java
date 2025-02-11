@@ -1,49 +1,72 @@
 package org.example.apirest.service.complaint;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.complaint.ComplaintDto;
+import org.example.apirest.dto.complaint.CreateComplaintDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Complaint;
+import org.example.apirest.repository.ComplaintRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-public class ComplaintServiceImpl{
-    rotected final R repository;
+@RequiredArgsConstructor
+public class ComplaintServiceImpl implements DtoConverter<Complaint, ComplaintDto, CreateComplaintDto> {
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    private final ComplaintRepository repository;
+    private final ModelMapper mapper;
+
+    public List<ComplaintDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public ComplaintDto findOne(Long id) {
+        Complaint complaint = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Complaint.class, id));
+        return this.toDto(complaint);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public ComplaintDto save(CreateComplaintDto entity) {
+        Complaint complaint = fromDto(entity);
+        return toDto(repository.save(complaint));
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
-        }
+    public ComplaintDto update(Long id, CreateComplaintDto createEntity) {
+        Complaint oldEntity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Complaint.class, id));
+        Complaint entityToInsert = fromDto(createEntity);
 
         UtilsClass.updateFields(oldEntity, entityToInsert);
 
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        return toDto(repository.save(oldEntity));
+    }
+
+    public void delete(Long id) {
+        Complaint complaint = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Complaint.class, id));
+        repository.delete(complaint);
     }
 
     @Override
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+    public ComplaintDto toDto(Complaint complaint) {
+        return mapper.map(complaint, ComplaintDto.class);
+    }
+
+    @Override
+    public List<ComplaintDto> toDtoList(List<Complaint> entities) {
+        return entities.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public Complaint fromDto(CreateComplaintDto createComplaintDto) {
+        return mapper.map(createComplaintDto, Complaint.class);
+    }
+
+    @Override
+    public List<Complaint> fromDtoList(List<CreateComplaintDto> createComplaintDtos) {
+        return createComplaintDtos.stream().map(this::fromDto).toList();
     }
 }

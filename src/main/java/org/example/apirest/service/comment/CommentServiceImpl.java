@@ -1,49 +1,73 @@
 package org.example.apirest.service.comment;
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.comment.CommentDto;
+import org.example.apirest.dto.comment.CreateCommentDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Comment;
+import org.example.apirest.repository.CommentRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-public class CommentServiceImpl{
-    rotected final R repository;
+@RequiredArgsConstructor
+public class CommentServiceImpl implements DtoConverter<Comment, CommentDto, CreateCommentDto> {
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    private final CommentRepository repository;
+    private final ModelMapper mapper;
+
+    public List<CommentDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public CommentDto findOne(Long id) {
+        Comment comment = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Comment.class, id));
+        return this.toDto(comment);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    public CommentDto save(CreateCommentDto entity) {
+        Comment comment = fromDto(entity);
+        return toDto(repository.save(comment));
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    public CommentDto update(Long id, CreateCommentDto createEntity) {
+        Comment oldEntity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Comment.class, id));
+        Comment entityToInsert = this.fromDto(createEntity);
 
-        if (oldEntity == null) {
-            return null;
-        }
-
+        // Actualiza los campos modificables de la entidad existente.
         UtilsClass.updateFields(oldEntity, entityToInsert);
 
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        return this.toDto(repository.save(oldEntity));
+    }
+
+    public void delete(Long id) {
+        Comment entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Comment.class, id));
+        repository.delete(entity);
     }
 
     @Override
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+    public CommentDto toDto(Comment comment) {
+        return mapper.map(comment, CommentDto.class);
+    }
+
+    @Override
+    public List<CommentDto> toDtoList(List<Comment> entities) {
+        return entities.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public Comment fromDto(CreateCommentDto createCommentDto) {
+        return mapper.map(createCommentDto, Comment.class);
+    }
+
+    @Override
+    public List<Comment> fromDtoList(List<CreateCommentDto> createCommentDtos) {
+        return createCommentDtos.stream().map(this::fromDto).toList();
     }
 }

@@ -1,98 +1,107 @@
 package org.example.apirest.service.excursion;
 
-import org.example.apirest.dto.DtoConverterImpl;
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.excursion.ExcursionDto;
 import org.example.apirest.dto.excursion.CreateExcursionDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.*;
+import org.example.apirest.model.Excursion;
+import org.example.apirest.model.User;
+import org.example.apirest.model.Route;
+import org.example.apirest.model.ExcursionTicketDetails;
+import org.example.apirest.repository.ExcursionRepository;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ExcursionServiceImpl{
+@RequiredArgsConstructor
+public class ExcursionServiceImpl {
 
-    rotected final R repository;
+    private final ExcursionRepository repository;
+    private final ModelMapper mapper;
 
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<ExcursionDto> findAll() {
+        List<Excursion> excursions = repository.findAll();
+        return excursions.stream()
+                .map(this::toDto)
+                .toList();
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public ExcursionDto findOne(Long id) {
+        Excursion excursion = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Excursion.class, id));
+        return toDto(excursion);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
-    }
+    public ExcursionDto save(CreateExcursionDto createDto) {
+        // Mapea el DTO a la entidad Excursion
+        Excursion excursion = mapper.map(createDto, Excursion.class);
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
+        // Procesa la asociación con User si se proporciona
+        if (createDto.getUser() != null) {
+            User user = mapper.map(createDto.getUser(), User.class);
+            excursion.setUser(user);
         }
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
+        // Procesa la asociación con Route si se proporciona
+        if (createDto.getRoute() != null) {
+            Route route = mapper.map(createDto.getRoute(), Route.class);
+            excursion.setRoute(route);
+        }
 
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        // Procesa la lista de ExcursionTicketDetails si se proporciona
+        if (createDto.getExcursionTicketDetails() != null) {
+            List<ExcursionTicketDetails> ticketDetails = createDto.getExcursionTicketDetails().stream()
+                    .map(dto -> {
+                        ExcursionTicketDetails etd = mapper.map(dto, ExcursionTicketDetails.class);
+                        etd.setExcursion(excursion);
+                        return etd;
+                    })
+                    .toList();
+            excursion.setExcursionTicketDetails(ticketDetails);
+        }
+
+        Excursion savedExcursion = repository.save(excursion);
+        return toDto(savedExcursion);
     }
 
-    @Override
+
+    public ExcursionDto update(Long id, CreateExcursionDto createDto) {
+        Excursion existing = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Excursion.class, id));
+
+        // Mapea los nuevos datos a una entidad temporal
+        Excursion updatedData = mapper.map(createDto, Excursion.class);
+
+        // Actualiza los campos modificables de la entidad existente
+        UtilsClass.updateFields(existing, updatedData);
+
+        // Si se proporcionan ExcursionTicketDetails, actualiza la lista
+        if (createDto.getExcursionTicketDetails() != null) {
+            existing.getExcursionTicketDetails().clear();
+            List<ExcursionTicketDetails> ticketDetails = createDto.getExcursionTicketDetails().stream()
+                    .map(dto -> {
+                        ExcursionTicketDetails etd = mapper.map(dto, ExcursionTicketDetails.class);
+                        etd.setExcursion(existing);
+                        return etd;
+                    })
+                    .toList();
+            existing.getExcursionTicketDetails().addAll(ticketDetails);
+        }
+
+        Excursion savedExcursion = repository.save(existing);
+        return toDto(savedExcursion);
+    }
+
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+        Excursion excursion = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Excursion.class, id));
+        repository.delete(excursion);
     }
 
-
-    public ExcursionDto save(CreateExcursionDto entity) {
-        Excursion entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, Excursion.class);
-
-        if (entity.getUser() != null) {
-            User user = dtoUser.convertToEntityFromDto(entity.getUser(), User.class);
-            entityToInsert.setUser(user);
-        }
-
-        if (entity.getRoute() != null) {
-            Route route = dtoRoute.convertToEntityFromDto(entity.getRoute(), Route.class);
-            entityToInsert.setRoute(route);
-        }
-
-        if (entity.getExcursionTicketDetails() != null) {
-            List<ExcursionTicketDetails> excursionTicketDetails = dtoExcursionTicketDetails.convertToEntityListFromCreateDto(entity.getExcursionTicketDetails(), ExcursionTicketDetails.class);
-            for (ExcursionTicketDetails etd : excursionTicketDetails) {
-                etd.setExcursion(entityToInsert);
-            }
-            entityToInsert.setExcursionTicketDetails(excursionTicketDetails);
-        }
-
-        return dtoConverter.convertDto(repository.save(entityToInsert), ExcursionDto.class);
-
-    }
-
-    public ExcursionDto update(Long id, CreateExcursionDto entity) {
-        Excursion old = repository.findById(id).orElseThrow(() -> new NotFoundException(Excursion.class, id));
-        Excursion newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Excursion.class);
-
-        UtilsClass.updateFields(old, newEntity);
-
-        if (entity.getExcursionTicketDetails() != null) {
-            old.getExcursionTicketDetails().clear();
-            List<ExcursionTicketDetails> excursionTicketDetails = dtoExcursionTicketDetails.convertToEntityListFromCreateDto(entity.getExcursionTicketDetails(), ExcursionTicketDetails.class);
-            for (ExcursionTicketDetails etd : excursionTicketDetails) {
-                etd.setExcursion(old);
-            }
-            old.getExcursionTicketDetails().addAll(excursionTicketDetails);
-        }
-
-        return dtoConverter.convertDto(repository.save(old), ExcursionDto.class);
+    private ExcursionDto toDto(Excursion excursion) {
+        return mapper.map(excursion, ExcursionDto.class);
     }
 }
