@@ -1,40 +1,42 @@
 package org.example.apirest.service.billType;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.billType.BillTypeDto;
 import org.example.apirest.dto.billType.CreateBillTypeDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.BillType;
 import org.example.apirest.repository.BillTypeRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BillTypeServiceImpl{
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+@RequiredArgsConstructor
+public class BillTypeServiceImpl implements DtoConverter<BillType, BillTypeDto, CreateBillTypeDto> {
+    private final BillTypeRepository repository;
+    
+    public List<BillTypeDto> findAll() {
+        return toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    
+    public BillTypeDto findOne(Long id) {
+        BillType entity = repository.findById(id).orElseThrow(()-> new NotFoundException(BillType.class,id));
+        return this.toDto(entity);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
+    
+    public BillTypeDto save(CreateBillTypeDto entity) {
+        BillType entityToInsert = this.fromDto(entity);
+        return this.toDto(repository.save(entityToInsert));
     }
 
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+    
+    public BillTypeDto update(Long id, CreateBillTypeDto createEntity) {
+        BillType oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(BillType.class, id));
+        BillType entityToInsert = this.fromDto(createEntity);
 
         if (oldEntity == null) {
             return null;
@@ -42,12 +44,32 @@ public class BillTypeServiceImpl{
 
         UtilsClass.updateFields(oldEntity, entityToInsert);
 
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        return this.toDto(repository.save(oldEntity));
+    }
+
+    
+    public void delete(Long id) {
+        BillType entity = repository.findById(id).orElseThrow(()-> new NotFoundException(BillType.class,id));
+        repository.delete(entity);
     }
 
     @Override
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+    public BillTypeDto toDto(BillType billType) {
+        return null;
+    }
+
+    @Override
+    public List<BillTypeDto> toDtoList(List<BillType> billTypes) {
+        return List.of();
+    }
+
+    @Override
+    public BillType fromDto(CreateBillTypeDto createBillTypeDto) {
+        return null;
+    }
+
+    @Override
+    public List<BillType> fromDtoList(List<CreateBillTypeDto> createBillTypeDtos) {
+        return List.of();
     }
 }

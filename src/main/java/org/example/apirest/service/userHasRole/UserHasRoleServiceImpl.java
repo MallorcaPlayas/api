@@ -1,37 +1,42 @@
 package org.example.apirest.service.userHasRole;
 
 
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
+import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.UserHasRole;
+import org.example.apirest.repository.UserHasRoleRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserHasRoleServiceImpl{
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+@RequiredArgsConstructor
+public class UserHasRoleServiceImpl implements DtoConverter<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> {
+    
+    private final UserHasRoleRepository repository;
+    
+    public List<UserHasRoleDto> findAll() {
+        return this.toDtoList(repository.findAll());
+    }
+    
+    public UserHasRoleDto findOne(Long id) {
+        UserHasRole entity = repository.findById(id).orElseThrow(()-> new NotFoundException(UserHasRole.class,id));
+        return this.toDto(entity);
+    }
+    
+    public UserHasRoleDto save(UserHasRoleDto entity) {
+        UserHasRole entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, UserHasRole.class);
+        return this.toDto(repository.save(entityToInsert));
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
-    }
-
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
-    }
-
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
+   
+    public UserHasRoleDto update(Long id, UserHasRoleDto createEntity) {
+        UserHasRole oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(UserHasRole.class, id));
+        UserHasRole entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, UserHasRole.class);
 
         if (oldEntity == null) {
             return null;
@@ -39,12 +44,32 @@ public class UserHasRoleServiceImpl{
 
         UtilsClass.updateFields(oldEntity, entityToInsert);
 
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
+        return this.toDto(repository.save(oldEntity), dtoClass);
+    }
+
+    
+    public void delete(Long id) {
+        UserHasRole entity = repository.findById(id).orElseThrow(()-> new NotFoundException(UserHasRole.class,id));
+        repository.delete(entity);
     }
 
     @Override
-    public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        repository.delete(entity);
+    public UserHasRoleDto toDto(UserHasRole userHasRole) {
+        return null;
+    }
+
+    @Override
+    public List<UserHasRoleDto> toDtoList(List<UserHasRole> userHasRoles) {
+        return List.of();
+    }
+
+    @Override
+    public UserHasRole fromDto(CreateUserHasRoleDto createUserHasRoleDto) {
+        return null;
+    }
+
+    @Override
+    public List<UserHasRole> fromDtoList(List<CreateUserHasRoleDto> createUserHasRoleDtos) {
+        return List.of();
     }
 }

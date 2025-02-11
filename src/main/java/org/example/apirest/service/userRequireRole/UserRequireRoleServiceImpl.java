@@ -9,73 +9,49 @@ import org.example.apirest.model.User;
 import org.example.apirest.model.UserRequireRole;
 import org.example.apirest.repository.RoleRepository;
 import org.example.apirest.repository.UserRepository;
+import org.example.apirest.repository.UserRequireRoleRepository;
+import org.example.apirest.service.DtoConverter;
 import org.example.apirest.utils.UtilsClass;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserRequireRoleServiceImpl {
+public class UserRequireRoleServiceImpl implements DtoConverter<UserRequireRole, UserRequireRoleDto,CreateUserRequireRoleDto> {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserRequireRoleRepository repository;
+    private final ModelMapper mapper;
 
-    rotected final R repository;
-
-    @Override
-    public List<Dto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), dtoClass);
+    public List<UserRequireRoleDto> findAll() {
+        return this.toDtoList(repository.findAll());
     }
 
-    @Override
-    public Dto findOne(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
-        return dtoConverter.convertDto(entity, dtoClass);
+    public UserRequireRoleDto findOne(Long id) {
+        UserRequireRole entity = repository.findById(id).orElseThrow(()-> new NotFoundException(UserRequireRole.class,id));
+        return this.toDto(entity);
     }
 
-    @Override
-    public Dto save(CreateDto entity) {
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, entityClass);
-        return dtoConverter.convertDto(repository.save(entityToInsert), dtoClass);
-    }
-
-    @Override
-    public Dto update(Long id, CreateDto createEntity) {
-        Entity oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        Entity entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, entityClass);
-
-        if (oldEntity == null) {
-            return null;
-        }
-
-        UtilsClass.updateFields(oldEntity, entityToInsert);
-
-        return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
-    }
-
-    @Override
     public void delete(Long id) {
-        Entity entity = repository.findById(id).orElseThrow(()-> new NotFoundException(entityClass,id));
+        UserRequireRole entity = repository.findById(id).orElseThrow(()-> new NotFoundException(UserRequireRole.class,id));
         repository.delete(entity);
     }
 
     public UserRequireRoleDto save(CreateUserRequireRoleDto entity) {
-        UserRequireRole entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, UserRequireRole.class);
+        UserRequireRole entityToInsert = this.fromDto(entity);
         User user = userRepository.findById(entity.getUser_id()).orElseThrow(()-> new NotFoundException(User.class,entity.getUser_id()));
         Role role = roleRepository.findById(entity.getRole_id()).orElseThrow(()-> new NotFoundException(Role.class,entity.getRole_id()));
         entityToInsert.setUser(user);
         entityToInsert.setRole(role);
-        return dtoConverter.convertDto(repository.save(entityToInsert), UserRequireRoleDto.class);
+        return this.toDto(repository.save(entityToInsert));
     }
 
     public UserRequireRoleDto update(Long id, CreateUserRequireRoleDto entity) {
         UserRequireRole old = repository.findById(id).orElseThrow(()-> new NotFoundException(UserRequireRole.class,id));
-        UserRequireRole newEntity = dtoConverter.convertToEntityFromCreateDto(entity, UserRequireRole.class);
-
-        if (entity == null) {
-            return null;
-        }
+        UserRequireRole newEntity = this.fromDto(entity);
 
         UtilsClass.updateFields(old, newEntity);
 
@@ -84,6 +60,26 @@ public class UserRequireRoleServiceImpl {
         old.setUser(user);
         old.setRole(role);
 
-        return dtoConverter.convertDto(repository.save(old), UserRequireRoleDto.class);
+        return this.toDto(repository.save(old));
+    }
+
+    @Override
+    public UserRequireRoleDto toDto(UserRequireRole userRequireRole) {
+        return mapper.map(userRequireRole,UserRequireRoleDto.class);
+    }
+
+    @Override
+    public List<UserRequireRoleDto> toDtoList(List<UserRequireRole> userRequireRoles) {
+        return userRequireRoles.stream().map(this::toDto).toList();
+    }
+
+    @Override
+    public UserRequireRole fromDto(CreateUserRequireRoleDto createUserRequireRoleDto) {
+        return mapper.map(createUserRequireRoleDto,UserRequireRole.class);
+    }
+
+    @Override
+    public List<UserRequireRole> fromDtoList(List<CreateUserRequireRoleDto> createUserRequireRoleDtos) {
+        return createUserRequireRoleDtos.stream().map(this::fromDto).toList();
     }
 }
