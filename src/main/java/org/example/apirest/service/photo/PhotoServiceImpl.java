@@ -11,6 +11,7 @@ import org.example.apirest.model.Photo;
 import org.example.apirest.repository.PhotoRepository;
 import org.example.apirest.service.s3.S3Service;
 import org.example.apirest.utils.Utils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +22,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PhotoServiceImpl{
 
-    private static final String PUBLIC_BUCKET = "mallorca-playas-public";
-    private static final String PRIVATE_BUCKET = "mallorca-playas-private";
+    @Value("${private.bucket}")
+    private String PUBLIC_BUCKET;
+    @Value("${public.bucket}")
+    private String PRIVATE_BUCKET;
 
     private final S3Service s3Service;
     private final DtoConverter<Photo,PhotoDto,CreatePhotoDto> dtoConverter;
