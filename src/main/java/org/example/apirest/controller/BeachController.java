@@ -22,33 +22,33 @@ public class BeachController{
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('readBeach')")
+//    @PreAuthorize("hasAuthority('readBeach')")
     public ResponseEntity<List<BeachDto>> index() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('readBeach')")
+//    @PreAuthorize("hasAuthority('readBeach')")
     public ResponseEntity<BeachDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(service.findOne(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('createBeach')")
+//    @PreAuthorize("hasAuthority('createBeach')")
     public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto entity) {
         BeachDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('updateBeach')")
+//    @PreAuthorize("hasAuthority('updateBeach')")
     public ResponseEntity<BeachDto> update(@RequestBody CreateBeachDto entity, @PathVariable Long id) {
         BeachDto updated = service.update(id, entity);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('deleteBeach')")
+//    @PreAuthorize("hasAuthority('deleteBeach')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
