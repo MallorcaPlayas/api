@@ -22,9 +22,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PhotoServiceImpl{
 
-    @Value("${private.bucket}")
-    private String PUBLIC_BUCKET;
     @Value("${public.bucket}")
+    private String PUBLIC_BUCKET;
+    @Value("${private.bucket}")
     private String PRIVATE_BUCKET;
 
     private final S3Service s3Service;
