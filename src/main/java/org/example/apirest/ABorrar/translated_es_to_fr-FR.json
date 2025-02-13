@@ -1,0 +1,274 @@
+{
+  "hello" : "Bonjour le monde jajajjaja!",
+  "welcome" : "Bienvenue sur mon application",
+  "logout" : "Se déconnecter",
+  "indexPage" : {
+    "title" : "Panneau d'administration"
+  },
+  "userPage" : {
+    "managerGeneral" : {
+      "title" : "Utilisateur"
+    },
+    "columnsAA" : {
+      "userName" : "Nom d'utilisateur",
+      "name" : "Nom",
+      "firstSurname" : "Prénom Nom",
+      "secondSurname" : "Deuxième nom de famille",
+      "email" : "E-mail",
+      "birthday" : "Date de naissance",
+      "urlPhoto" : "Photo de profil",
+      "privatePrivacy" : "Visibilité",
+      "state" : "État",
+      "roles" : "Rôle",
+      "accion" : "Action"
+    },
+    "fieldsFormulario" : {
+      "userName" : "Nom d'utilisateur",
+      "name" : "Nom",
+      "firstSurname" : "Prénom Nom",
+      "secondSurname" : "Deuxième nom de famille",
+      "email" : "E-mail",
+      "birthday" : "Date de naissance",
+      "urlPhoto" : "Photo de profil",
+      "privatePrivacy" : "Visibilité",
+      "roles" : "Rôle",
+      "state" : "État",
+      "rules" : {
+        "required" : "Champ obligatoire",
+        "urlInvalid" : "Doit être une URL valide"
+      }
+    }
+  },
+  "beachPage" : {
+    "managerGeneral" : {
+      "title" : "Plage"
+    },
+    "fieldsForm" : {
+      "name" : "Nom de la plage",
+      "municipio" : "Municipalité",
+      "description" : "Description",
+      "types" : "Type de plage",
+      "services" : "Services de plage",
+      "cameras" : "Webcam (URL)",
+      "estado" : "État de la plage",
+      "rules" : {
+        "required" : "Champ obligatoire",
+        "selectAtLeastOne" : "Sélectionnez au moins une option",
+        "selectAtLeastOneService" : "Sélectionnez au moins un service",
+        "urlInvalid" : "Doit être une URL valide",
+        "positiveNumber" : "Doit être un nombre positif ou nul"
+      }
+    },
+    "beachColumns" : {
+      "select" : "Sélectionner",
+      "id" : "IDENTIFIANT",
+      "name" : "Nom",
+      "municipio" : "Municipalité",
+      "description" : "Description",
+      "services" : "Services de plage",
+      "types" : "Type de plage",
+      "fotos" : "Photos",
+      "cameras" : "Webcam",
+      "empresaSocorrista" : "Compagnie de sauveteurs",
+      "denuncias" : "Plaintes",
+      "paginaWeb" : "page web",
+      "accion" : "Action",
+      "noPhotos" : "Il n'y a pas de photos",
+      "noCamera" : "Sans chambre à air",
+      "noWebsite" : "Pas de site web",
+      "seeCamera" : "Voir la caméra",
+      "seePage" : "Voir la page"
+    }
+  },
+  "form" : {
+    "input" : {
+      "startTime" : "Heure de début",
+      "endTime" : "Fin des temps"
+    },
+    "card" : {
+      "edit" : "Modifier",
+      "add" : "Ajouter"
+    },
+    "title" : {
+      "servicesBeach" : "Services de plage",
+      "serviceBeach" : "Service de plage"
+    },
+    "btn" : {
+      "delete" : "Éliminer",
+      "addService" : "Ajouter un service",
+      "addFunction" : "Ajouter une fonction",
+      "cancel" : "Annuler",
+      "save" : "Garder"
+    },
+    "select" : {
+      "rol" : "Rôle Fonction"
+    }
+  },
+  "managerGeneral" : {
+    "ConfirmDialog" : {
+      "title" : "Quelle action souhaitez-vous effectuer avec l'{item} ?",
+      "message" : "Choisissez une option pour l'{item} : {name}"
+    },
+    "confirmOptions" : {
+      "delete" : "Supprimer {titre}",
+      "disable" : "Désactiver {title}"
+    }
+  },
+  "crudTable" : {
+    "btn" : {
+      "delete" : "Supprimer les {title} sélectionnés",
+      "add" : "Ajouter {titre}",
+      "photos" : "Voir les photos",
+      "noPhotosAvailable" : "Aucune photo disponible",
+      "services" : "Voir les services",
+      "map" : "Voir la carte"
+    },
+    "card" : {
+      "close" : "Fermer"
+    },
+    "imgAltPerfil" : "Photo de profil",
+    "dialog" : {
+      "beachServices" : "Services de plage",
+      "service" : "Service",
+      "noName" : "Anonyme",
+      "startTime" : "Heure de début",
+      "endTime" : "Fin des temps"
+    },
+    "table" : {
+      "title" : "Gérer {titre}"
+    }
+  },
+  "confirmDialog" : {
+    "btn" : {
+      "cancel" : "Annuler",
+      "confirm" : "Continuer"
+    }
+  },
+  "rolePage" : {
+    "managerGeneral" : {
+      "title" : "Rôles"
+    },
+    "fieldsFormulario" : {
+      "name" : "Nom du rôle",
+      "description" : "Description",
+      "functions" : "Fonctions",
+      "estado" : "Statut du rôle",
+      "rules" : {
+        "required" : "Champ obligatoire",
+        "selectAtLeastOneFunction" : "Sélectionnez au moins une fonction"
+      }
+    },
+    "rolesColumns" : {
+      "select" : "Sélectionner",
+      "id" : "IDENTIFIANT",
+      "name" : "Nom",
+      "description" : "Description",
+      "functions" : "Fonctions",
+      "accion" : "Action",
+      "rules" : {
+        "noName" : "Anonyme"
+      }
+    }
+  },
+  "routePage" : {
+    "managerGeneral" : {
+      "title" : "Itinéraire"
+    },
+    "fieldsFormulario" : {
+      "name" : "Nom de l'itinéraire",
+      "zona" : "Zone",
+      "descripcion" : "Description",
+      "paginaWeb" : "Page Web (URL)",
+      "fotos" : "URL des photos",
+      "tipoRuta" : "Type d'itinéraire",
+      "private" : "Privé",
+      "estado" : "État de la route",
+      "rules" : {
+        "required" : "Champ obligatoire",
+        "urlInvalid" : "Doit être une URL valide",
+        "selectAtLeastOneType" : "Sélectionnez au moins un type d'itinéraire",
+        "invalidList" : "Doit être une liste d'URL valides"
+      }
+    },
+    "routeColumns" : {
+      "select" : "Sélectionner",
+      "id" : "IDENTIFIANT",
+      "localizacion" : "Emplacement",
+      "name" : "Nom de l'itinéraire",
+      "map" : "Carte",
+      "zona" : "Zone",
+      "paginaWeb" : "page web",
+      "seePage" : "Voir la page",
+      "noWebsite" : "Pas de site web",
+      "fotos" : "Photos",
+      "photosAvailable" : "photo(s) disponible(s)",
+      "noPhotos" : "Il n'y a pas de photos",
+      "descripcion" : "Description",
+      "denuncias" : "Plaintes",
+      "distance" : "Distance",
+      "duration" : "Durée",
+      "elevation" : "Pente",
+      "valoracion" : "Évaluation",
+      "private" : "Privé",
+      "accion" : "Action"
+    }
+  },
+  "mainLayout" : {
+    "title" : "Plage de Majorque",
+    "selectLanguage" : "Sélectionner la langue",
+    "admin" : "Panneau d'administration"
+  },
+  "roleRequestPage" : {
+    "managerGeneral" : {
+      "title" : "Demande de rôle"
+    },
+    "rolesColumns" : {
+      "select" : "Sélectionner",
+      "id" : "IDENTIFIANT",
+      "user" : "Utilisateur",
+      "role" : "Rôle",
+      "urlPhotoDni" : "Photo d'identité",
+      "urlOfficialDoc" : "Document officiel",
+      "approved" : "Approuvé",
+      "accion" : "Action"
+    }
+  },
+  "linksList" : {
+    "home" : {
+      "title" : "Commencer",
+      "caption" : "Page d'accueil"
+    },
+    "user" : {
+      "title" : "Gérer les utilisateurs",
+      "caption" : "Utilisateur CRUD"
+    },
+    "roles" : {
+      "title" : "Gestion des rôles",
+      "caption" : "CRUD"
+    },
+    "beaches" : {
+      "title" : "Gestion des plages",
+      "caption" : "Plages du CRUD"
+    },
+    "routes" : {
+      "title" : "Gérer les itinéraires",
+      "caption" : "Itinéraires CRUD"
+    },
+    "roleRequests" : {
+      "title" : "Gérer les approbations",
+      "caption" : "Cadre de travail Quasar"
+    },
+    "complaints" : {
+      "title" : "Gestion des plaintes",
+      "caption" : "Projets communautaires Quasar"
+    },
+    "events" : {
+      "title" : "Gérer les événements",
+      "caption" : "Projets communautaires Quasar"
+    },
+    "pointsOfInterest" : {
+      "title" : "Points mondiaux",
+      "caption" : "Projets communautaires Quasar"
+    }
+  }
+}
