@@ -1,17 +1,14 @@
 package org.example.apirest.service.beachHasService;
 
-import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
+import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
 import org.example.apirest.dto.beachHasService.CreateBeachHasServiceDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
 import org.example.apirest.repository.*;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.utils.UtilsClass;
+import org.example.apirest.utils.Utils;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BeachHasServiceServiceImpl extends GeneralizedServiceImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto, BeachHasServiceRepository> {
@@ -19,7 +16,7 @@ public class BeachHasServiceServiceImpl extends GeneralizedServiceImpl<BeachHasS
     private final BeachRepository beachRepository;
     private final ServiceRepository serviceRepository;
 
-    public BeachHasServiceServiceImpl(BeachHasServiceRepository repository, DtoConverterImpl<BeachHasService,BeachHasServiceDto,CreateBeachHasServiceDto> dtoConverter, BeachRepository beachRepository, ServiceRepository serviceRepository) {
+    public BeachHasServiceServiceImpl(BeachHasServiceRepository repository, DtoConverterGeneralizedImpl<BeachHasService,BeachHasServiceDto,CreateBeachHasServiceDto> dtoConverter, BeachRepository beachRepository, ServiceRepository serviceRepository) {
         super(repository, dtoConverter, BeachHasService.class, BeachHasServiceDto.class);
         this.beachRepository = beachRepository;
         this.serviceRepository = serviceRepository;
@@ -44,7 +41,7 @@ public class BeachHasServiceServiceImpl extends GeneralizedServiceImpl<BeachHasS
             return null;
         }
 
-        UtilsClass.updateFields(old, newEntity);
+        Utils.updateFields(old, newEntity);
 
         Beach beach = beachRepository.findById(entity.getBeach_id()).orElseThrow(()-> new NotFoundException(Beach.class,entity.getBeach_id()));
         ServiceBeach service = serviceRepository.findById(entity.getServiceBeach().getId()).orElseThrow(()-> new NotFoundException(Role.class,entity.getServiceBeach().getId()));

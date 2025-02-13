@@ -25,10 +25,8 @@ public class S3Service {
     private final S3Client s3Client;
     private final S3Presigner presigner;
 
-    public String uploadFile(String bucketName, String prefix, MultipartFile file) throws IOException {
-        String key = generateKey(prefix , file);
+    public void uploadFile(String bucketName, String key, MultipartFile file) throws IOException {
         String contentType = file.getContentType();
-        System.out.println("AQUI!!! :" + contentType);
         s3Client.putObject(
                 PutObjectRequest.builder()
                         .bucket(bucketName)
@@ -37,7 +35,6 @@ public class S3Service {
                         .build(),
                 RequestBody.fromInputStream(file.getInputStream(), file.getSize())
         );
-        return key;
     }
 
     public void deleteFile(String bucketName, String key) {
@@ -75,20 +72,5 @@ public class S3Service {
         presigner.close();
 
         return url.toExternalForm();
-    }
-
-    private String extractExtension(String fileName) {
-        String extension = "";
-        if (fileName != null && fileName.contains(".")) {
-            extension = fileName.substring(fileName.lastIndexOf("."));
-        }
-        return extension;
-    }
-
-    private String generateKey(String prefix , MultipartFile file){
-        String originalFileName = file.getOriginalFilename();
-        String uniqueName = UUID.randomUUID().toString();
-        String extension = extractExtension(originalFileName);
-        return prefix + uniqueName + extension;
     }
 }

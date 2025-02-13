@@ -20,7 +20,7 @@ public class Photo implements BaseEntity {
 
     private String path;
 
-    private Boolean isPrivate;
+    private boolean isPrivate;
 
     private String url;
 

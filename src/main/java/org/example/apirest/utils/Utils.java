@@ -1,9 +1,11 @@
 package org.example.apirest.utils;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-public class    UtilsClass {
+public class Utils {
     public static void updateFields(Object oldObject, Object objectToInsert) {
         Class<?> clazz = oldObject.getClass();
         Field[] fields = clazz.getDeclaredFields();
@@ -23,5 +25,18 @@ public class    UtilsClass {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String extractExtension(String fileName) {
+        String extension = "";
+        if (fileName != null && fileName.contains(".")) {
+            extension = fileName.substring(fileName.lastIndexOf("."));
+        }
+        return extension;
+    }
+
+    public static String extractExtension(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        return extractExtension(fileName);
     }
 }

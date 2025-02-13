@@ -35,9 +35,9 @@ public class BeachController{
         return ResponseEntity.ok(service.findOne(id));
     }
 
-    @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
 //    @PreAuthorize("hasAuthority('createBeach')")
-    public ResponseEntity<BeachDto> create(@ModelAttribute CreateBeachDto entity) {
+    public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto entity) {
         BeachDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }

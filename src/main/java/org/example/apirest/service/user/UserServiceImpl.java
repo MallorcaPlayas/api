@@ -1,7 +1,6 @@
 package org.example.apirest.service.user;
 
-import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
+import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
@@ -11,7 +10,7 @@ import org.example.apirest.model.*;
 import org.example.apirest.repository.OrganizationRepository;
 import org.example.apirest.repository.UserRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.utils.UtilsClass;
+import org.example.apirest.utils.Utils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,13 +30,13 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
         implements UserDetailsService {
 
     private final OrganizationRepository organizationRepository;
-    private final DtoConverterImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto;
+    private final DtoConverterGeneralizedImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository repository,
-                           DtoConverterImpl<User,UserDto,CreateUserDto> dtoConverter,
+                           DtoConverterGeneralizedImpl<User,UserDto,CreateUserDto> dtoConverter,
                            OrganizationRepository organizationRepository,
-                           DtoConverterImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto,
+                           DtoConverterGeneralizedImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto,
                            PasswordEncoder passwordEncoder) {
         super(repository, dtoConverter, User.class, UserDto.class);
 
@@ -75,7 +74,7 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
         User old = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class, id));
         User newEntity = dtoConverter.convertToEntityFromCreateDto(entity, User.class);
 
-        UtilsClass.updateFields(old, newEntity);
+        Utils.updateFields(old, newEntity);
 
         if (entity.getOrganization() != null) {
             Organization org = organizationRepository.findById(entity.getOrganization().getId())
