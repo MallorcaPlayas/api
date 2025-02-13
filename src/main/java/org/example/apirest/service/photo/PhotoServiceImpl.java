@@ -40,7 +40,6 @@ public class PhotoServiceImpl{
     
     @SneakyThrows
     public PhotoDto save(CreatePhotoDto entity) {
-        System.out.println("CreateDto : " + entity);
         Photo photo = dtoConverter.createDtoToEntity(entity);
 
         MultipartFile file = entity.getFile();
@@ -51,7 +50,6 @@ public class PhotoServiceImpl{
 
         photo.setPath(randomFileName(file));
 
-        System.out.println("Photo : " + photo.isPrivate() + " CreatePhotoDto : " + entity.isPrivate());
         if(!photo.isPrivate()){
             String url = s3Service.generateUrl(photo.getBucket(), photo.getPath());
             photo.setUrl(url);
