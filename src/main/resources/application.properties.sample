@@ -36,6 +36,8 @@ aws.accessKeyId=AWS_ACCESS_KEY
 aws.secretAccessKey=AWS_SECRET_ACCESS_KEY
 aws.sessionToken=AWS_SESSION_TOKEN
 aws.region=REGION
+private.bucket=mallorca-playas-private
+public.bucket=mallorca-playas-public
 
 jwt.secret=JWT_SECRET
 
