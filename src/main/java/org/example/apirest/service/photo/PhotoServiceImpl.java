@@ -40,6 +40,16 @@ public class PhotoServiceImpl{
         List<Photo> photos = repository.findAll();
         return dtoConverter.entityListToDtoList(photos);
     }
+
+    public List<PhotoDto> findAllPublic() {
+        List<Photo> photos = repository.findByIsPrivateFalse().orElse(null);
+        return dtoConverter.entityListToDtoList(photos);
+    }
+
+    public List<PhotoDto> findAllByUser(String username){
+        List<Photo> photos = repository.findByUserUserName(username).orElse(null);
+        return dtoConverter.entityListToDtoList(photos);
+    }
     
     @SneakyThrows
     public PhotoDto save(CreatePhotoDto entity) {

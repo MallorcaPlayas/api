@@ -130,8 +130,6 @@ public class UserAuthenticationController {
     // Endpoint para registrar un usuario
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CreateUserDto createUserDto) {
-        System.out.println("paso por aqui para hacer el registro?");
-        System.out.println(createUserDto.toString());
         UserDto savedUser = userService.save(createUserDto);
         return ResponseEntity.ok(savedUser);
     }

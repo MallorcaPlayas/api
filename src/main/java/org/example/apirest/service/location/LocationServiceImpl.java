@@ -12,13 +12,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocationServiceImpl extends GeneralizedServiceImpl<Location, LocationDto, CreateLocationDto, LocationRepository> {
 
-    private final PhotoServiceImpl photoService;
 
     public LocationServiceImpl(LocationRepository repository,
-                               DtoConverterGeneralizedImpl<Location,LocationDto,CreateLocationDto> dtoConverter,
-                               PhotoServiceImpl photoService) {
+                               DtoConverterGeneralizedImpl<Location,LocationDto,CreateLocationDto> dtoConverter) {
         super(repository, dtoConverter, Location.class, LocationDto.class);
-        this.photoService = photoService;
     }
 
     //    @Override
