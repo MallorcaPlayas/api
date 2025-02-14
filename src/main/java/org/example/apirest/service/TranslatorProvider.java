@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.io.File;
 import java.util.Map;
 
 @Service
@@ -21,6 +19,11 @@ public class TranslatorProvider {
     private final String baseUrl = "https://theteacher.codiblau.com";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final QuasarStaticTranslationService translatorMongoService;
+
+    public TranslatorProvider(QuasarStaticTranslationService translatorMongoService) {
+        this.translatorMongoService = translatorMongoService;
+    }
 
     public String translateText(String text, String origen, String translated) {
 
@@ -61,27 +64,7 @@ public class TranslatorProvider {
         try {
             Map<String, Object> translatedJson = translateValues(json, origen, translated);
 
-            // Devolver el JSON traducido directamente como un Map
-
-            // TODO: pensar en donde lo voy a guardar para que me lo pueda coger 
-            //  Quasar
-            String directoryPath = "src/main/java/org/example/apirest/ABorrar";
-            String fileName = "translated_" + origen.toUpperCase() + "_to_" + translated.toUpperCase() + ".json";
-
-            // Asegurar que la carpeta existe
-            File directory = new File(directoryPath);
-            if (!directory.exists()) {
-                directory.mkdirs(); // Crea la carpeta si no existe
-            }
-
-            // Crear el archivo JSON
-            File jsonFile = Paths.get(directoryPath, fileName).toFile();
-
-            // Guardar el JSON traducido en el archivo
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, translatedJson);
-
-            System.out.println("Archivo JSON guardado en: " + jsonFile.getAbsolutePath());
+            translatorMongoService.saveTranslation(translated, translatedJson);
 
             return translatedJson;
         } catch (Exception e) {
