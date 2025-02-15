@@ -4,7 +4,9 @@ import org.example.apirest.model.TranslationMongoDB;
 import org.example.apirest.repository.TranslatorMongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class QuasarStaticTranslationService {
@@ -40,4 +42,9 @@ public class QuasarStaticTranslationService {
         repository.save(existingTranslation);
     }
 
+    public List<String> getAllLanguageIds() {
+        return repository.findAll().stream()
+                .map(TranslationMongoDB::getLanguage)
+                .collect(Collectors.toList());
+    }
 }

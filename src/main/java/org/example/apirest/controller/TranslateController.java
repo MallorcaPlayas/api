@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -62,4 +63,11 @@ public class TranslateController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/getAvailableLanguages")
+    public ResponseEntity<List<String>> getAvailableLanguages() {
+        List<String> languageIds = quasarStaticTranslationService.getAllLanguageIds();
+        return ResponseEntity.ok(languageIds);
+    }
+
 }
