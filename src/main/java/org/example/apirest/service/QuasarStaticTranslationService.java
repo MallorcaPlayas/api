@@ -4,6 +4,7 @@ import org.example.apirest.model.TranslationMongoDB;
 import org.example.apirest.repository.TranslatorMongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,13 +29,14 @@ public class QuasarStaticTranslationService {
         return translation;
     }
 
-    public void saveTranslation(String language, Map<String, Object> translations) {
+    public void saveTranslation(String language, String name, Map<String, Object> translations) {
         TranslationMongoDB existingTranslation = repository.findById(language).orElse(null);
 
         if (existingTranslation == null) {
             // Crear nueva entrada si no existe
             existingTranslation = new TranslationMongoDB();
             existingTranslation.setLanguage(language);
+            existingTranslation.setName(name);
         }
 
         // Actualizar traducciones
@@ -42,9 +44,14 @@ public class QuasarStaticTranslationService {
         repository.save(existingTranslation);
     }
 
-    public List<String> getAllLanguageIds() {
+    public List<Map<String, String>> getAllLanguageIds() {
         return repository.findAll().stream()
-                .map(TranslationMongoDB::getLanguage)
+                .map(lang -> {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("id", lang.getLanguage());
+                    map.put("name", lang.getName());
+                    return map;
+                })
                 .collect(Collectors.toList());
     }
 }

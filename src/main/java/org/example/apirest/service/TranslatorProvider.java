@@ -55,7 +55,7 @@ public class TranslatorProvider {
         return HtmlUtils.htmlUnescape(response);
     }
 
-    public Map<String, Object>  translateJsonAsText(Map<String, Object> json, String origen, String translated) {
+    public Map<String, Object>  translateJsonAsText(Map<String, Object> json, String origen, String translated, String name) {
         if (json == null || json.isEmpty()) {
             return new HashMap<>(); // Retornar un JSON vacío en formato Map
         }
@@ -64,7 +64,7 @@ public class TranslatorProvider {
         try {
             Map<String, Object> translatedJson = translateValues(json, origen, translated);
 
-            translatorMongoService.saveTranslation(translated, translatedJson);
+            translatorMongoService.saveTranslation(translated, name, translatedJson);
 
             return translatedJson;
         } catch (Exception e) {

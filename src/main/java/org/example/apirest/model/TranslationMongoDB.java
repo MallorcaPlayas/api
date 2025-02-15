@@ -10,5 +10,6 @@ import java.util.Map;
 public class TranslationMongoDB {
     @Id
     private String language;  // "es", "en", "fr"
+    private String name;
     private Map<String, Object> translations;
 }

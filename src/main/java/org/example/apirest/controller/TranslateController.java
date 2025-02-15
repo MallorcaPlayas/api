@@ -41,9 +41,10 @@ public class TranslateController {
     public ResponseEntity<Map<String, Object>> translateJson(
             @RequestBody Map<String, Object> json,
             @RequestParam String origen,
-            @RequestParam String translated) {
+            @RequestParam String translated,
+            @RequestParam String name) {
 
-        Map<String, Object> translatedJson = translatorProvider.translateJsonAsText(json, origen, translated);
+        Map<String, Object> translatedJson = translatorProvider.translateJsonAsText(json, origen, translated, name);
 
 
         return ResponseEntity.ok() // ResponseEntity.ok() → Devuelve un HTTP 200 (OK) si to_do salió bien.
@@ -65,9 +66,9 @@ public class TranslateController {
     }
 
     @GetMapping("/getAvailableLanguages")
-    public ResponseEntity<List<String>> getAvailableLanguages() {
-        List<String> languageIds = quasarStaticTranslationService.getAllLanguageIds();
-        return ResponseEntity.ok(languageIds);
+    public ResponseEntity<List<Map<String, String>>> getAvailableLanguages() {
+        List<Map<String, String>> languages = quasarStaticTranslationService.getAllLanguageIds();
+        return ResponseEntity.ok(languages);
     }
 
 }
