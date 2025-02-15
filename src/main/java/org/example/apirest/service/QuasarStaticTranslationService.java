@@ -1,5 +1,6 @@
 package org.example.apirest.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.apirest.model.TranslationMongoDB;
 import org.example.apirest.repository.TranslatorMongoRepository;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class QuasarStaticTranslationService {
     private final TranslatorMongoRepository repository;
