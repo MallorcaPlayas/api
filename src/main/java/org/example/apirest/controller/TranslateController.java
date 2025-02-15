@@ -4,6 +4,7 @@ package org.example.apirest.controller;
 import org.example.apirest.model.TranslationMongoDB;
 import org.example.apirest.service.QuasarStaticTranslationService;
 import org.example.apirest.service.TranslatorProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,5 +71,16 @@ public class TranslateController {
         List<Map<String, String>> languages = quasarStaticTranslationService.getAllLanguageIds();
         return ResponseEntity.ok(languages);
     }
+
+    @DeleteMapping("/deleteLanguage/{id}")
+    public ResponseEntity<String> deleteLanguage(@PathVariable String id) {
+        boolean deleted = quasarStaticTranslationService.deleteLanguage(id);
+        if (deleted) {
+            return ResponseEntity.ok("Idioma eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Idioma no encontrado.");
+        }
+    }
+
 
 }

@@ -56,4 +56,13 @@ public class QuasarStaticTranslationService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public boolean deleteLanguage(String id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
 }
