@@ -31,5 +31,5 @@ public class BeachDto extends BaseDto {
     @JsonProperty("services")
     private List<BeachHasServiceDto> beachHasServiceBeach;
     private List<PhotoDto> photos;
-    private LocationDto location;
+//    private LocationDto location;
 }

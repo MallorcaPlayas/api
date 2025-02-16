@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.UUID;
 
 public class Utils {
     public static void updateFields(Object oldObject, Object objectToInsert) {
@@ -38,5 +39,12 @@ public class Utils {
     public static String extractExtension(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         return extractExtension(fileName);
+    }
+
+    public static String randomFileName(MultipartFile file){
+        String originalFileName = file.getOriginalFilename();
+        String uniqueName = UUID.randomUUID().toString();
+        String extension = Utils.extractExtension(originalFileName);
+        return uniqueName + extension;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,42 +35,6 @@ public class PhotoController {
     private final Validator<CreatePhotoDto> photoValidator;
     private final UserServiceImpl userService;
 
-    @GetMapping("/public")
-    public ResponseEntity<List<PhotoDto>> indexPublic() {
-        return ResponseEntity.ok(service.findAllPublic());
-    }
-
-    @GetMapping("/private")
-    public ResponseEntity<List<PhotoDto>> indexPrivate(@AuthenticationPrincipal UserDetails userDetails) {
-
-        UserDto userDto = userService.findByUserName(userDetails.getUsername()).orElse(null);
-
-        return ResponseEntity.ok(service.findAllByUser(userDto.getUserName()));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<PhotoDto> show(@PathVariable Long id , @AuthenticationPrincipal UserDetails userDetails) {
-
-        PhotoDto photoDto = service.findOne(id);
-
-        if(!photoDto.isPrivate()){
-            return ResponseEntity.ok(service.findOne(id));
-        }
-
-        if(userDetails == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        UserDto userDto = userService.findByUserName(userDetails.getUsername()).orElse(null);
-
-
-        if(userDto.getId().equals(photoDto.getUserId())){
-            return ResponseEntity.ok(service.findOne(id));
-        }
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-
     @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PhotoDto> create(@ModelAttribute CreatePhotoDto entity) {
         photoValidator.validate(entity);
@@ -79,7 +44,19 @@ public class PhotoController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id , @AuthenticationPrincipal UserDetails userDetails) {
+
+        PhotoDto photoDto = service.findOne(id);
+
+        if(photoDto == null) return;
+
+        if(!photoDto.isPrivate()) service.delete(id);
+
+        String username = userDetails.getUsername();
+        UserDto userDto = userService.findByUserName(username).orElse(null);
+
+        if(!photoDto.getUserId().equals(userDto.getId())) return;
+
         service.delete(id);
     }
 }

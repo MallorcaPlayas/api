@@ -20,6 +20,7 @@ public class Photo implements BaseEntity {
 
     private String path;
 
+    @Column(name = "private")
     private boolean isPrivate;
 
     private String url;
@@ -43,4 +44,8 @@ public class Photo implements BaseEntity {
     @OneToOne
     @JoinColumn(name="excursion_id")
     private Excursion excursion;
+
+    @ManyToOne
+    @JoinColumn(name="complaint_id")
+    private Complaint complaint;
 }

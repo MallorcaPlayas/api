@@ -28,7 +28,7 @@ public class PhotoValidator implements Validator<CreatePhotoDto>{
         boolean commentAssigned = createPhotoDto.getCommentId() != null;
 
         if(!beachAssigned && !routeAssigned && !excursionAssigned && !userAssigned && !commentAssigned) {
-            throw  new PhotoNotAssignedException();
+            throw new PhotoNotAssignedException();
         }
     }
 }

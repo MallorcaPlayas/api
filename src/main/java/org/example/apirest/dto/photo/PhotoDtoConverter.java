@@ -11,13 +11,14 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class DtoConverterPhoto implements DtoConverter<Photo, PhotoDto, CreatePhotoDto> {
+public class PhotoDtoConverter implements DtoConverter<Photo, PhotoDto> {
 
     private final ModelMapper mapper;
     private final S3Service s3Service;
 
     @Override
     public PhotoDto entityToDto(Photo photo) {
+        if(photo == null) return null;
         PhotoDto photoDto = mapper.map(photo, PhotoDto.class);
         if (photo.isPrivate()) {
             String url = this.s3Service.generateTeamporalUrl(photo.getBucket(), photo.getPath());
@@ -32,16 +33,16 @@ public class DtoConverterPhoto implements DtoConverter<Photo, PhotoDto, CreatePh
     }
 
     @Override
-    public Photo createDtoToEntity(CreatePhotoDto createPhotoDto) {
-        return mapper.map(createPhotoDto , Photo.class);
+    public Photo dtoToEntity(PhotoDto photoDto) {
+        return mapper.map(photoDto , Photo.class);
     }
 
     @Override
-    public List<Photo> createDtoListToEntityList(List<CreatePhotoDto> createPhotoDtos) {
-        return createPhotoDtos.stream().map(this::createDtoToEntity).toList();
+    public List<Photo> dtoListToEntityList(List<PhotoDto> photoDtos) {
+        return photoDtos.stream().map(this::dtoToEntity).toList();
     }
 
-//    @Override
+    //    @Override
 //    public PhotoDto convertDto(Photo entity, Class<PhotoDto> dtoClass) {
 //        PhotoDto photoDto = modelMapper.map(entity, dtoClass);
 //        return photoDto;

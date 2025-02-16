@@ -28,7 +28,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PhotoException.class)
-    public ResponseEntity<ApiError> invalidFileException(PhotoException ex) {
+    public ResponseEntity<ApiError> PhotoException(PhotoException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }

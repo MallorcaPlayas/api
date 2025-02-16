@@ -12,6 +12,7 @@ public class PhotoDto extends BaseDto {
     private Long routeId;
     private Long userId;
     private Long excursionId;
+    private Long complaintId;
     @JsonProperty("private")
     private boolean isPrivate;
     private String url;

@@ -10,6 +10,7 @@ public class CreatePhotoDto{
     private Long beachId;
     private Long routeId;
     private Long userId;
+    private Long complaintId;
     private Long excursionId;
     private boolean isPrivate;
     private MultipartFile file;

@@ -28,5 +28,5 @@ public class CreateBeachDto extends BaseCreateDto {
     private List<CreateBeachManagerDto> usersInCharge;
     @JsonProperty("services")
     private List<CreateBeachHasServiceDto> beachHasServiceBeach;
-    private CreateLocationDto location;
+//    private CreateLocationDto location;
 }

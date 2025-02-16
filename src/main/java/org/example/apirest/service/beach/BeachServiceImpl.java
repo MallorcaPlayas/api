@@ -1,5 +1,6 @@
 package org.example.apirest.service.beach;
 
+import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
@@ -11,6 +12,8 @@ import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.PhotoDto;
+import org.example.apirest.dto.photo.PhotoDtoConverter;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.error.NotFoundException;
@@ -28,9 +31,8 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     private final DtoConverterGeneralizedImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService;
     private final DtoConverterGeneralizedImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
     private final DtoConverterGeneralizedImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
-    private final DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoLocation;
-//    private final DtoConverterPhoto dtoConverterPhoto;
-//    private final S3Service s3Service;
+//    private final DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoLocation;
+    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
 
     public BeachServiceImpl(BeachRepository repository,
                             DtoConverterGeneralizedImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
@@ -38,28 +40,48 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
                             DtoConverterGeneralizedImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
                             DtoConverterGeneralizedImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
                             DtoConverterGeneralizedImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach,
-                            DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoLocation) {
+
+                            DtoConverter<Photo, PhotoDto> photoDtoConverter) {
 
         super(repository, dtoConverter, Beach.class, BeachDto.class);
         this.dtoBeachManager = dtoBeachManager;
         this.dtoBeachHasService = dtoBeachHasService;
         this.dtoCamera = dtoCamera;
         this.dtoTypeBeach = dtoTypeBeach;
-        this.dtoLocation = dtoLocation;
-//        this.dtoConverterPhoto = dtoConverterPhoto;
-//        this.s3Service = s3Service;
+//        this.dtoLocation = dtoLocation;
+        this.photoDtoConverter = photoDtoConverter;
     }
 
     @Override
     public BeachDto findOne(Long id) {
+
         Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(entityClass, id));
-        return dtoConverter.convertDto(beach, BeachDto.class);
+        BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+
+        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(beach.getPhotos());
+        beachDto.setPhotos(photoDtos);
+
+        return beachDto;
     }
 
     @Override
     public List<BeachDto> findAll() {
+
         List<Beach> beaches = repository.findAll();
-        return dtoConverter.convertDtoList(beaches,BeachDto.class);
+
+        return beaches.stream()
+                .map(beach -> {
+
+                    BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+
+                    List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(beach.getPhotos());
+
+                    beachDto.setPhotos(photoDtos);
+
+                    return beachDto;
+
+                })
+                .toList();
     }
 
 
@@ -96,10 +118,10 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
             entityToInsert.setCameras(cameras);
         }
 
-        if (entity.getLocation() != null) {
-            Location location = dtoLocation.convertToEntityFromCreateDto(entity.getLocation(), Location.class);
-            entityToInsert.setLocation(location);
-        }
+//        if (entity.getLocation() != null) {
+//            Location location = dtoLocation.convertToEntityFromCreateDto(entity.getLocation(), Location.class);
+//            entityToInsert.setLocation(location);
+//        }
 
         return dtoConverter.convertDto(repository.save(entityToInsert), BeachDto.class);
 

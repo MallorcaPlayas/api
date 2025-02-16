@@ -1,6 +1,8 @@
 package org.example.apirest.service.user;
 
+import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
+import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
@@ -23,7 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Qualifier("userServiceImpl") // Hay 2 clases que implementan UserDetailsService, por lo que necesitamos especificar cuál usar en la inyección de dependencias cuando se necesite UserDetailsService
+@Qualifier("userServiceImpl")
+// Hay 2 clases que implementan UserDetailsService, por lo que necesitamos especificar cuál usar en la inyección de dependencias cuando se necesite UserDetailsService
 //  UserServiceImpl manejar la lógica relacionada con los usuarios, incluyendo operaciones CRUD
 //  y autenticación para Spring Security.
 public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, CreateUserDto, UserRepository>
@@ -31,18 +34,44 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
 
     private final OrganizationRepository organizationRepository;
     private final DtoConverterGeneralizedImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto;
+    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository repository,
-                           DtoConverterGeneralizedImpl<User,UserDto,CreateUserDto> dtoConverter,
+                           DtoConverterGeneralizedImpl<User, UserDto, CreateUserDto> dtoConverter,
                            OrganizationRepository organizationRepository,
                            DtoConverterGeneralizedImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           DtoConverter<Photo, PhotoDto> photoDtoConverter) {
         super(repository, dtoConverter, User.class, UserDto.class);
 
         this.organizationRepository = organizationRepository;
         this.roleDto = roleDto;
         this.passwordEncoder = passwordEncoder;
+        this.photoDtoConverter = photoDtoConverter;
+    }
+
+    @Override
+    public List<UserDto> findAll() {
+        List<User> users = repository.findAll();
+        return users.stream().map(user -> {
+                Photo photo = user.getPhoto();
+                PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+                UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
+                userDto.setPhoto(photoDto);
+                return userDto;
+                })
+                .toList();
+    }
+
+    @Override
+    public UserDto findOne(Long id) {
+        User user = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class,id));
+        Photo photo = user.getPhoto();
+        PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+        UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
+        userDto.setPhoto(photoDto);
+        return userDto;
     }
 
     @Override

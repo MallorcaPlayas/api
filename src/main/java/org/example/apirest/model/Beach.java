@@ -47,6 +47,6 @@ public class Beach implements BaseEntity {
     @OneToMany(mappedBy = "beach" , cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Photo> photos;
 
-    @OneToOne(mappedBy = "beach" , cascade = CascadeType.ALL , orphanRemoval = true)
-    private Location location;
+//    @OneToOne(mappedBy = "beach" , cascade = CascadeType.ALL , orphanRemoval = true)
+//    private Location location;
 }

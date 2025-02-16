@@ -1,12 +1,16 @@
 package org.example.apirest.service.route;
 
 import lombok.SneakyThrows;
+import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
+import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.Location;
+import org.example.apirest.model.Photo;
 import org.example.apirest.model.Route;
 import org.example.apirest.repository.LocationRepository;
 import org.example.apirest.repository.RouteRepository;
@@ -26,16 +30,52 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
 
     private SAXParser saxParser;
     private final DtoConverterGeneralizedImpl<Location, LocationDto,CreateLocationDto> dtoConverterLocation;
+    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
 
     public RouteServiceImpl(RouteRepository repository,
                             DtoConverterGeneralizedImpl<Route,RouteDto,CreateRouteDto> dtoConverter,
                             LocationRepository locationRepository,
-                            DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation)
+                            DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation,
+                            DtoConverter<Photo,PhotoDto> photoDtoConverter)
             throws ParserConfigurationException, SAXException {
 
         super(repository, dtoConverter, Route.class, RouteDto.class);
         this.dtoConverterLocation = dtoConverterLocation;
         this.saxParser = SAXParserFactory.newInstance().newSAXParser();
+        this.photoDtoConverter = photoDtoConverter;
+    }
+
+    @Override
+    public RouteDto findOne(Long id){
+
+        Route route = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
+
+        RouteDto routeDto = dtoConverter.convertDto(route,RouteDto.class);
+
+        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
+
+        routeDto.setPhotos(photoDtos);
+
+        return routeDto;
+    }
+
+    @Override
+    public List<RouteDto> findAll(){
+
+        List<Route> routes = repository.findAll();
+
+        return routes.stream()
+                .map(route -> {
+                    RouteDto routeDto = dtoConverter.convertDto(route,RouteDto.class);
+
+                    List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
+
+                    routeDto.setPhotos(photoDtos);
+
+                    return routeDto;
+                    
+                })
+                .toList();
     }
 
     @Override

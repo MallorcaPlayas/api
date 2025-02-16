@@ -18,14 +18,14 @@ public class Comment implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date editedDate;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date editedDate;
 
     private Integer rating;
-    private String comment;
+    private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date publishedDate;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date publishedDate;
 
     @ManyToOne
     @JoinColumn(name = "beach_id")
