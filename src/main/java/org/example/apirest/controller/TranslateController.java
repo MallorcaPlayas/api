@@ -82,5 +82,25 @@ public class TranslateController {
         }
     }
 
+    @GetMapping("/getLanguage/{id}")
+    public ResponseEntity<TranslationMongoDB> getLanguage(@PathVariable String id) {
+        TranslationMongoDB language = quasarStaticTranslationService.findByLanguage(id);
+        if (language != null) {
+            return ResponseEntity.ok(language);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/updateLanguage/{id}")
+    public ResponseEntity<?> updateLanguage(@PathVariable String id, @RequestBody TranslationMongoDB updatedLanguage) {
+        boolean updated = quasarStaticTranslationService.updateTranslation(id, updatedLanguage);
+        if (updated) {
+            return ResponseEntity.ok("Idioma actualizado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

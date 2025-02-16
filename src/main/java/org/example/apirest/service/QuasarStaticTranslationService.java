@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -65,4 +66,20 @@ public class QuasarStaticTranslationService {
         return false;
     }
 
+
+
+    public boolean updateTranslation(String id, TranslationMongoDB updatedLanguage) {
+        Optional<TranslationMongoDB> existing = repository.findById(id);
+
+        if (existing.isPresent()) {
+            TranslationMongoDB existingTranslation = existing.get();
+
+            // Mantener el ID original para evitar que se cree un nuevo documento
+            existingTranslation.setTranslations(updatedLanguage.getTranslations());
+
+            repository.save(existingTranslation);
+            return true;
+        }
+        return false;
+    }
 }
