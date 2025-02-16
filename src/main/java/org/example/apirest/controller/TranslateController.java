@@ -102,5 +102,15 @@ public class TranslateController {
         }
     }
 
+    @PostMapping("/uploadJson")
+    public ResponseEntity<String> uploadJson(@RequestBody TranslationMongoDB translation) {
+        try {
+            quasarStaticTranslationService.saveTranslation(translation.getLanguage(), translation.getName(), translation.getTranslations());
+            return ResponseEntity.ok("Traducción subida correctamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir la traducción.");
+        }
+    }
+
 
 }
