@@ -14,14 +14,14 @@ import java.util.List;
 public class ValidatorConfig {
 
     @Bean
-    public Validator<MultipartFile> fileValidator(){
+    public Validator fileValidator(){
         final List<String> ALLOWED_MIME = List.of("image/png", "image/jpeg");
         final List<String> ALLOWED_EXTENSION = List.of(".png", ".jpeg",".jpg");
         return new FileValidator(ALLOWED_MIME,ALLOWED_EXTENSION,null,null);
     }
 
     @Bean
-    public Validator<CreatePhotoDto> photoValidator(){
+    public Validator photoValidator(){
         return new PhotoValidator(this.fileValidator());
     }
 

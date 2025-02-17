@@ -32,7 +32,7 @@ import java.util.List;
 public class PhotoController {
 
     private final PhotoServiceImpl service;
-    private final Validator<CreatePhotoDto> photoValidator;
+    private final Validator photoValidator;
     private final UserServiceImpl userService;
 
     @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)

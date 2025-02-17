@@ -17,20 +17,21 @@ import java.util.function.Predicate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class FileValidator implements Validator<MultipartFile> {
+public class FileValidator implements Validator {
     private List<String> allowedMime;
     private List<String> allowedExtension;
     private Long maxSize;
     private Long minSize;
 
     @Override
-    public boolean validate(Predicate<List<MultipartFile>> callBack,List<MultipartFile> files){
+    public boolean validate(Predicate<Object[]> callBack,Object... files){
         return this.validate(files) && callBack.test(files);
     }
 
     @Override
-    public boolean validate(List<MultipartFile> files) {
-        return files.stream()
+    public boolean validate(Object... objects) {
+        MultipartFile[] files = (MultipartFile[]) objects;
+        return Arrays.stream(files)
                 .allMatch(file ->
                         emptyValidate(file) &&
                         mimeValidate(file) &&

@@ -5,26 +5,29 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.photo.CreatePhotoDto;
 import org.example.apirest.error.photo_exceptions.PhotoNotAssignedException;
+import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
 @Component
 @RequiredArgsConstructor
-public class PhotoValidator implements Validator<CreatePhotoDto>{
+public class PhotoValidator implements Validator{
 
-    private final Validator<MultipartFile> fileValidator;
+    private final Validator fileValidator;
 
     @Override
-    public boolean validate(Predicate<List<CreatePhotoDto>> callBack, List<CreatePhotoDto> createPhotoDtos) {
+    public boolean validate(Predicate<Object[]> callBack, Object... createPhotoDtos) {
         return this.validate(createPhotoDtos) && callBack.test(createPhotoDtos);
     }
 
     @Override
-    public boolean validate(List<CreatePhotoDto> createPhotoDtos) {
-        return createPhotoDtos.stream()
+    public boolean validate(Object... objects) {
+        CreatePhotoDto[] createPhotoDtos = (CreatePhotoDto[]) objects;
+        return Arrays.stream(createPhotoDtos)
                 .allMatch(createPhotoDto ->
                         assignmentValidate(createPhotoDto) &&
                         fileValidator.validate(List.of(createPhotoDto.getFile()))
