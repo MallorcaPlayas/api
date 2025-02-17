@@ -26,11 +26,11 @@ public class PhotoValidator implements Validator{
 
     @Override
     public boolean validate(Object... objects) {
-        CreatePhotoDto[] createPhotoDtos = (CreatePhotoDto[]) objects;
-        return Arrays.stream(createPhotoDtos)
+        List<CreatePhotoDto> createPhotoDtos = Arrays.stream(objects).map(o -> (CreatePhotoDto) o).toList();
+        return createPhotoDtos.stream()
                 .allMatch(createPhotoDto ->
                         assignmentValidate(createPhotoDto) &&
-                        fileValidator.validate(List.of(createPhotoDto.getFile()))
+                        fileValidator.validate(createPhotoDto.getFile())
                 );
     }
 
@@ -41,6 +41,6 @@ public class PhotoValidator implements Validator{
         boolean userAssigned = createPhotoDto.getUserId() != null;
         boolean commentAssigned = createPhotoDto.getCommentId() != null;
 
-        return beachAssigned && routeAssigned && excursionAssigned && userAssigned && commentAssigned;
+        return beachAssigned || routeAssigned || excursionAssigned || userAssigned || commentAssigned;
     }
 }

@@ -30,8 +30,8 @@ public class FileValidator implements Validator {
 
     @Override
     public boolean validate(Object... objects) {
-        MultipartFile[] files = (MultipartFile[]) objects;
-        return Arrays.stream(files)
+        List<MultipartFile> files = Arrays.stream(objects).map(o-> (MultipartFile) o ).toList();
+        return files.stream()
                 .allMatch(file ->
                         emptyValidate(file) &&
                         mimeValidate(file) &&
