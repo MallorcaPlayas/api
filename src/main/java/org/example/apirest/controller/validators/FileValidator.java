@@ -10,55 +10,60 @@ import org.example.apirest.error.file_exceptions.InvalidFileSizeException;
 import org.example.apirest.utils.Utils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class FileValidator implements Validator<MultipartFile>{
+public class FileValidator implements Validator<MultipartFile> {
     private List<String> allowedMime;
     private List<String> allowedExtension;
     private Long maxSize;
     private Long minSize;
 
     @Override
-    public void validate(MultipartFile file) {
-        emptyValidate(file);
-        mimeValidate(file);
-        extensionValidate(file);
-        maxSizeValidate(file);
-        minSizeValidate(file);
+    public boolean validate(Predicate<List<MultipartFile>> callBack,List<MultipartFile> files){
+        return this.validate(files) && callBack.test(files);
     }
 
-    private void maxSizeValidate(MultipartFile file){
-        if (maxSize == null) return;
-        if (file.getSize() > maxSize) throw new InvalidFileSizeException(maxSize + " MB " , String.valueOf(file.getSize()));
+    @Override
+    public boolean validate(List<MultipartFile> files) {
+        return files.stream()
+                .allMatch(file ->
+                        emptyValidate(file) &&
+                        mimeValidate(file) &&
+                        extensionValidate(file) &&
+                        maxSizeValidate(file) &&
+                        minSizeValidate(file)
+                );
     }
 
-    private void emptyValidate(MultipartFile file){
-        if (file == null || file.isEmpty()) throw new InvalidFileException(" null or empty file provided ");
+    private boolean maxSizeValidate(MultipartFile file) {
+        if (maxSize == null) return true;
+        return file.getSize() <= maxSize;
     }
 
-    private void extensionValidate(MultipartFile file){
-        if (allowedExtension == null) return ;
+    private boolean emptyValidate(MultipartFile file) {
+        return file != null && !file.isEmpty();
+    }
 
+    private boolean extensionValidate(MultipartFile file) {
+        if (allowedExtension == null) return true;
         String extension = Utils.extractExtension(file.getOriginalFilename());
-        if (extension == null || extension.isEmpty() || !allowedExtension.contains(extension.toLowerCase())) {
-            throw new InvalidFileExtensionException(extension);
-        }
+        return extension != null && !extension.isEmpty() && allowedExtension.contains(extension.toLowerCase());
     }
 
-    private void mimeValidate(MultipartFile file){
-        if (allowedMime == null) return ;
+    private boolean mimeValidate(MultipartFile file) {
+        if (allowedMime == null) return true;
 
         String contentType = file.getContentType();
-        if (contentType == null || !allowedMime.contains(contentType.toLowerCase())) {
-            throw new InvalidFileMimeTypeException(contentType);
-        }
+        return contentType != null && allowedMime.contains(contentType.toLowerCase());
     }
 
-    private void minSizeValidate(MultipartFile file){
-        if(minSize == null) return;
-        if (file.getSize() < minSize) throw new InvalidFileSizeException(" 10 MB " , String.valueOf(file.getSize()));
+    private boolean minSizeValidate(MultipartFile file) {
+        if (minSize == null) return true;
+        return file.getSize() >= minSize;
     }
 }

@@ -37,7 +37,9 @@ public class PhotoController {
 
     @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PhotoDto> create(@ModelAttribute CreatePhotoDto entity) {
-        photoValidator.validate(entity);
+
+        if(!photoValidator.validate(entity)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         PhotoDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }

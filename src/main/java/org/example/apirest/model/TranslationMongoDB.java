@@ -1,18 +1,15 @@
 package org.example.apirest.model;
 
-
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
+import java.util.Map;
 
 @Data
-@Document(collection = "traduccion")
+@Document(collection = "translations")
 public class TranslationMongoDB {
     @Id
-    String key;
-    String value;
-    List<LanguageMongoDb> languages;
-
+    private String language;  // "es", "en", "fr"
+    private String name;
+    private Map<String, Object> translations;
 }

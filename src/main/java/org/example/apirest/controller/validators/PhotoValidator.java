@@ -8,6 +8,9 @@ import org.example.apirest.error.photo_exceptions.PhotoNotAssignedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 @Component
 @RequiredArgsConstructor
 public class PhotoValidator implements Validator<CreatePhotoDto>{
@@ -15,20 +18,26 @@ public class PhotoValidator implements Validator<CreatePhotoDto>{
     private final Validator<MultipartFile> fileValidator;
 
     @Override
-    public void validate(CreatePhotoDto createPhotoDto) {
-        assignmentValidate(createPhotoDto);
-        fileValidator.validate(createPhotoDto.getFile());
+    public boolean validate(Predicate<List<CreatePhotoDto>> callBack, List<CreatePhotoDto> createPhotoDtos) {
+        return this.validate(createPhotoDtos) && callBack.test(createPhotoDtos);
     }
 
-    private void assignmentValidate(CreatePhotoDto createPhotoDto){
+    @Override
+    public boolean validate(List<CreatePhotoDto> createPhotoDtos) {
+        return createPhotoDtos.stream()
+                .allMatch(createPhotoDto ->
+                        assignmentValidate(createPhotoDto) &&
+                        fileValidator.validate(List.of(createPhotoDto.getFile()))
+                );
+    }
+
+    private boolean assignmentValidate(CreatePhotoDto createPhotoDto){
         boolean beachAssigned = createPhotoDto.getBeachId() != null;
         boolean routeAssigned = createPhotoDto.getRouteId() != null;
         boolean excursionAssigned = createPhotoDto.getExcursionId() != null;
         boolean userAssigned = createPhotoDto.getUserId() != null;
         boolean commentAssigned = createPhotoDto.getCommentId() != null;
 
-        if(!beachAssigned && !routeAssigned && !excursionAssigned && !userAssigned && !commentAssigned) {
-            throw new PhotoNotAssignedException();
-        }
+        return beachAssigned && routeAssigned && excursionAssigned && userAssigned && commentAssigned;
     }
 }
