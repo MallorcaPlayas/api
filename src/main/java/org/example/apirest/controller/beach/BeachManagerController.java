@@ -1,5 +1,6 @@
-package org.example.apirest.controller;
+package org.example.apirest.controller.beach;
 
+import org.example.apirest.controller.GeneralizedController;
 import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
 import org.example.apirest.service.beachManager.BeachManagerServiceImpl;

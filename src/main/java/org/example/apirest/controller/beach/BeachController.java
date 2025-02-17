@@ -23,15 +23,17 @@ public class BeachController{
         this.service = service;
     }
 
+    // para usarlo en postman: 127.0.0.1:8080/beaches?language=es
     @GetMapping
     @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<List<BeachDto>> index() {
+    public ResponseEntity<List<BeachDto>> index(@RequestParam(defaultValue = "de") String language) {
         return ResponseEntity.ok(service.findAll());
     }
 
+    // para usarlo en postman: 127.0.0.1:8080/beaches/2/?language=de
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<BeachDto> show(@PathVariable Long id) {
+    public ResponseEntity<BeachDto> show(@PathVariable Long id , @RequestParam String language) {
         return ResponseEntity.ok(service.findOne(id));
     }
 
@@ -49,6 +51,7 @@ public class BeachController{
         return ResponseEntity.ok(updated);
     }
 
+    // Puedes borrar el registro de mysql y mongo
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('deleteBeach')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

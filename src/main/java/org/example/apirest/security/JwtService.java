@@ -3,11 +3,8 @@ package org.example.apirest.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.stereotype.Service;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolverAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
@@ -17,17 +14,18 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.Map;
 
-import java.util.Base64;
 // Nota: Codigo para poder hacer la autentificacion por Google de Quasar
 //  verificar y extraer el email de un token JWT de Google Sign-In
 @Service
 public class JwtService {
     // GOOGLE_CERTS_URL: URL donde Google publica las claves públicas para verificar los tokens JWT.
-    private static final String GOOGLE_CERTS_URL = "https://www.googleapis.com/oauth2/v3/certs";
+    @Value("${jwt.google.certs.url}")
+    private  String GOOGLE_CERTS_URL;
     // CLIENT_ID: El ID del cliente OAuth 2.0 que identifica la aplicación en Google.
     // esta clave la he sacado de la consola de google cloud
     // https://console.cloud.google.com/apis/credentials?inv=1&invt=Abo1XA&project=sunny-resolver-443420-e0
-    private static final String CLIENT_ID = "974828485061-bic4bibg7nln4hsppirr258oel4ti11f.apps.googleusercontent.com";
+    @Value("${jwt.google.client.id}")
+    private  String CLIENT_ID;
 
     public String extractEmailFromJwt(String jwtToken) {
         try {
