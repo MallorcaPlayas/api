@@ -32,12 +32,14 @@ import java.util.List;
 public class PhotoController {
 
     private final PhotoServiceImpl service;
-    private final Validator<CreatePhotoDto> photoValidator;
+    private final Validator photoValidator;
     private final UserServiceImpl userService;
 
     @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PhotoDto> create(@ModelAttribute CreatePhotoDto entity) {
-        photoValidator.validate(entity);
+
+        if(!photoValidator.validate(entity)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         PhotoDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }

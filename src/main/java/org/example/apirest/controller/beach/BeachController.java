@@ -1,4 +1,4 @@
-package org.example.apirest.controller;
+package org.example.apirest.controller.beach;
 
 
 import org.example.apirest.dto.beach.BeachDto;
@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/beaches")
 @CrossOrigin(origins = "*")
 public class BeachController{
-
     private final BeachServiceImpl service;
 
     public BeachController(BeachServiceImpl service) {

@@ -10,6 +10,10 @@ import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
 import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
+import org.example.apirest.dto.location.CreateLocationDto;
+import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.PhotoDto;
+import org.example.apirest.dto.photo.PhotoDtoConverter;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.error.NotFoundException;
@@ -34,20 +38,22 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     private final BeachTranslationMongoService beachTranslationMongoService;
 
     public BeachServiceImpl(BeachRepository repository,
-                            DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
-                            DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
-                            DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
-                            DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
-                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach, BeachTranslationMongoService translationServiceMongoDB) {
+                            DtoConverterGeneralizedImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
+                            DtoConverterGeneralizedImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
+                            DtoConverterGeneralizedImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
+                            DtoConverterGeneralizedImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
+                            DtoConverterGeneralizedImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach,
+                            BeachTranslationMongoService translationServiceMongoDB,
+                            DtoConverter<Photo, PhotoDto> photoDtoConverter) {
 
         super(repository, dtoConverter, Beach.class, BeachDto.class);
         this.dtoBeachManager = dtoBeachManager;
         this.dtoBeachHasService = dtoBeachHasService;
         this.dtoCamera = dtoCamera;
         this.dtoTypeBeach = dtoTypeBeach;
-        this.beachTranslationMongoService = translationServiceMongoDB;
 //        this.dtoLocation = dtoLocation;
         this.photoDtoConverter = photoDtoConverter;
+        this.beachTranslationMongoService = translationServiceMongoDB;
     }
 
     @Override
@@ -116,7 +122,7 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
             }
 
             return beachDto; // Retornar la playa con la descripción traducida
-        }).collect(Collectors.toList());
+        }).toList();
 
         return translatedBeaches; // Lista de todas las playas con descripciones traducidas
     }
@@ -235,10 +241,6 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     public BeachDto updateWithTranslate(Long id, CreateBeachDto entity) {
         Beach old = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         Beach newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
-
-        if (!old.getDescription().equals(entity.getDescription())) {
-            beachTranslationMongoService.updateTranslationsInMongo(id, entity.getDescription());
-        }
 
         Utils.updateFields(old, newEntity);
 

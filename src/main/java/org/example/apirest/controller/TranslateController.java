@@ -4,10 +4,12 @@ package org.example.apirest.controller;
 import org.example.apirest.model.TranslationMongoDB;
 import org.example.apirest.service.QuasarStaticTranslationService;
 import org.example.apirest.service.TranslatorProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,9 +42,10 @@ public class TranslateController {
     public ResponseEntity<Map<String, Object>> translateJson(
             @RequestBody Map<String, Object> json,
             @RequestParam String origen,
-            @RequestParam String translated) {
+            @RequestParam String translated,
+            @RequestParam String name) {
 
-        Map<String, Object> translatedJson = translatorProvider.translateJsonAsText(json, origen, translated);
+        Map<String, Object> translatedJson = translatorProvider.translateJsonAsText(json, origen, translated, name);
 
 
         return ResponseEntity.ok() // ResponseEntity.ok() → Devuelve un HTTP 200 (OK) si to_do salió bien.
@@ -62,4 +65,52 @@ public class TranslateController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/getAvailableLanguages")
+    public ResponseEntity<List<Map<String, String>>> getAvailableLanguages() {
+        List<Map<String, String>> languages = quasarStaticTranslationService.getAllLanguageIds();
+        return ResponseEntity.ok(languages);
+    }
+
+    @DeleteMapping("/deleteLanguage/{id}")
+    public ResponseEntity<String> deleteLanguage(@PathVariable String id) {
+        boolean deleted = quasarStaticTranslationService.deleteLanguage(id);
+        if (deleted) {
+            return ResponseEntity.ok("Idioma eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Idioma no encontrado.");
+        }
+    }
+
+    @GetMapping("/getLanguage/{id}")
+    public ResponseEntity<TranslationMongoDB> getLanguage(@PathVariable String id) {
+        TranslationMongoDB language = quasarStaticTranslationService.findByLanguage(id);
+        if (language != null) {
+            return ResponseEntity.ok(language);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/updateLanguage/{id}")
+    public ResponseEntity<?> updateLanguage(@PathVariable String id, @RequestBody TranslationMongoDB updatedLanguage) {
+        boolean updated = quasarStaticTranslationService.updateTranslation(id, updatedLanguage);
+        if (updated) {
+            return ResponseEntity.ok("Idioma actualizado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/uploadJson")
+    public ResponseEntity<String> uploadJson(@RequestBody TranslationMongoDB translation) {
+        try {
+            quasarStaticTranslationService.saveTranslation(translation.getLanguage(), translation.getName(), translation.getTranslations());
+            return ResponseEntity.ok("Traducción subida correctamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir la traducción.");
+        }
+    }
+
+
 }
