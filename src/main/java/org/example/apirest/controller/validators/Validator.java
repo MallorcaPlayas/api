@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public interface Validator {
-    public boolean validate(Object... objects);
-    public boolean validate(Predicate<Object[]> callBack, Object... object);
+    boolean validate(Object... objects);
+    default boolean validate(Predicate<Object[]> callBack, Object... object){
+        return this.validate(object) && callBack.test(object);
+    }
 }

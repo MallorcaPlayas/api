@@ -1,13 +1,8 @@
 package org.example.apirest.controller.validators;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.photo.CreatePhotoDto;
-import org.example.apirest.error.photo_exceptions.PhotoNotAssignedException;
-import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;

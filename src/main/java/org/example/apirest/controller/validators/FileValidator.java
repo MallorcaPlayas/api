@@ -3,10 +3,6 @@ package org.example.apirest.controller.validators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.apirest.error.file_exceptions.InvalidFileException;
-import org.example.apirest.error.file_exceptions.InvalidFileExtensionException;
-import org.example.apirest.error.file_exceptions.InvalidFileMimeTypeException;
-import org.example.apirest.error.file_exceptions.InvalidFileSizeException;
 import org.example.apirest.utils.Utils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +18,6 @@ public class FileValidator implements Validator {
     private List<String> allowedExtension;
     private Long maxSize;
     private Long minSize;
-
-    @Override
-    public boolean validate(Predicate<Object[]> callBack,Object... files){
-        return this.validate(files) && callBack.test(files);
-    }
 
     @Override
     public boolean validate(Object... objects) {
