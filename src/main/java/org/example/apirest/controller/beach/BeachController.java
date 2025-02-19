@@ -5,6 +5,7 @@ import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.service.beach.BeachServiceImpl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/beaches")
 @CrossOrigin(origins = "*")
-public class BeachController {
+public class BeachController{
     private final BeachServiceImpl service;
 
     public BeachController(BeachServiceImpl service) {
@@ -23,29 +24,29 @@ public class BeachController {
 
     // para usarlo en postman: 127.0.0.1:8080/beaches?language=es
     @GetMapping
-//    @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<List<BeachDto>> index( @RequestParam(defaultValue = "de") String language) {
-        return ResponseEntity.ok(service.findAllTranslate(language));
+    @PreAuthorize("hasAuthority('readBeach')")
+    public ResponseEntity<List<BeachDto>> index(@RequestParam(defaultValue = "de") String language) {
+        return ResponseEntity.ok(service.findAll());
     }
 
     // para usarlo en postman: 127.0.0.1:8080/beaches/2/?language=de
-    @GetMapping("/{id}/")
-//    @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<BeachDto> show(@PathVariable Long id, @RequestParam String language) {
-        return ResponseEntity.ok(service.findOneTranslate(id, language));
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('readBeach')")
+    public ResponseEntity<BeachDto> show(@PathVariable Long id , @RequestParam String language) {
+        return ResponseEntity.ok(service.findOne(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('createBeach')")
     public ResponseEntity<BeachDto> create(@RequestBody CreateBeachDto entity) {
-        BeachDto newEntity = service.saveWithTranslate(entity);
+        BeachDto newEntity = service.save(entity);
         return ResponseEntity.ok(newEntity);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('updateBeach')")
     public ResponseEntity<BeachDto> update(@RequestBody CreateBeachDto entity, @PathVariable Long id) {
-        BeachDto updated = service.updateWithTranslate(id, entity);
+        BeachDto updated = service.update(id, entity);
         return ResponseEntity.ok(updated);
     }
 
@@ -54,6 +55,6 @@ public class BeachController {
     @PreAuthorize("hasAuthority('deleteBeach')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        service.deleteTranslate(id);
+        service.delete(id);
     }
 }

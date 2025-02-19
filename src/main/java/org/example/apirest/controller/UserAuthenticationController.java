@@ -47,10 +47,8 @@ public class UserAuthenticationController {
         // comprobar si es username o email
         Optional<UserDto> userOptional;
         if (username.contains("@")) {
-            System.out.println("es un email");
             userOptional = userService.findByEmail(username);
         } else {
-            System.out.println("es un username");
             userOptional = userService.findByUserName(username);
         }
 
@@ -98,12 +96,9 @@ public class UserAuthenticationController {
         // Extraer el email del token JWT
         String email = jwtService.extractEmailFromJwt(tokenGoogle);
         Optional<UserDto> userOptional = userService.findByEmail(email);
-        System.out.println("paso por aqui para hacer el login? cogiendo el email");
-        System.out.println(userOptional.get().getUserName());
 
         UserDto user = userOptional.get();
         // Verifica si la contraseña coincide
-
 
         // Extraer los nombres de los roles como cadenas
         List<String> roleNames = user.getRoles().stream()
@@ -135,8 +130,6 @@ public class UserAuthenticationController {
     // Endpoint para registrar un usuario
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CreateUserDto createUserDto) {
-        System.out.println("paso por aqui para hacer el registro?");
-        System.out.println(createUserDto.toString());
         UserDto savedUser = userService.save(createUserDto);
         return ResponseEntity.ok(savedUser);
     }

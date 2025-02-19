@@ -10,6 +10,9 @@ import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
 import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
+import org.example.apirest.dto.location.CreateLocationDto;
+import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.CreatePhotoDto;
 import org.example.apirest.dto.service.CreateServiceBeachDto;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
@@ -25,4 +28,5 @@ public class CreateBeachDto extends BaseCreateDto {
     private List<CreateBeachManagerDto> usersInCharge;
     @JsonProperty("services")
     private List<CreateBeachHasServiceDto> beachHasServiceBeach;
+//    private CreateLocationDto location;
 }

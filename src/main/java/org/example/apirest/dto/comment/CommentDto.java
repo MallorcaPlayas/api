@@ -9,10 +9,10 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CommentDto extends BaseDto {
-    private Date editedDate;
+//    private Date editedDate;
     private Integer rating;
-    private String comment;
-    private Date publishedDate;
+    private String content;
+//    private Date publishedDate;
     private Long beachId;
     private Long routeId;
     private Long userId;

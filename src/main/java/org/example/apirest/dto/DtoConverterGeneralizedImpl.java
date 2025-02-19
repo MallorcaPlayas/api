@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class DtoConverterImpl<Entity extends BaseEntity, Dto, CreateDto> implements DtoConverter<Entity, Dto, CreateDto>{
+public class DtoConverterGeneralizedImpl<Entity extends BaseEntity, Dto, CreateDto> implements DtoConverterGeneralized<Entity, Dto, CreateDto> {
 
     private final ModelMapper modelMapper;
 
