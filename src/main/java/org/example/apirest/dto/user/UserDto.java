@@ -26,8 +26,8 @@ public class UserDto extends BaseDto {
     private String password;
     private Date birthday;
     private String profilePicture;
-    private boolean privatePrivacy;
-    private boolean state;
+    private Boolean privatePrivacy;
+    private Boolean state;
     private OrganizationDto organization;
     private List<UserHasRoleDto> roles;
 }

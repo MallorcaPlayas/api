@@ -14,11 +14,11 @@ import java.util.List;
 @Data
 public class RouteDto extends BaseDto {
     private String name;
-    private double distance;
-    private double duration;
-    private double elevationAsc;
-    private double elevationDesc;
-    private boolean isPrivate;
+    private Double distance;
+    private Double duration;
+    private Double elevationAsc;
+    private Double elevationDesc;
+    private Boolean isPrivate;
     private List<LocationDto> locations;
     private UserDto user;
 }

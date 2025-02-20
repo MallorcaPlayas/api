@@ -15,11 +15,11 @@ import java.util.List;
 @Data
 public class CreateRouteDto extends BaseCreateDto {
     private String name;
-    private double distance;
-    private double duration;
-    private double elevationAsc;
-    private double elevationDesc;
-    private boolean isPrivate;
+    private Double distance;
+    private Double duration;
+    private Double elevationAsc;
+    private Double elevationDesc;
+    private Boolean isPrivate;
     private List<CreateLocationDto> locations;
     private Long userId;
 }

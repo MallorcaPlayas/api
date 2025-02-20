@@ -38,8 +38,8 @@ public class User implements BaseEntity {
     private String profilePicture; // Cambiado de `urlPhoto` a `profilePicture` para coincidir con la base de datos
 
     @Column(name = "private_privacy") // Ajuste al nombre de la columna en la base de datos
-    private boolean privatePrivacy;
-    private boolean state;
+    private Boolean privatePrivacy;
+    private Boolean state;
 
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = true)
