@@ -16,10 +16,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration // Le dice a Spring que esta clase contiene la configuración de seguridad
@@ -33,6 +35,9 @@ public class SecurityConfig {
     // En este caso, jwtAuthenticationFilter es el único campo requerido
     // @Component en la clase JwtAuthenticationFilter detecta que esta clase debe ser un bean y automáticamente inyecta su instancia aquí.
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${app.cors.allowed-origins}")  // Leer desde application.properties
+    private String allowedOrigins;
 
     @Bean
     // Este mét_odo configura cómo manejar las solicitudes entrantes
@@ -58,7 +63,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:81")); // Dominios permitidos
+        // TODO Configuración de CORS PARA poder usar en QUASAR Y LARAVERL
+        // Convertir la lista de String a una lista en Java
+        List<String> originsList = Arrays.asList(allowedOrigins.split(","));
+
+        configuration.setAllowedOrigins(originsList); // Dominios permitidos
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
         configuration.setAllowedHeaders(List.of("*")); // Encabezados permitidos
         configuration.setAllowCredentials(true); // Permitir credenciales (ej. Authorization)

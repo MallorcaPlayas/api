@@ -41,6 +41,9 @@ jwt.secret=JWT_SECRET
 
 logging.level.org.springframework.security=DEBUG
 
+app.cors.allowed-origins=https://admin.playaruta.me,https://admind.playaruta.me,https://www.playaruta.me,https://wwwd.playaruta.me,http://localhost:81
+
+
 #
 ## Si quieres que Hibernate genere las tablas automoticamente solo si no existen
 
