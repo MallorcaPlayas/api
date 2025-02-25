@@ -37,11 +37,17 @@ public class Beach implements BaseEntity {
     private List<Camera> cameras;
 
     @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<Complaint> beachComplaints;
+    private List<Complaint> complaints;
 
     @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<Comment> beachComments;
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "beach", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<BeachManager> usersInCharge;
+
+    @OneToMany(mappedBy = "beach" , cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Photo> photos;
+
+//    @OneToOne(mappedBy = "beach" , cascade = CascadeType.ALL , orphanRemoval = true)
+//    private Location location;
 }

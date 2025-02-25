@@ -1,6 +1,8 @@
 package org.example.apirest.service.beach;
 
-import org.example.apirest.dto.DtoConverterImpl;
+import lombok.RequiredArgsConstructor;
+import org.example.apirest.dto.DtoConverter;
+import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.beach.BeachDto;
 import org.example.apirest.dto.beach.CreateBeachDto;
 import org.example.apirest.dto.beachHasService.BeachHasServiceDto;
@@ -9,6 +11,10 @@ import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
 import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
+import org.example.apirest.dto.location.CreateLocationDto;
+import org.example.apirest.dto.location.LocationDto;
+import org.example.apirest.dto.photo.PhotoDto;
+import org.example.apirest.dto.photo.PhotoDtoConverter;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.error.NotFoundException;
@@ -17,41 +23,39 @@ import org.example.apirest.model.beach.Beach;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.utils.UtilsClass;
+import org.example.apirest.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, CreateBeachDto, BeachRepository> {
-
-    private final DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager;
-    private final DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService;
-    private final DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
-    private final DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
-
+@RequiredArgsConstructor
+public class BeachServiceImpl{
+    private final DtoConverterGeneralizedImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager;
+    private final DtoConverterGeneralizedImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService;
+    private final DtoConverterGeneralizedImpl<Camera, CameraDto, CreateCameraDto> dtoCamera;
+    private final DtoConverterGeneralizedImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach;
+//    private final DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoLocation;
+    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
     private final BeachTranslationMongoService beachTranslationMongoService;
+    private final DtoConverterGeneralizedImpl<Beach,BeachDto,CreateBeachDto> dtoConverter;
+    private final BeachRepository repository;
 
-    public BeachServiceImpl(BeachRepository repository,
-                            DtoConverterImpl<Beach, BeachDto, CreateBeachDto> dtoConverter,
-                            DtoConverterImpl<BeachManager, BeachManagerDto, CreateBeachManagerDto> dtoBeachManager,
-                            DtoConverterImpl<BeachHasService, BeachHasServiceDto, CreateBeachHasServiceDto> dtoBeachHasService,
-                            DtoConverterImpl<Camera, CameraDto, CreateCameraDto> dtoCamera,
-                            DtoConverterImpl<TypeBeach, TypeBeachDto, CreateTypeBeachDto> dtoTypeBeach, BeachTranslationMongoService translationServiceMongoDB) {
-
-        super(repository, dtoConverter, Beach.class, BeachDto.class);
-        this.dtoBeachManager = dtoBeachManager;
-        this.dtoBeachHasService = dtoBeachHasService;
-        this.dtoCamera = dtoCamera;
-        this.dtoTypeBeach = dtoTypeBeach;
-        this.beachTranslationMongoService = translationServiceMongoDB;
-    }
-
-
-    public BeachDto findOneTranslate(Long id, String requestedLanguage) {
+    public BeachDto findOne(Long id) {
         Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+
+        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(beach.getPhotos());
+        beachDto.setPhotos(photoDtos);
+        return beachDto;
+    }
+
+    public BeachDto findOne(Long id, String requestedLanguage) {
+        Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
+        BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
+
+        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(beach.getPhotos());
+        beachDto.setPhotos(photoDtos);
         // Buscar la traducción específica en MongoDB para esta playa
         // Indico el id de la playa para buscar la traducción específica en MongoDB
         // todos los documentos en MongoDB tienen la clave 'beach_' + id
@@ -74,7 +78,7 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
     }
 
 
-    public List<BeachDto> findAllTranslate(String requestedLanguage) {
+    public List<BeachDto> findAll(String requestedLanguage) {
         // Obtener todas las playas desde MySQL
         List<Beach> beaches = repository.findAll();
 
@@ -101,52 +105,36 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
                 }
             }
 
+            List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(beach.getPhotos());
+
+            beachDto.setPhotos(photoDtos);
+
             return beachDto; // Retornar la playa con la descripción traducida
-        }).collect(Collectors.toList());
+        }).toList();
 
         return translatedBeaches; // Lista de todas las playas con descripciones traducidas
     }
 
+    public List<BeachDto> findAll() {
 
-    @Override
-    public BeachDto save(CreateBeachDto entity) {
-        Beach entityToInsert = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
+        List<Beach> beaches = repository.findAll();
 
-        if (entity.getTypes() != null) {
-            List<TypeBeach> typeBeaches = dtoTypeBeach.convertToEntityListFromDto(entity.getTypes(), TypeBeach.class);
-            entityToInsert.setTypes(typeBeaches);
-        }
+        return beaches.stream()
+                .map(beach -> {
 
-        if (entity.getUsersInCharge() != null) {
-            List<BeachManager> managers = dtoBeachManager.convertToEntityListFromCreateDto(entity.getUsersInCharge(), BeachManager.class);
-            for (BeachManager manager : managers) {
-                manager.setBeach(entityToInsert);
-            }
-            entityToInsert.setUsersInCharge(managers);
-        }
+                    BeachDto beachDto = dtoConverter.convertDto(beach, BeachDto.class);
 
-        if (entity.getBeachHasServiceBeach() != null) {
-            List<BeachHasService> services = dtoBeachHasService.convertToEntityListFromCreateDto(entity.getBeachHasServiceBeach(), BeachHasService.class);
-            for (BeachHasService service : services) {
-                service.setBeach(entityToInsert);
-            }
-            entityToInsert.setBeachHasServiceBeach(services);
-        }
+                    List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(beach.getPhotos());
 
-        if (entity.getCameras() != null) {
-            List<Camera> cameras = dtoCamera.convertToEntityListFromCreateDto(entity.getCameras(), Camera.class);
-            for (Camera camera : cameras) {
-                camera.setBeach(entityToInsert);
-            }
-            entityToInsert.setCameras(cameras);
-        }
+                    beachDto.setPhotos(photoDtos);
 
-        return dtoConverter.convertDto(repository.save(entityToInsert), BeachDto.class);
+                    return beachDto;
 
+                })
+                .toList();
     }
 
-
-    public BeachDto saveWithTranslate(CreateBeachDto createBeachDto) {
+    public BeachDto save(CreateBeachDto createBeachDto) {
         // Convertir la DTO de entrada en una entidad `Beach`
         Beach entityToInsert = dtoConverter.convertToEntityFromCreateDto(createBeachDto, Beach.class);
 
@@ -192,15 +180,11 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
 
 
 
-    public BeachDto updateWithTranslate(Long id, CreateBeachDto entity) {
+    public BeachDto update(Long id, CreateBeachDto entity) {
         Beach old = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         Beach newEntity = dtoConverter.convertToEntityFromCreateDto(entity, Beach.class);
 
-        if (!old.getDescription().equals(entity.getDescription())) {
-            beachTranslationMongoService.updateTranslationsInMongo(id, entity.getDescription());
-        }
-
-        UtilsClass.updateFields(old, newEntity);
+        Utils.updateFields(old, newEntity);
 
         if (entity.getTypes() != null) {
             old.getTypes().clear();
@@ -238,7 +222,7 @@ public class BeachServiceImpl extends GeneralizedServiceImpl<Beach, BeachDto, Cr
         return dtoConverter.convertDto(repository.save(old), BeachDto.class);
     }
 
-    public void deleteTranslate(Long id) {
+    public void delete(Long id) {
         // Eliminar el registro en MySQL
         Beach beach = repository.findById(id).orElseThrow(() -> new NotFoundException(Beach.class, id));
         repository.delete(beach);

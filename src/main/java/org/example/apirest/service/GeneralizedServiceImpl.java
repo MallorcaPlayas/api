@@ -1,23 +1,20 @@
 package org.example.apirest.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
-import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
-import org.example.apirest.dto.userHasRole.UserHasRoleDto;
+import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.BaseEntity;
-import org.example.apirest.model.UserHasRole;
-import org.example.apirest.utils.UtilsClass;
+import org.example.apirest.utils.Utils;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-    public class GeneralizedServiceImpl<Entity extends BaseEntity,Dto,CreateDto, R extends JpaRepository<Entity,Long>>
+    public class  GeneralizedServiceImpl<Entity extends BaseEntity,Dto,CreateDto, R extends JpaRepository<Entity,Long>>
         implements GeneralizedService<Dto,CreateDto> {
 
     protected final R repository;
-    protected final DtoConverterImpl<Entity, Dto, CreateDto> dtoConverter;
+    protected final DtoConverterGeneralizedImpl<Entity, Dto, CreateDto> dtoConverter;
     protected final Class<Entity> entityClass;
     protected final Class<Dto> dtoClass;
 
@@ -47,7 +44,7 @@ import java.util.List;
             return null;
         }
 
-        UtilsClass.updateFields(oldEntity, entityToInsert);
+        Utils.updateFields(oldEntity, entityToInsert);
 
         return dtoConverter.convertDto(repository.save(oldEntity), dtoClass);
     }

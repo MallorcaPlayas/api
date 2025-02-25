@@ -28,7 +28,8 @@ import java.util.List;
 @RequiredArgsConstructor // Crea un constructor con todos los campos requeridos, en este caso jwtAuthenticationFilter
 // SecurityConfig Decide qué rutas (URLs) son accesibles sin autenticación
 // Define cómo se valida la identidad de un usuario
-@EnableGlobalMethodSecurity(prePostEnabled = true) // Habilita @PreAuthorize y @PostAuthorize para que puedas proteger los métodos de tus controladores
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+// Habilita @PreAuthorize y @PostAuthorize para que puedas proteger los métodos de tus controladores
 public class SecurityConfig {
 
     // Con @RequiredArgsConstructor, Lombok crea un constructor con todos los campos requeridos
@@ -47,9 +48,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración de CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/**","/usersMongoDB", "/tranduccionMongoDB", "/list").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
+                        .requestMatchers("/auth/**", "/usersMongoDB", "/tranduccionMongoDB", "/**", "/list").permitAll() // Permite acceso sin autenticación a las ruta /api/auth
                         // Dejo el codigo de abajo comentado como ejemplo por si en un futuro lo uso
-                    //  .requestMatchers("/api/users/**").hasAuthority("ReadUser") // Restringir acceso a `/api/users` a usuarios con la función ReadUser
+                        //  .requestMatchers("/api/users/**").hasAuthority("ReadUser") // Restringir acceso a `/api/users` a usuarios con la función ReadUser
                         .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura la aplicación para no usar sesiones en el servidor (estado STATELESS). En lugar de almacenar información de sesión, to_do se gestiona mediante tokens JWT. En sistemas con JWT, la información del usuario (como su autenticación y roles) está contenida en el token

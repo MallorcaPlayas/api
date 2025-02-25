@@ -23,8 +23,8 @@ public class CreateUserDto extends BaseCreateDto {
     private Date birthday;
     private String password;
     private String profilePicture;
-    private boolean privatePrivacy;
-    private boolean state;
+    private Boolean privatePrivacy;
+    private Boolean state;
     private OrganizationDto organization;
     private List<CreateUserHasRoleDto> roles;
 }

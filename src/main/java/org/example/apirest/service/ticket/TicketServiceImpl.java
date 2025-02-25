@@ -1,6 +1,6 @@
 package org.example.apirest.service.ticket;
 
-import org.example.apirest.dto.DtoConverterImpl;
+import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.ticket.CreateTicketDto;
 import org.example.apirest.dto.ticket.TicketDto;
 import org.example.apirest.model.Ticket;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TicketServiceImpl extends GeneralizedServiceImpl<Ticket, TicketDto, CreateTicketDto, TicketRepository> {
-    public TicketServiceImpl(TicketRepository repository, DtoConverterImpl<Ticket,TicketDto,CreateTicketDto> dtoConverter) {
+    public TicketServiceImpl(TicketRepository repository, DtoConverterGeneralizedImpl<Ticket,TicketDto,CreateTicketDto> dtoConverter) {
         super(repository, dtoConverter, Ticket.class, TicketDto.class);
     }
 }

@@ -69,6 +69,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String username = claims.getSubject(); // Obtiene el nombre de usuario del claim subject del token JWT
 
+            System.out.println(username);
+
             // Estoy haciendo un casting
             // y con "var" estoy diciendo que es una lista de Strings. "var" permite declarar variables locales sin especificar explícitamente su tipo
             // "var" Solo funciona en variables locales, dentro de un mét_odo

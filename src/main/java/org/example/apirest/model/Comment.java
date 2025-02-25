@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.example.apirest.model.beach.Beach;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,14 +19,14 @@ public class Comment implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date editedDate;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date editedDate;
 
     private Integer rating;
-    private String comment;
+    private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date publishedDate;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date publishedDate;
 
     @ManyToOne
     @JoinColumn(name = "beach_id")
@@ -38,4 +39,7 @@ public class Comment implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+//    @OneToMany
+//    private List<Photo> photos;
 }

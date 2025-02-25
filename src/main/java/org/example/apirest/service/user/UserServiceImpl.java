@@ -1,7 +1,8 @@
 package org.example.apirest.service.user;
 
-import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterImpl;
+import org.example.apirest.dto.DtoConverter;
+import org.example.apirest.dto.DtoConverterGeneralizedImpl;
+import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
@@ -11,7 +12,7 @@ import org.example.apirest.model.*;
 import org.example.apirest.repository.OrganizationRepository;
 import org.example.apirest.repository.UserRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.utils.UtilsClass;
+import org.example.apirest.utils.Utils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,26 +25,53 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Qualifier("userServiceImpl") // Hay 2 clases que implementan UserDetailsService, por lo que necesitamos especificar cuál usar en la inyección de dependencias cuando se necesite UserDetailsService
+@Qualifier("userServiceImpl")
+// Hay 2 clases que implementan UserDetailsService, por lo que necesitamos especificar cuál usar en la inyección de dependencias cuando se necesite UserDetailsService
 //  UserServiceImpl manejar la lógica relacionada con los usuarios, incluyendo operaciones CRUD
 //  y autenticación para Spring Security.
 public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, CreateUserDto, UserRepository>
         implements UserDetailsService {
 
     private final OrganizationRepository organizationRepository;
-    private final DtoConverterImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto;
+    private final DtoConverterGeneralizedImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto;
+    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository repository,
-                           DtoConverterImpl<User,UserDto,CreateUserDto> dtoConverter,
+                           DtoConverterGeneralizedImpl<User, UserDto, CreateUserDto> dtoConverter,
                            OrganizationRepository organizationRepository,
-                           DtoConverterImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto,
-                           PasswordEncoder passwordEncoder) {
+                           DtoConverterGeneralizedImpl<UserHasRole, UserHasRoleDto, CreateUserHasRoleDto> roleDto,
+                           PasswordEncoder passwordEncoder,
+                           DtoConverter<Photo, PhotoDto> photoDtoConverter) {
         super(repository, dtoConverter, User.class, UserDto.class);
 
         this.organizationRepository = organizationRepository;
         this.roleDto = roleDto;
         this.passwordEncoder = passwordEncoder;
+        this.photoDtoConverter = photoDtoConverter;
+    }
+
+    @Override
+    public List<UserDto> findAll() {
+        List<User> users = repository.findAll();
+        return users.stream().map(user -> {
+                Photo photo = user.getPhoto();
+                PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+                UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
+                userDto.setPhoto(photoDto);
+                return userDto;
+                })
+                .toList();
+    }
+
+    @Override
+    public UserDto findOne(Long id) {
+        User user = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class,id));
+        Photo photo = user.getPhoto();
+        PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+        UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
+        userDto.setPhoto(photoDto);
+        return userDto;
     }
 
     @Override
@@ -75,7 +103,7 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
         User old = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class, id));
         User newEntity = dtoConverter.convertToEntityFromCreateDto(entity, User.class);
 
-        UtilsClass.updateFields(old, newEntity);
+        Utils.updateFields(old, newEntity);
 
         if (entity.getOrganization() != null) {
             Organization org = organizationRepository.findById(entity.getOrganization().getId())

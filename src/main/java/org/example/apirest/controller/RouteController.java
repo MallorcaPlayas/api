@@ -62,7 +62,7 @@ public class RouteController {
         routeService.delete(id);
     }
 
-    @PostMapping("upload")
+    @PostMapping("/upload")
     @PreAuthorize("hasAuthority('uploadRoute')")
     public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles) {
         List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
