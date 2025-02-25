@@ -1,6 +1,7 @@
 package org.example.apirest.dto.userRequireRole;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 public class CreateUserRequireRoleDto {
     private Long user_id;
     private Long role_id;
-    private String urlPhotoDni;
-    private String urlOfficialDoc;
+    // for allow modify Require role documentation
+//    private MultipartFile file;
     private boolean isApproved;
 }

@@ -26,7 +26,7 @@ public class UserRequireRole implements BaseEntity{
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userRequireRole")
     private List<Document> documents;
 
     private Boolean isApproved;

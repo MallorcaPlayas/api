@@ -1,8 +1,9 @@
 package org.example.apirest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.userRequireRole.CreateUserRequireRoleDto;
 import org.example.apirest.dto.userRequireRole.UserRequireRoleDto;
-import org.example.apirest.service.userRequireRole.UserRequireRoleServiceImpl;
+import org.example.apirest.service.userRequireRole.UserRequireRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,11 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/user-require-role")
 @CrossOrigin(origins = "*")
-public class UserRequireRoleController extends GeneralizedController<UserRequireRoleDto, CreateUserRequireRoleDto> {
-    public UserRequireRoleController(UserRequireRoleServiceImpl  service) {
-        super(service);
-    }
-    // TODO esta clase sirve para denegar o aceptar solicitudes de roles
+@RequiredArgsConstructor
+public class UserRequireRoleController {
+
+    private final UserRequireRoleService service;
 
     @GetMapping
     @PreAuthorize("hasAuthority('readRole')")

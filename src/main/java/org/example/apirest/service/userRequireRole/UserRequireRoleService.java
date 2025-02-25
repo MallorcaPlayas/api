@@ -1,19 +1,19 @@
 package org.example.apirest.service.userRequireRole;
 
 import lombok.RequiredArgsConstructor;
-import org.example.apirest.dto.DtoConverterGeneralized;
+import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
+import org.example.apirest.dto.document.DocumentDto;
 import org.example.apirest.dto.userRequireRole.CreateUserRequireRoleDto;
 import org.example.apirest.dto.userRequireRole.UserRequireRoleDto;
 import org.example.apirest.error.NotFoundException;
+import org.example.apirest.model.Document;
 import org.example.apirest.model.Role;
 import org.example.apirest.model.User;
 import org.example.apirest.model.UserRequireRole;
-import org.example.apirest.repository.DocumentRepository;
 import org.example.apirest.repository.RoleRepository;
 import org.example.apirest.repository.UserRepository;
 import org.example.apirest.repository.UserRequireRoleRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.service.document.DocumentService;
 import org.example.apirest.utils.Utils;
 import org.springframework.stereotype.Service;
@@ -22,21 +22,31 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserRequireRoleServiceImpl{
+public class UserRequireRoleService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final DocumentService documentService;
+    private final DtoConverter<Document,DocumentDto> documentDtoConverter;
     private final UserRequireRoleRepository repository;
     private final DtoConverterGeneralizedImpl<UserRequireRole, UserRequireRoleDto, CreateUserRequireRoleDto> dtoConverter;
 
     public List<UserRequireRoleDto> findAll() {
-        return dtoConverter.convertDtoList(repository.findAll(), UserRequireRoleDto.class);
+        List<UserRequireRole> requireRoles = repository.findAll();
+        return requireRoles.stream()
+                .map(requireRole -> {
+                    UserRequireRoleDto requireRoleDto = dtoConverter.convertDto(requireRole,UserRequireRoleDto.class);
+                    List<DocumentDto> documentDtos = documentDtoConverter.entityListToDtoList(requireRole.getDocuments());
+                    requireRoleDto.setDocuments(documentDtos);
+                    return requireRoleDto;
+                }).toList();
     }
 
     public UserRequireRoleDto findOne(Long id) {
         UserRequireRole entity = repository.findById(id).orElseThrow(()-> new NotFoundException(UserRequireRole.class,id));
-        return dtoConverter.convertDto(entity, UserRequireRoleDto.class);
+        UserRequireRoleDto requireRoleDto = dtoConverter.convertDto(entity,UserRequireRoleDto.class);
+        List<DocumentDto> documentDtos = documentDtoConverter.entityListToDtoList(entity.getDocuments());
+        requireRoleDto.setDocuments(documentDtos);
+        return requireRoleDto;
     }
 
     public void delete(Long id) {
