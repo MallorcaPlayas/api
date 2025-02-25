@@ -87,7 +87,10 @@ public class BeachMigrationService {
                     String textToTranslate = spanishDescription.getTranslate();
 
                     // Traducir al inglés usando TraductorService
-                    String translatedText = traductorService.translateText(textToTranslate, "es", languageToTranslate);
+                    // TODO en la base de datos de Mysql las descripcones estan en ingles, pero deberian estar en español
+                    // TODO por eso ahora el metodo translateText recibe como segundo parametro el origen de la descripcion
+                    //  que esta en INGLES y como tercer parametrno el idioma al que se quiere traducir
+                    String translatedText = traductorService.translateText(textToTranslate, "en", languageToTranslate);
 
                     if (translatedText != null && !translatedText.isEmpty()) {
                         // Crear el objeto para la traducción al inglés
