@@ -22,9 +22,10 @@ public class BeachController {
     }
 
     // para usarlo en postman: 127.0.0.1:8080/beaches?language=es
+    // TODO modificar la logica en Quasar para enviar el idioma. Actualmente por defecto me da el idioma frances
     @GetMapping
 //    @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<List<BeachDto>> index( @RequestParam(defaultValue = "de") String language) {
+    public ResponseEntity<List<BeachDto>> index( @RequestParam(defaultValue = "fr") String language) {
         return ResponseEntity.ok(service.findAllTranslate(language));
     }
 
