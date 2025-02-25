@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+@Deprecated
 @RequiredArgsConstructor
     public class  GeneralizedServiceImpl<Entity extends BaseEntity,Dto,CreateDto, R extends JpaRepository<Entity,Long>>
         implements GeneralizedService<Dto,CreateDto> {

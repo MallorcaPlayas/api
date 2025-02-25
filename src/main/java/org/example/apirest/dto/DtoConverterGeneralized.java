@@ -2,6 +2,7 @@ package org.example.apirest.dto;
 
 import java.util.List;
 
+@Deprecated
 public interface DtoConverterGeneralized<Entity, Dto, CreateDto> {
 
     Dto convertDto(Entity entity, Class<Dto> dtoClass);

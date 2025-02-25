@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,8 @@ public class UserRequireRole implements BaseEntity{
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    private String urlPhotoDni;
-    private String urlOfficialDoc;
-    private boolean isApproved;
+    @OneToMany
+    private List<Document> documents;
+
+    private Boolean isApproved;
 }
