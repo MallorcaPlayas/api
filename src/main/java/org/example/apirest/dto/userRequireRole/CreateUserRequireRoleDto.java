@@ -1,7 +1,6 @@
 package org.example.apirest.dto.userRequireRole;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 

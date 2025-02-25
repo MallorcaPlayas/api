@@ -18,7 +18,6 @@ public class Organization implements BaseEntity {
     private Long id;
 
     private String name;
-//    private String documentationUrl;
     private String contactNumber;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL , orphanRemoval = true)
