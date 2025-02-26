@@ -11,9 +11,9 @@ import java.net.http.HttpClient;
 @Configuration
 public class WebClientConfig {
     @Bean
-    public WebClient laravelApi() {
+    public WebClient mallorcaPlayasLaravelApi() {
         return WebClient.builder()
-                .baseUrl("http://localhost/api/roles/notify")
+                .baseUrl("http://localhost/api")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }

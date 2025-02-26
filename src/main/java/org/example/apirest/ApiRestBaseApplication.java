@@ -19,7 +19,5 @@ public class ApiRestBaseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ApiRestBaseApplication.class, args);
-
-
     }
 }

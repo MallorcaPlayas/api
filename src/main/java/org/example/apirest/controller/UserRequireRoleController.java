@@ -1,14 +1,27 @@
 package org.example.apirest.controller;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.apirest.dto.userRequireRole.CreateUserRequireRoleDto;
 import org.example.apirest.dto.userRequireRole.UserRequireRoleDto;
+import org.example.apirest.model.UserRequireRole;
+import org.example.apirest.providers.MallorcaPlayasProvider;
+import org.example.apirest.security.JwtKeyProvider;
 import org.example.apirest.service.userRequireRole.UserRequireRoleService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,6 +31,7 @@ import java.util.List;
 public class UserRequireRoleController {
 
     private final UserRequireRoleService service;
+    private final MallorcaPlayasProvider mallorcaPlayasProvider;
 
     @GetMapping
     @PreAuthorize("hasAuthority('readRole')")
@@ -52,4 +66,15 @@ public class UserRequireRoleController {
         service.delete(id);
     }
 
+    @PatchMapping("/{id}")
+    @SneakyThrows
+    @PreAuthorize("hasAuthority('updateRole')")
+    public ResponseEntity<UserRequireRoleDto> approve(@RequestParam("approved") Boolean approved, @PathVariable Long id) {
+
+        UserRequireRoleDto requireRoleDto = service.approve(id, approved);
+
+        mallorcaPlayasProvider.notifyRoleApproved(id);
+
+        return ResponseEntity.ok().body(requireRoleDto);
+    }
 }

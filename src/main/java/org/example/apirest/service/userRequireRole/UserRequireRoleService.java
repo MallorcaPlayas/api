@@ -80,4 +80,10 @@ public class UserRequireRoleService {
 
         return dtoConverter.convertDto(repository.save(old), UserRequireRoleDto.class);
     }
+
+    public UserRequireRoleDto approve(Long id , Boolean approve){
+        UserRequireRole requireRole = repository.findById(id).orElseThrow(()-> new NotFoundException(UserRequireRole.class,id));
+        requireRole.setIsApproved(approve);
+        return dtoConverter.convertDto(repository.save(requireRole), UserRequireRoleDto.class);
+    }
 }
