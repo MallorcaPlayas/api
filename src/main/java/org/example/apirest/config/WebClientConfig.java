@@ -11,7 +11,7 @@ import java.net.http.HttpClient;
 @Configuration
 public class WebClientConfig {
     @Bean
-    public WebClient mallorcaPlayasLaravelApi() {
+    public WebClient laravelApi() {
         return WebClient.builder()
                 .baseUrl("http://localhost/api")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
