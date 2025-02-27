@@ -6,8 +6,6 @@ import org.example.apirest.dto.BaseDto;
 import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.user.UserDto;
-import org.example.apirest.model.Location;
-import org.example.apirest.model.User;
 
 import java.util.List;
 

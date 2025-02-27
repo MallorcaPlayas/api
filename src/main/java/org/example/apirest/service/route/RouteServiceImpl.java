@@ -10,24 +10,18 @@ import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.Location;
+import org.example.apirest.model.location.Location;
 import org.example.apirest.model.Photo;
 import org.example.apirest.model.route.Route;
 import org.example.apirest.model.route.RouteFireStore;
-import org.example.apirest.repository.LocationRepository;
-import org.example.apirest.repository.RouteRepository;
 import org.example.apirest.repository.RouteRepositoryFirestore;
-import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.RouteHandler;
 import org.example.apirest.utils.Utils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.util.List;
 
 @Service

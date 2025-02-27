@@ -3,10 +3,9 @@ package org.example.apirest.service.location;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.dto.location.CreateLocationDto;
-import org.example.apirest.model.Location;
+import org.example.apirest.model.location.Location;
 import org.example.apirest.repository.LocationRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
-import org.example.apirest.service.photo.PhotoServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service

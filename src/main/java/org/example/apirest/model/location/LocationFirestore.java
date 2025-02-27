@@ -1,6 +1,9 @@
-package org.example.apirest.model;
+package org.example.apirest.model.location;
 
-import jakarta.persistence.*;
+import com.google.cloud.firestore.GeoPoint;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,18 +13,12 @@ import org.example.apirest.model.route.Route;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "locations")
-public class Location implements BaseEntity {
+@AllArgsConstructor
+public class LocationFirestore {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double latitude;
-    private Double longitude;
-    private Double elevation;
+    private GeoPoint location;
     private LocalDateTime time;
 
     @ManyToOne

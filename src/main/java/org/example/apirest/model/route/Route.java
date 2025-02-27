@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.apirest.model.*;
+import org.example.apirest.model.location.Location;
 
 import java.util.List;
 
