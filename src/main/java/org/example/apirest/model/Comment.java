@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.apirest.model.beach.Beach;
-
-import java.util.Date;
-import java.util.List;
+import org.example.apirest.model.route.Route;
 
 @Data
 @AllArgsConstructor

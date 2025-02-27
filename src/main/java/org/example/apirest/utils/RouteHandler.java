@@ -3,14 +3,12 @@ package org.example.apirest.utils;
 import lombok.Data;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.route.CreateRouteDto;
-import org.example.apirest.model.Route;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class RouteHandler extends DefaultHandler {

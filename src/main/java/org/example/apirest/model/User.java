@@ -1,12 +1,11 @@
 package org.example.apirest.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.apirest.model.route.Route;
 
 import java.util.Date;
 import java.util.List;

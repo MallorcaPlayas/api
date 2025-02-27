@@ -1,12 +1,11 @@
-package org.example.apirest.model;
+package org.example.apirest.model.route;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.apirest.model.*;
 
-import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data

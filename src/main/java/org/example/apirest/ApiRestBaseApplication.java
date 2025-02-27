@@ -1,6 +1,8 @@
 package org.example.apirest;
 
+import com.google.cloud.firestore.DocumentReference;
 import org.example.apirest.model.*;
+import org.example.apirest.model.route.RouteFireStore;
 import org.example.apirest.repository.*;
 //import org.example.apirest.service.s3.S3Service;
 import org.springframework.boot.SpringApplication;

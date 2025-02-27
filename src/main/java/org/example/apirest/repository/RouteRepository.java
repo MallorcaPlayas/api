@@ -1,6 +1,6 @@
 package org.example.apirest.repository;
 
-import org.example.apirest.model.Route;
+import org.example.apirest.model.route.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

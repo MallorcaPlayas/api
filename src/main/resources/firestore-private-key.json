@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "mallorca-playas",
+  "private_key_id": "56d7bffb1e3f73f28111742a3c1e72d784cd411e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD0Y57hvGRv8UWL\nFKxpXHyL14EkjNeA15Aes4lIU2cCDMzdgBWTGDsfqATmOFJDWuGJ8k7o9W3NU7wh\nHiNd7yoRXUM7csWs3iIGZXs/EZVH8OJCsWB6mzFEc+0C/Ql2HS2CpeP84IvEKitq\n5wEVagJFFOnRVVp7emxvw6pQnUYC1shS7w7KcBkbRYKj6gcTP/S5yKk0jnUS7CTp\n36KwmbBoTTN38tcKLqiON98xe21GPZtEojQcRV9ixsTboaa0XwAiAGW1Gr6vZXjH\nHVzwg4R5JCIVj7rSPsrRZdA55V1c1EzDsqnSX4ARp55vP1Hy0NWbvVCW5evQndLW\n7jeWcG6zAgMBAAECggEAcwSftiXwLy8iR77HFh9NDpOyV/1hP2Y0kf51UfDOvgxA\nLs8lWEFDMjbld2RycvjGxSGhOcqojsYl+IAyrPbumZWHGud9WUqCQPhp9NjVpTId\nir3oZku7+DeHCK0GUuyQiriAgHc90Gj4XiuyOt3Vi6W4FalSGGMZvdAczCv400RP\nOUJmL0IzmplMEJMOZOFrZpjtEf5h/cf9AGe1Tf8tn4nmVArS+qABTy5/dMPUKPXl\nZcREUv+ehCGXl6wlHJhaOMy6Sf9f760yMpiKFTfhZwyariBh8F/ZaII4eaIv/pML\nOhHGk1aK//S5o36SBzq3cT34rfK9kv6Jhgp3bNzSoQKBgQD75YaU/Zlx+sVlOk7u\nAXeQ1VXmvioiIC6G8Wx0oWNAmNZU25hHFIcth9a8mw0UJKmGSFdG1vE5JKC7zubD\ng6HQDQE1xuaF2yMeKyibzFjAAuLv2xsGKEW9BP+3l+RU0X4YKo+AJBO6T2qyNbs3\nVgMqD+mMWsWtneusRhEBjy6ehQKBgQD4Xsl0o/eHlLlLk8a6+6xvHRVn51ctXX5I\naZ7bJYTB0snJNtqWSeOr5qz5QrVSFhuMgYH8tu/w9b1tM5vOb0Y+lJ+uKjbto/pc\nvFX9WasHIpNiJT/RkwRtLVgLdDM3nVa4wWZaV4DwO67y/tng3SuznS3BA+QfeWjX\nnPLgxy4p1wKBgQCxDPM7ZcSkyI5WSFWSFJXlxw1J0f/rXJNXZfnFQGpyzPpZSsAN\ntfANoJzelFzs+5fsOoydzhZfA8+2MgchBTSG950SH2uISi601cEFQOxgiabY0Dh+\na3AZG5phgPGMbHMkqUWT28fB/HASMpIUovA2cFjHvkWTcpxjyhvJ7MnnwQKBgCxn\nnfLpocaus1YszHn/pvuSopIaDT8CGSLPJ2Sc15hjnEoKMZhvC3JfYouJ/qr3YuOC\n//9zoYBeHwjYEkIdKNzla4sS5xEjoQ5VabZLAsXay6jfagKJG2B9m+EoXEPUMH4F\nrcv3GwlYUlYFdGS8hiSttFFu5aku5qyt1cqUMc+vAoGASp1622CpgsPz6q5ZpjJZ\nvPsEQLIUK43C6OPWlpYtqiZr/TScCV+VLLoBOJA3roxyTxBseV3uYUqKOJ3JEEUQ\nmxCKtjTNkZE7gPCxz/hxck9uK18fHGOnW0DQyi+WrJKbLZp8c4fg7wu864BAcc1V\nLGBj+D4puktiZKvPW2wOq9Q=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@mallorca-playas.iam.gserviceaccount.com",
+  "client_id": "101062169924562932693",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40mallorca-playas.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

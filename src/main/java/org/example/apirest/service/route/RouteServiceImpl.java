@@ -1,5 +1,6 @@
 package org.example.apirest.service.route;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
@@ -11,11 +12,15 @@ import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.Location;
 import org.example.apirest.model.Photo;
-import org.example.apirest.model.Route;
+import org.example.apirest.model.route.Route;
+import org.example.apirest.model.route.RouteFireStore;
 import org.example.apirest.repository.LocationRepository;
 import org.example.apirest.repository.RouteRepository;
+import org.example.apirest.repository.RouteRepositoryFirestore;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.RouteHandler;
+import org.example.apirest.utils.Utils;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
@@ -26,26 +31,33 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.List;
 
 @Service
-public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, CreateRouteDto, RouteRepository> {
+@RequiredArgsConstructor
+public class RouteServiceImpl {
 
-    private SAXParser saxParser;
+    private final SAXParser saxParser;
     private final DtoConverterGeneralizedImpl<Location, LocationDto,CreateLocationDto> dtoConverterLocation;
     private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
+    private final DtoConverterGeneralizedImpl<Route,RouteDto,CreateRouteDto> dtoConverter;
+    private final JpaRepository<Route,Long> repository;
+    private final RouteRepositoryFirestore repositoryFirestore;
 
-    public RouteServiceImpl(RouteRepository repository,
-                            DtoConverterGeneralizedImpl<Route,RouteDto,CreateRouteDto> dtoConverter,
-                            LocationRepository locationRepository,
-                            DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation,
-                            DtoConverter<Photo,PhotoDto> photoDtoConverter)
-            throws ParserConfigurationException, SAXException {
-
-        super(repository, dtoConverter, Route.class, RouteDto.class);
-        this.dtoConverterLocation = dtoConverterLocation;
-        this.saxParser = SAXParserFactory.newInstance().newSAXParser();
-        this.photoDtoConverter = photoDtoConverter;
+    public RouteFireStore findOneFireStore(Long id){
+        return  repositoryFirestore.findById(id);
     }
 
-    @Override
+    public List<RouteFireStore> findAllFireStore(){
+        return repositoryFirestore.findAll();
+    }
+
+    public RouteFireStore saveFireStore(RouteFireStore routeFireStore){
+        return repositoryFirestore.save(routeFireStore);
+    }
+
+    public void deleteFireStore(Long id){
+        RouteFireStore routeFireStore = findOneFireStore(id);
+        repositoryFirestore.delete(routeFireStore);
+    }
+
     public RouteDto findOne(Long id){
 
         Route route = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
@@ -59,7 +71,6 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
         return routeDto;
     }
 
-    @Override
     public List<RouteDto> findAll(){
 
         List<Route> routes = repository.findAll();
@@ -78,7 +89,6 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
                 .toList();
     }
 
-    @Override
     public RouteDto save(CreateRouteDto entity) {
         Route route = dtoConverter.convertToEntityFromCreateDto(entity, Route.class);
         List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(entity.getLocations(),Location.class);
@@ -112,5 +122,23 @@ public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, Cr
     @SneakyThrows
     public List<RouteDto> uploadList(List<MultipartFile> files) {
         return files.stream().map(this::upload).toList();
+    }
+
+    public RouteDto update(Long id, CreateRouteDto createEntity) {
+        Route oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class, id));
+        Route entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, Route.class);
+
+        if (oldEntity == null) {
+            return null;
+        }
+
+        Utils.updateFields(oldEntity, entityToInsert);
+
+        return dtoConverter.convertDto(repository.save(oldEntity), RouteDto.class);
+    }
+
+    public void delete(Long id) {
+        Route entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Route.class,id));
+        repository.delete(entity);
     }
 }

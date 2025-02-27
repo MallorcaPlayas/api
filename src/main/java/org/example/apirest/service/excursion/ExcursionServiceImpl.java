@@ -11,6 +11,7 @@ import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.*;
+import org.example.apirest.model.route.Route;
 import org.example.apirest.repository.ExcursionRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.Utils;
