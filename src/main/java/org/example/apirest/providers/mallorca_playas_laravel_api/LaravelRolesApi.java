@@ -24,8 +24,6 @@ public class LaravelRolesApi {
                 .signWith(jwtKeyProvider.getSigningKey(), SignatureAlgorithm.HS256) // Firma el token con la clave secreta
                 .compact(); // Compacta el token en una cadena
 
-        System.out.println("TOKEN " + token);
-
         laravelApi.post()
                 .uri(BASE_URL+"/notify")
                 .header(HttpHeaders.AUTHORIZATION,"Bearer " + token)
