@@ -13,6 +13,7 @@ import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.location.Location;
 import org.example.apirest.model.Photo;
 import org.example.apirest.model.route.Route;
+import org.example.apirest.service.location.LocationServiceImpl;
 import org.example.apirest.utils.RouteHandler;
 import org.example.apirest.utils.Utils;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,14 +27,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteServiceImpl {
 
-    private final DtoConverter<Location,LocationDto> locationDtoConverter;
-    private final DtoConverter<Location,CreateLocationDto> createLocationDtoDtoConverter;
+
     private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
     private final DtoConverter<Route, RouteDto> routeDtoConverter;
     private final DtoConverter<Route, CreateRouteDto> createRouteDtoConverter;
 
     private final JpaRepository<Route,Long> repository;
     private final SAXParser saxParser;
+    private final LocationServiceImpl locationServiceImpl;
 
     public RouteDto findOne(Long id){
 
@@ -68,12 +69,6 @@ public class RouteServiceImpl {
 
     public RouteDto save(CreateRouteDto entity) {
         Route route = createRouteDtoConverter.dtoToEntity(entity);
-        List<Location> locations = createLocationDtoDtoConverter.dtoListToEntityList(entity.getLocations());
-        System.out.println(locations);
-        for(Location location : locations){
-           location.setRoute(route);
-        }
-        route.setLocations(locations);
         return routeDtoConverter.entityToDto(repository.save(route));
     }
 
