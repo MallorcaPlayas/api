@@ -32,6 +32,7 @@ public class RouteServiceImpl {
 
     private final JpaRepository<Route,Long> repository;
     private final SAXParser saxParser;
+    private final LocationServiceImpl locationServiceImpl;
 
     public RouteDto findOne(Long id){
         Route route = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
@@ -42,9 +43,40 @@ public class RouteServiceImpl {
         return routeDtoConverter.entityListToDtoList(repository.findAll());
     }
 
+    @SneakyThrows
     public RouteDto save(CreateRouteDto entity) {
-        Route route = createRouteDtoConverter.dtoToEntity(entity);
+        // save the route data
+        Route route = repository.save(createRouteDtoConverter.dtoToEntity(entity));
+
+        // parsing file to location entity
+        RouteHandler routeHandler = new RouteHandler();
+        saxParser.parse(entity.getFile().getInputStream(),routeHandler);
+
+        // saving each location to a route
+        routeHandler.getWayLocations().forEach(location -> {
+            locationServiceImpl.createInRoute(location,route.getId());
+        });
+
         return routeDtoConverter.entityToDto(repository.save(route));
+    }
+
+    @SneakyThrows
+    public RouteDto update(Long id , CreateRouteDto entity) {
+        // get location from database
+        Route routeOld = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
+
+        // if not exit return
+        if (routeOld == null) {
+            return null;
+        }
+
+        // convert from dto to route
+        Route routeNew = createRouteDtoConverter.dtoToEntity(entity);
+
+        // updating fields
+        Utils.updateFields(routeOld, routeNew);
+
+        return routeDtoConverter.entityToDto(repository.save(routeOld));
     }
 
 //    @SneakyThrows

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Data
 public class RouteHandler extends DefaultHandler {
     private static final String NAME = "name";
     private static final String DISTANCE_METERS = "gpxtrkx:Distance";
@@ -23,11 +24,13 @@ public class RouteHandler extends DefaultHandler {
     private static final String ASCENDANT_METERS = "gpxtrkx:Ascent";
     private static final String DESCENDANT_METERS = "gpxtrkx:Descent";
     private static final String POINT = "trkpt";
+    private static final String WAY_POINT = "wpt";
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
 
     private CreateRouteDto route;
-    private List<CreateLocationDto> locations;
+    private List<CreateLocationDto> trackedLocations;
+    private List<CreateLocationDto> wayLocations;
     private CreateLocationDto currentLocation;
     private StringBuilder elementValue;
 
@@ -43,13 +46,22 @@ public class RouteHandler extends DefaultHandler {
     @Override
     public void startDocument() throws SAXException {
         this.route = new CreateRouteDto();
-        this.locations = new ArrayList<>();
+        this.trackedLocations = new ArrayList<>();
+        this.wayLocations = new ArrayList<>();
     }
 
     @Override
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
         switch (qName) {
             case POINT:
+                this.currentLocation = new CreateLocationDto();
+                this.currentLocation.setPoint(
+                        new GeoPoint(
+                                Double.parseDouble(attr.getValue("lat")),
+                                Double.parseDouble(attr.getValue("lon"))
+                        ));
+                break;
+            case WAY_POINT:
                 this.currentLocation = new CreateLocationDto();
                 this.currentLocation.setPoint(
                         new GeoPoint(
@@ -70,7 +82,10 @@ public class RouteHandler extends DefaultHandler {
                 this.route.setName(this.elementValue.toString());
                 break;
             case POINT:
-                this.locations.add(this.currentLocation);
+                this.trackedLocations.add(this.currentLocation);
+                break;
+            case WAY_POINT:
+                this.wayLocations.add(this.currentLocation);
                 break;
             case ELEVATION:
                 if (this.currentLocation == null) {

@@ -43,7 +43,7 @@ public class LocationRepositoryFirestore{
 
         DocumentReference routeRerence = firestore
                 .collection(ROUTE_PATH + "/" + id.toString() + "/" + LOCATION_PATH)
-                .document(location.getId().toString());
+                .document();
 
         routeRerence.set(location);
 

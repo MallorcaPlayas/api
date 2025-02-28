@@ -28,17 +28,21 @@ public class RouteDtoConverter implements DtoConverter<Route, RouteDto> {
 
     @Override
     public RouteDto entityToDto(Route route) {
+        // convert route to dto
+        RouteDto routeDto = mapper.map(route, RouteDto.class);
         // convert photos to dto
-        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
+        if(route.getPhotos() != null ){
+            List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
+            routeDto.setPhotos(photoDtos);
+        }
         // get locations of the route
         List<Location> locations = locationRepository.findAllByRouteId(route.getId());
         // convert locations to the dto
         List<LocationDto> locationDtos = locationDtoConverter.entityListToDtoList(locations);
-        // convert route to dto
-        RouteDto routeDto = mapper.map(route, RouteDto.class);
+
         // set location and photos to the dto
         routeDto.setLocations(locationDtos);
-        routeDto.setPhotos(photoDtos);
+
         return routeDto;
     }
 
