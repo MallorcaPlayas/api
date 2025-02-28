@@ -29,6 +29,16 @@ public class LocationRepositoryFirestore{
     }
 
     @SneakyThrows
+    public Location findByIdInRoute(Long locationId, Long routeId){
+        return firestore
+                .collection(ROUTE_PATH + "/" + routeId.toString() + "/" + LOCATION_PATH)
+                .document(locationId.toString())
+                .get()
+                .get()
+                .toObject(Location.class);
+    }
+
+    @SneakyThrows
     public Location saveInRoute(Location location , Long id) {
 
         DocumentReference routeRerence = firestore

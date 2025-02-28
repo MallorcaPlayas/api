@@ -11,10 +11,7 @@ import org.example.apirest.dto.beachManager.BeachManagerDto;
 import org.example.apirest.dto.beachManager.CreateBeachManagerDto;
 import org.example.apirest.dto.camera.CameraDto;
 import org.example.apirest.dto.camera.CreateCameraDto;
-import org.example.apirest.dto.location.CreateLocationDto;
-import org.example.apirest.dto.location.LocationDto;
 import org.example.apirest.dto.photo.PhotoDto;
-import org.example.apirest.dto.photo.PhotoDtoConverter;
 import org.example.apirest.dto.typeBeach.CreateTypeBeachDto;
 import org.example.apirest.dto.typeBeach.TypeBeachDto;
 import org.example.apirest.error.NotFoundException;
@@ -22,7 +19,6 @@ import org.example.apirest.model.*;
 import org.example.apirest.model.beach.Beach;
 import org.example.apirest.model.beach.BeachTranslationMongoDB;
 import org.example.apirest.repository.beach.BeachRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
 import org.example.apirest.utils.Utils;
 import org.springframework.stereotype.Service;
 

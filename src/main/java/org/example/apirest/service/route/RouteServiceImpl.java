@@ -26,17 +26,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteServiceImpl {
 
-    private final SAXParser saxParser;
-    private final DtoConverterGeneralizedImpl<Location, LocationDto,CreateLocationDto> dtoConverterLocation;
+    private final DtoConverter<Location,LocationDto> locationDtoConverter;
+    private final DtoConverter<Location,CreateLocationDto> createLocationDtoDtoConverter;
     private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
-    private final DtoConverterGeneralizedImpl<Route,RouteDto,CreateRouteDto> dtoConverter;
+    private final DtoConverter<Route, RouteDto> routeDtoConverter;
+    private final DtoConverter<Route, CreateRouteDto> createRouteDtoConverter;
+
     private final JpaRepository<Route,Long> repository;
+    private final SAXParser saxParser;
 
     public RouteDto findOne(Long id){
 
         Route route = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
 
-        RouteDto routeDto = dtoConverter.convertDto(route,RouteDto.class);
+        RouteDto routeDto = routeDtoConverter.entityToDto(route);
 
         List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
 
@@ -51,7 +54,7 @@ public class RouteServiceImpl {
 
         return routes.stream()
                 .map(route -> {
-                    RouteDto routeDto = dtoConverter.convertDto(route,RouteDto.class);
+                    RouteDto routeDto = routeDtoConverter.entityToDto(route);
 
                     List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
 
@@ -64,14 +67,14 @@ public class RouteServiceImpl {
     }
 
     public RouteDto save(CreateRouteDto entity) {
-        Route route = dtoConverter.convertToEntityFromCreateDto(entity, Route.class);
-        List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(entity.getLocations(),Location.class);
+        Route route = createRouteDtoConverter.dtoToEntity(entity);
+        List<Location> locations = createLocationDtoDtoConverter.dtoListToEntityList(entity.getLocations());
         System.out.println(locations);
         for(Location location : locations){
            location.setRoute(route);
         }
         route.setLocations(locations);
-        return dtoConverter.convertDto(repository.save(route),RouteDto.class);
+        return routeDtoConverter.entityToDto(repository.save(route));
     }
 
     @SneakyThrows
@@ -81,16 +84,16 @@ public class RouteServiceImpl {
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
         CreateRouteDto createRouteDto = routeHandler.getRoute();
 
-        Route route = dtoConverter.convertToEntityFromCreateDto(createRouteDto,Route.class);
+        Route route = createRouteDtoConverter.dtoToEntity(createRouteDto);
 
-        List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(createRouteDto.getLocations(),Location.class);
+        List<Location> locations = createLocationDtoDtoConverter.dtoListToEntityList(createRouteDto.getLocations());
 
         for(Location location : locations){
             location.setRoute(route);
         }
 
         route.setLocations(locations);
-        return dtoConverter.convertDto(repository.save(route),RouteDto.class);
+        return routeDtoConverter.entityToDto(repository.save(route));
     }
 
     @SneakyThrows
@@ -100,7 +103,7 @@ public class RouteServiceImpl {
 
     public RouteDto update(Long id, CreateRouteDto createEntity) {
         Route oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class, id));
-        Route entityToInsert = dtoConverter.convertToEntityFromCreateDto(createEntity, Route.class);
+        Route entityToInsert = createRouteDtoConverter.dtoToEntity(createEntity);
 
         if (oldEntity == null) {
             return null;
@@ -108,7 +111,7 @@ public class RouteServiceImpl {
 
         Utils.updateFields(oldEntity, entityToInsert);
 
-        return dtoConverter.convertDto(repository.save(oldEntity), RouteDto.class);
+        return routeDtoConverter.entityToDto(repository.save(oldEntity));
     }
 
     public void delete(Long id) {
