@@ -29,17 +29,7 @@ public class DocumentDtoCoverter implements DtoConverter<Document, DocumentDto> 
     }
 
     @Override
-    public List<DocumentDto> entityListToDtoList(List<Document> documents) {
-        return documents.stream().map(this::entityToDto).toList();
-    }
-
-    @Override
     public Document dtoToEntity(DocumentDto documentDto) {
         return modelMapper.map(documentDto, Document.class);
-    }
-
-    @Override
-    public List<Document> dtoListToEntityList(List<DocumentDto> documentDtos) {
-        return documentDtos.stream().map(this::dtoToEntity).toList();
     }
 }

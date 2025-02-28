@@ -13,5 +13,4 @@ public class CreateLocationDto{
     private Double latitude;
     private Double elevation;
     private LocalDateTime time;
-    private Long beachId;
 }

@@ -25,6 +25,7 @@ public class Route implements BaseEntity {
     private Double duration;
     private Double elevationAsc;
     private Double elevationDesc;
+    private List<Location> locations;
 
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
@@ -39,8 +40,6 @@ public class Route implements BaseEntity {
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Excursion> excursions;
 
-    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<Location> locations;
 
     @OneToMany(mappedBy = "route")
     private List<Photo> photos;

@@ -13,8 +13,6 @@ import org.example.apirest.error.NotFoundException;
 import org.example.apirest.model.location.Location;
 import org.example.apirest.model.Photo;
 import org.example.apirest.model.route.Route;
-import org.example.apirest.model.route.RouteFireStore;
-import org.example.apirest.repository.RouteRepositoryFirestore;
 import org.example.apirest.utils.RouteHandler;
 import org.example.apirest.utils.Utils;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,24 +31,6 @@ public class RouteServiceImpl {
     private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
     private final DtoConverterGeneralizedImpl<Route,RouteDto,CreateRouteDto> dtoConverter;
     private final JpaRepository<Route,Long> repository;
-    private final RouteRepositoryFirestore repositoryFirestore;
-
-    public RouteFireStore findOneFireStore(Long id){
-        return  repositoryFirestore.findById(id);
-    }
-
-    public List<RouteFireStore> findAllFireStore(){
-        return repositoryFirestore.findAll();
-    }
-
-    public RouteFireStore saveFireStore(RouteFireStore routeFireStore){
-        return repositoryFirestore.save(routeFireStore);
-    }
-
-    public void deleteFireStore(Long id){
-        RouteFireStore routeFireStore = findOneFireStore(id);
-        repositoryFirestore.delete(routeFireStore);
-    }
 
     public RouteDto findOne(Long id){
 

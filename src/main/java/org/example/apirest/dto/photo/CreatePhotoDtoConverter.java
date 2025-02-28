@@ -30,11 +30,6 @@ public class CreatePhotoDtoConverter implements DtoConverter<Photo, CreatePhotoD
     }
 
     @Override
-    public List<CreatePhotoDto> entityListToDtoList(List<Photo> photos) {
-        return photos.stream().map(this::entityToDto).toList();
-    }
-
-    @Override
     public Photo dtoToEntity(CreatePhotoDto photoDto) {
         Photo photo = mapper.map(photoDto,Photo.class);
 
@@ -52,12 +47,5 @@ public class CreatePhotoDtoConverter implements DtoConverter<Photo, CreatePhotoD
         }
         return photo;
     }
-
-    @Override
-    public List<Photo> dtoListToEntityList(List<CreatePhotoDto> photoDtos) {
-        return photoDtos.stream().map(this::dtoToEntity).toList();
-    }
-
-
     
 }
