@@ -9,9 +9,9 @@ import org.example.apirest.dto.user.UserDto;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class RouteDto extends BaseDto {
+public class RouteDto {
+    private Long id;
     private String name;
     private double distance;
     private double duration;

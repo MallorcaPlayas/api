@@ -17,18 +17,30 @@ import java.io.InputStream;
 @Configuration
 public class FireBaseConfiguration {
 
+    private static FirebaseApp firebaseApp;
+
     @Value("${firebase.private.key}")
     private Resource privateKey;
 
     @Bean
     @SneakyThrows
-    public Firestore firestore() {
+    public FirebaseApp firebaseApp(){
+        if(firebaseApp != null){
+            return firebaseApp;
+        }
+
         InputStream credentials = new ByteArrayInputStream(privateKey.getContentAsByteArray());
         FirebaseOptions firebaseOptions = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(credentials))
                 .build();
+        firebaseApp = FirebaseApp.initializeApp(firebaseOptions);
+        return firebaseApp;
+    }
 
-        FirebaseApp firebaseApp = FirebaseApp.initializeApp(firebaseOptions);
+    @Bean
+    @SneakyThrows
+    public Firestore firestore() {
+        FirebaseApp firebaseApp = this.firebaseApp();
         return FirestoreClient.getFirestore(firebaseApp);
     }
 }

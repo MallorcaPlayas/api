@@ -27,44 +27,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteServiceImpl {
 
-
-    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
     private final DtoConverter<Route, RouteDto> routeDtoConverter;
     private final DtoConverter<Route, CreateRouteDto> createRouteDtoConverter;
 
     private final JpaRepository<Route,Long> repository;
     private final SAXParser saxParser;
-    private final LocationServiceImpl locationServiceImpl;
 
     public RouteDto findOne(Long id){
-
         Route route = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
-
-        RouteDto routeDto = routeDtoConverter.entityToDto(route);
-
-        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
-
-        routeDto.setPhotos(photoDtos);
-
-        return routeDto;
+        return routeDtoConverter.entityToDto(route);
     }
 
     public List<RouteDto> findAll(){
-
-        List<Route> routes = repository.findAll();
-
-        return routes.stream()
-                .map(route -> {
-                    RouteDto routeDto = routeDtoConverter.entityToDto(route);
-
-                    List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
-
-                    routeDto.setPhotos(photoDtos);
-
-                    return routeDto;
-                    
-                })
-                .toList();
+        return routeDtoConverter.entityListToDtoList(repository.findAll());
     }
 
     public RouteDto save(CreateRouteDto entity) {
@@ -72,42 +47,35 @@ public class RouteServiceImpl {
         return routeDtoConverter.entityToDto(repository.save(route));
     }
 
-    @SneakyThrows
-    public RouteDto upload(MultipartFile multipartFile){
-        RouteHandler routeHandler = new RouteHandler();
-
-        saxParser.parse(multipartFile.getInputStream(),routeHandler);
-        CreateRouteDto createRouteDto = routeHandler.getRoute();
-
-        Route route = createRouteDtoConverter.dtoToEntity(createRouteDto);
-
-        List<Location> locations = createLocationDtoDtoConverter.dtoListToEntityList(createRouteDto.getLocations());
-
-        for(Location location : locations){
-            location.setRoute(route);
-        }
-
-        route.setLocations(locations);
-        return routeDtoConverter.entityToDto(repository.save(route));
-    }
-
-    @SneakyThrows
-    public List<RouteDto> uploadList(List<MultipartFile> files) {
-        return files.stream().map(this::upload).toList();
-    }
-
-    public RouteDto update(Long id, CreateRouteDto createEntity) {
-        Route oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class, id));
-        Route entityToInsert = createRouteDtoConverter.dtoToEntity(createEntity);
-
-        if (oldEntity == null) {
-            return null;
-        }
-
-        Utils.updateFields(oldEntity, entityToInsert);
-
-        return routeDtoConverter.entityToDto(repository.save(oldEntity));
-    }
+//    @SneakyThrows
+//    public RouteDto upload(MultipartFile multipartFile){
+//        RouteHandler routeHandler = new RouteHandler();
+//
+//        saxParser.parse(multipartFile.getInputStream(),routeHandler);
+//        CreateRouteDto createRouteDto = routeHandler.getRoute();
+//
+//        Route route = createRouteDtoConverter.dtoToEntity(createRouteDto);
+//
+//        return routeDtoConverter.entityToDto(repository.save(route));
+//    }
+//
+//    @SneakyThrows
+//    public List<RouteDto> uploadList(List<MultipartFile> files) {
+//        return files.stream().map(this::upload).toList();
+//    }
+//
+//    public RouteDto update(Long id, CreateRouteDto createEntity) {
+//        Route oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class, id));
+//        Route entityToInsert = createRouteDtoConverter.dtoToEntity(createEntity);
+//
+//        if (oldEntity == null) {
+//            return null;
+//        }
+//
+//        Utils.updateFields(oldEntity, entityToInsert);
+//
+//        return routeDtoConverter.entityToDto(repository.save(oldEntity));
+//    }
 
     public void delete(Long id) {
         Route entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Route.class,id));

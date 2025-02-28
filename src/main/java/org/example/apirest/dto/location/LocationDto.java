@@ -1,5 +1,6 @@
 package org.example.apirest.dto.location;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class LocationDto{
     private Long id;
-    private GeoPoint location;
+    private GeoPoint point;
     private Double elevation;
-    private LocalDateTime time;
+    private Timestamp time;
 }

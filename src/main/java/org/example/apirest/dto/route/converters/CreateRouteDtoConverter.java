@@ -8,6 +8,8 @@ import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.model.location.Location;
 import org.example.apirest.model.route.Route;
+import org.example.apirest.repository.location.LocationRepositoryFirestore;
+import org.example.apirest.service.location.LocationServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -17,23 +19,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CreateRouteDtoConverter implements DtoConverter<Route, CreateRouteDto> {
 
-    private final DtoConverter<Location, CreateLocationDto> createLocationDtoConverter;
-
     private final ModelMapper mapper;
 
     @Override
     public CreateRouteDto entityToDto(Route route) {
-        List<CreateLocationDto> locations = createLocationDtoConverter.entityListToDtoList(route.getLocations());
-        CreateRouteDto createRouteDto = mapper.map(route, CreateRouteDto.class);
-        createRouteDto.setLocations(locations);
-        return createRouteDto;
+        return mapper.map(route, CreateRouteDto.class);
     }
 
     @Override
     public Route dtoToEntity(CreateRouteDto createRouteDto) {
-        List<Location> locations = createLocationDtoConverter.dtoListToEntityList(createRouteDto.getLocations());
-        Route route = mapper.map(createRouteDto, Route.class);
-        route.setLocations(locations);
-        return route;
+        return mapper.map(createRouteDto, Route.class);
     }
 }

@@ -39,12 +39,12 @@ public class RouteController {
         return ResponseEntity.ok(newEntity);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('updateRoute')")
-    public ResponseEntity<RouteDto> update(@RequestBody CreateRouteDto entity, @PathVariable Long id) {
-        RouteDto updated = routeService.update(id, entity);
-        return ResponseEntity.ok(updated);
-    }
+//    @PutMapping("/{id}")
+//    @PreAuthorize("hasAuthority('updateRoute')")
+//    public ResponseEntity<RouteDto> update(@RequestBody CreateRouteDto entity, @PathVariable Long id) {
+//        RouteDto updated = routeService.update(id, entity);
+//        return ResponseEntity.ok(updated);
+//    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('deleteRoute')")
@@ -53,10 +53,10 @@ public class RouteController {
         routeService.delete(id);
     }
 
-    @PostMapping("/upload")
-    @PreAuthorize("hasAuthority('uploadRoute')")
-    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles) {
-        List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
-        return ResponseEntity.ok(routeDtos);
-    }
+//    @PostMapping("/upload")
+//    @PreAuthorize("hasAuthority('uploadRoute')")
+//    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles) {
+//        List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
+//        return ResponseEntity.ok(routeDtos);
+//    }
 }

@@ -1,5 +1,6 @@
 package org.example.apirest.model.location;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Location {
     private Long id;
-    private GeoPoint location;
+    private GeoPoint point;
     private Double elevation;
-    private LocalDateTime time;
+    private Timestamp time;
 }
