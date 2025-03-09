@@ -1,6 +1,8 @@
 package org.example.apirest.controller.MigracionMysqToMongo;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.apirest.model.TranslatedLanguageMongoDb;
 import org.example.apirest.model.beach.TableTranslationMongoDB;
 import org.example.apirest.repository.beach.TableTranslationMongoRepository;
@@ -36,6 +38,7 @@ public class MigrateMysqToMongoService {
         TABLE_FIELDS.put("beaches", Arrays.asList("id", "description"));
         TABLE_FIELDS.put("comments", Arrays.asList("id", "content"));
         TABLE_FIELDS.put("excursions", Arrays.asList("id", "name", "description"));
+        TABLE_FIELDS.put("notifications", Arrays.asList("id", "data"));
     }
 
     public MigrateMysqToMongoService(TableTranslationMongoRepository beachTranslationMongoRepository, TranslatorProvider traductorService) {
@@ -86,6 +89,83 @@ public class MigrateMysqToMongoService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+
+    public boolean migrateTableNotifications(String tableName) {
+        if (!TABLE_FIELDS.containsKey(tableName)) {
+            System.out.println("Tabla no configurada: " + tableName);
+            return false;
+        }
+
+        List<String> fields = TABLE_FIELDS.get(tableName);
+        String fieldString = String.join(", ", fields);
+
+        try (Connection connection = DriverManager.getConnection(mysqlUrl, mysqlUser, mysqlPassword)) {
+            String query = "SELECT " + fieldString + " FROM " + tableName;
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                String id;
+
+                // Si la tabla es "notifications", el id es un UUID (String)
+                if (tableName.equals("notifications")) {
+                    id = resultSet.getString("id");
+                } else {
+                    id = tableName + "_" + resultSet.getInt("id");
+                }
+
+                TableTranslationMongoDB document = new TableTranslationMongoDB();
+                document.setKey(id);
+                document.setValue("pending translation");
+
+                Map<String, List<TranslatedLanguageMongoDb>> translations = new HashMap<>();
+
+                for (String field : fields) {
+                    if (!field.equals("id")) {
+                        String value = resultSet.getString(field);
+
+                        // Si es la tabla notifications, parseamos el JSON de data
+                        if (tableName.equals("notifications") && field.equals("data")) {
+                            Map<String, String> jsonData = parseJson(value);
+                            for (Map.Entry<String, String> entry : jsonData.entrySet()) {
+                                TranslatedLanguageMongoDb translation = new TranslatedLanguageMongoDb();
+                                translation.setId("es");
+                                translation.setTranslate(entry.getValue());
+
+                                translations.put(entry.getKey(), Collections.singletonList(translation));
+                            }
+                        } else {
+                            // Para el resto de las tablas, lo tratamos como texto normal
+                            TranslatedLanguageMongoDb translation = new TranslatedLanguageMongoDb();
+                            translation.setId("es");
+                            translation.setTranslate(value);
+
+                            translations.put(field, Collections.singletonList(translation));
+                        }
+                    }
+                }
+
+                document.setTranslations(translations);
+                tableTranslationMongoRepository.save(document);
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private Map<String, String> parseJson(String jsonString) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(jsonString, new TypeReference<Map<String, String>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new HashMap<>(); // Si hay un error, devolvemos un mapa vacío
         }
     }
 

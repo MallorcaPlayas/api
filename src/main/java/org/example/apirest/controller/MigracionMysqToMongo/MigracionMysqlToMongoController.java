@@ -15,6 +15,14 @@ public class MigracionMysqlToMongoController {
         return success ? "Datos migrados exitosamente de MySQL a MongoDB." : "Error en la migración.";
     }
 
+    @GetMapping("/migrateNotification")
+    public String migrateTableNotification() {
+        String tableName = "notifications";
+        boolean success = migrateMysqToMongoService.migrateTableNotifications(tableName);
+        return success ? "Datos migrados exitosamente de MySQL a MongoDB." : "Error en la migración.";
+    }
+
+
     @GetMapping("/translate")
     public String translateData(
             @RequestParam String tableName,
@@ -25,5 +33,6 @@ public class MigracionMysqlToMongoController {
         return success ? "Traducciones al " + targetLanguage + " completadas."
                 : "Error en la traducción.";
     }
+
 
 }
