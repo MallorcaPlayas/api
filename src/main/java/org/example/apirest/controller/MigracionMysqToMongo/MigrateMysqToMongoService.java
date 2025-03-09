@@ -108,14 +108,7 @@ public class MigrateMysqToMongoService {
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                String id;
-
-                // Si la tabla es "notifications", el id es un UUID (String)
-                if (tableName.equals("notifications")) {
-                    id = resultSet.getString("id");
-                } else {
-                    id = tableName + "_" + resultSet.getInt("id");
-                }
+                String id = resultSet.getString("id"); // UUID como String
 
                 TableTranslationMongoDB document = new TableTranslationMongoDB();
                 document.setKey(id);
@@ -127,23 +120,13 @@ public class MigrateMysqToMongoService {
                     if (!field.equals("id")) {
                         String value = resultSet.getString(field);
 
-                        // Si es la tabla notifications, parseamos el JSON de data
+                        // Si el campo es "data" en "notifications", guardamos el JSON como un String sin modificar
                         if (tableName.equals("notifications") && field.equals("data")) {
-                            Map<String, String> jsonData = parseJson(value);
-                            for (Map.Entry<String, String> entry : jsonData.entrySet()) {
-                                TranslatedLanguageMongoDb translation = new TranslatedLanguageMongoDb();
-                                translation.setId("es");
-                                translation.setTranslate(entry.getValue());
-
-                                translations.put(entry.getKey(), Collections.singletonList(translation));
-                            }
-                        } else {
-                            // Para el resto de las tablas, lo tratamos como texto normal
                             TranslatedLanguageMongoDb translation = new TranslatedLanguageMongoDb();
-                            translation.setId("es");
-                            translation.setTranslate(value);
+                            translation.setId("es"); // Idioma español
+                            translation.setTranslate(value); // Guardamos el JSON sin modificar
 
-                            translations.put(field, Collections.singletonList(translation));
+                            translations.put("data", Collections.singletonList(translation));
                         }
                     }
                 }
@@ -158,6 +141,7 @@ public class MigrateMysqToMongoService {
             return false;
         }
     }
+
 
     private Map<String, String> parseJson(String jsonString) {
         try {

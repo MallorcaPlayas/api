@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MigracionMysqlToMongoController {
     private final MigrateMysqToMongoService migrateMysqToMongoService;
 
-    @GetMapping("/migrateAll")
+    @GetMapping("/migrateTable")
     public String migrateData(@RequestParam String tableName) {
         boolean success = migrateMysqToMongoService.migrateTable(tableName);
         return success ? "Datos migrados exitosamente de MySQL a MongoDB." : "Error en la migración.";
