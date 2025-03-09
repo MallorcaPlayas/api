@@ -14,4 +14,16 @@ public class MigracionMysqlToMongoController {
         boolean success = migrateMysqToMongoService.migrateTable(tableName);
         return success ? "Datos migrados exitosamente de MySQL a MongoDB." : "Error en la migración.";
     }
+
+    @GetMapping("/translate")
+    public String translateData(
+            @RequestParam String tableName,
+            @RequestParam String targetLanguage) {
+
+        boolean success = migrateMysqToMongoService.translateTableData(tableName, targetLanguage);
+
+        return success ? "Traducciones al " + targetLanguage + " completadas."
+                : "Error en la traducción.";
+    }
+
 }

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@Document(collection = "beaches")
-public class BeachTranslationMongoDB {
+@Document(collection = "migrateAllTableFromMysql")
+public class TableTranslationMongoDB {
     @Id
     String key;
     String value;

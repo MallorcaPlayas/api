@@ -1,12 +1,9 @@
 package org.example.apirest.controller.MigracionMysqToMongo;
 
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.example.apirest.model.TranslatedLanguageMongoDb;
-import org.example.apirest.model.beach.BeachTranslationMongoDB;
-import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
+import org.example.apirest.model.beach.TableTranslationMongoDB;
+import org.example.apirest.repository.beach.TableTranslationMongoRepository;
 import org.example.apirest.service.TranslatorProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,7 @@ import java.util.*;
 
 @Service
 public class MigrateMysqToMongoService {
-    private final BeachTranslationMongoRepository beachTranslationMongoRepository;
+    private final TableTranslationMongoRepository tableTranslationMongoRepository;
     private final TranslatorProvider traductorService;
 
     @Value("${spring.datasource.url}")
@@ -41,8 +38,8 @@ public class MigrateMysqToMongoService {
         TABLE_FIELDS.put("excursions", Arrays.asList("id", "name", "description"));
     }
 
-    public MigrateMysqToMongoService(BeachTranslationMongoRepository beachTranslationMongoRepository, TranslatorProvider traductorService) {
-        this.beachTranslationMongoRepository = beachTranslationMongoRepository;
+    public MigrateMysqToMongoService(TableTranslationMongoRepository beachTranslationMongoRepository, TranslatorProvider traductorService) {
+        this.tableTranslationMongoRepository = beachTranslationMongoRepository;
         this.traductorService = traductorService;
     }
 
@@ -63,7 +60,7 @@ public class MigrateMysqToMongoService {
             while (resultSet.next()) {
                 String id = tableName + "_" + resultSet.getInt("id");
 
-                BeachTranslationMongoDB document = new BeachTranslationMongoDB();
+                TableTranslationMongoDB document = new TableTranslationMongoDB();
                 document.setKey(id);
                 document.setValue("pending translation");
 
@@ -82,7 +79,7 @@ public class MigrateMysqToMongoService {
                 }
 
                 document.setTranslations(translations);
-                beachTranslationMongoRepository.save(document);
+                tableTranslationMongoRepository.save(document);
             }
 
             return true;
@@ -91,4 +88,50 @@ public class MigrateMysqToMongoService {
             return false;
         }
     }
+
+    public boolean translateTableData(String tableName, String languageToTranslate) {
+        // Obtener documentos de la tabla especificada
+        List<TableTranslationMongoDB> allDocuments = tableTranslationMongoRepository.findByKeyStartingWith(tableName + "_");
+
+        if (allDocuments.isEmpty()) {
+            System.out.println("No se encontraron documentos para la tabla: " + tableName);
+            return false;
+        }
+
+        for (TableTranslationMongoDB document : allDocuments) {
+            if (document.getTranslations() == null) continue;
+
+            for (String field : document.getTranslations().keySet()) {
+                List<TranslatedLanguageMongoDb> translations = document.getTranslations().get(field);
+
+                // Buscar la traducción en español
+                TranslatedLanguageMongoDb spanishTranslation = translations.stream()
+                        .filter(lang -> "es".equals(lang.getId()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (spanishTranslation != null) {
+                    String textToTranslate = spanishTranslation.getTranslate();
+
+                    // Traducir el texto
+                    String translatedText = traductorService.translateText(textToTranslate, "es", languageToTranslate);
+
+                    if (translatedText != null && !translatedText.isEmpty()) {
+                        // Agregar la traducción en el nuevo idioma
+                        TranslatedLanguageMongoDb newTranslation = new TranslatedLanguageMongoDb();
+                        newTranslation.setId(languageToTranslate);
+                        newTranslation.setTranslate(translatedText);
+
+                        translations.add(newTranslation);
+                        document.getTranslations().put(field, translations);
+
+                        // Guardar el documento actualizado
+                        tableTranslationMongoRepository.save(document);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }

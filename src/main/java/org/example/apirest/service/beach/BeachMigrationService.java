@@ -1,8 +1,8 @@
 package org.example.apirest.service.beach;
 
 import org.example.apirest.model.TranslatedLanguageMongoDb;
-import org.example.apirest.model.beach.BeachTranslationMongoDB;
-import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
+import org.example.apirest.model.beach.TableTranslationMongoDB;
+import org.example.apirest.repository.beach.TableTranslationMongoRepository;
 import org.example.apirest.service.TranslatorProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Service
 public class BeachMigrationService {
-    private final BeachTranslationMongoRepository beachTranslationMongoRepository;
+    private final TableTranslationMongoRepository beachTranslationMongoRepository;
     private final TranslatorProvider traductorService;
 
 
@@ -29,7 +29,7 @@ public class BeachMigrationService {
     @Value("${spring.datasource.password}")
     private String mysqlPassword;
 
-    public BeachMigrationService(BeachTranslationMongoRepository beachTranslationMongoRepository, TranslatorProvider traductorService) {
+    public BeachMigrationService(TableTranslationMongoRepository beachTranslationMongoRepository, TranslatorProvider traductorService) {
         this.beachTranslationMongoRepository = beachTranslationMongoRepository;
         this.traductorService = traductorService;
     }
@@ -47,7 +47,7 @@ public class BeachMigrationService {
                 String description = resultSet.getString("description");
 
                 // Crea el documento para MongoDB
-                BeachTranslationMongoDB beachTranslation = new BeachTranslationMongoDB();
+                TableTranslationMongoDB beachTranslation = new TableTranslationMongoDB();
                 beachTranslation.setKey(id);
                 beachTranslation.setValue("pending translation");
 
@@ -71,9 +71,9 @@ public class BeachMigrationService {
 
     public void translateDescriptionsForAllBeachesToLanguage(String languageToTranslate) {
         // Recuperar todos los documentos desde MongoDB
-        List<BeachTranslationMongoDB> allBeaches = beachTranslationMongoRepository.findAll();
+        List<TableTranslationMongoDB> allBeaches = beachTranslationMongoRepository.findAll();
 
-        for (BeachTranslationMongoDB beach : allBeaches) {
+        for (TableTranslationMongoDB beach : allBeaches) {
             if (beach.getTranslations() != null && beach.getTranslations().containsKey("description")) {
                 // Obtener la traducción en español
                 List<TranslatedLanguageMongoDb> descriptions = beach.getTranslations().get("description");

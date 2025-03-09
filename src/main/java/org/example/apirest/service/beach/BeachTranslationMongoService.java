@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.apirest.model.TranslatedLanguageMongoDb;
 import org.example.apirest.model.beach.Beach;
-import org.example.apirest.model.beach.BeachTranslationMongoDB;
-import org.example.apirest.repository.beach.BeachTranslationMongoRepository;
+import org.example.apirest.model.beach.TableTranslationMongoDB;
+import org.example.apirest.repository.beach.TableTranslationMongoRepository;
 import org.example.apirest.service.TranslatorProvider;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +18,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BeachTranslationMongoService {
 
-    private final BeachTranslationMongoRepository beachTranslationMongoRepository;
+    private final TableTranslationMongoRepository beachTranslationMongoRepository;
     private final TranslatorProvider traductorService;
 
 
-    public void save(BeachTranslationMongoDB translationMongoDB) {
+    public void save(TableTranslationMongoDB translationMongoDB) {
         log.info("Saving translation" + translationMongoDB.getKey());
         beachTranslationMongoRepository.save(translationMongoDB);
     }
 
-    public List<BeachTranslationMongoDB> findAll() {
+    public List<TableTranslationMongoDB> findAll() {
         return beachTranslationMongoRepository.findAll();
     }
 
-    public BeachTranslationMongoDB findByKey(String key) {
+    public TableTranslationMongoDB findByKey(String key) {
         return beachTranslationMongoRepository.findByKey(key);
     }
 
     public void deleteByKey(String key) {
-        BeachTranslationMongoDB document = beachTranslationMongoRepository.findByKey(key);
+        TableTranslationMongoDB document = beachTranslationMongoRepository.findByKey(key);
         if (document != null) {
             beachTranslationMongoRepository.delete(document);
         }
@@ -47,7 +47,7 @@ public class BeachTranslationMongoService {
         String beachId = "beach_" + savedEntity.getId();
 
         // Crear la estructura de traducciones
-        BeachTranslationMongoDB beachMongo = new BeachTranslationMongoDB();
+        TableTranslationMongoDB beachMongo = new TableTranslationMongoDB();
         beachMongo.setKey(beachId);
         beachMongo.setValue("successful translation");
 
@@ -68,7 +68,7 @@ public class BeachTranslationMongoService {
         String mongoKey = "beach_" + beachId;
 
         // Recuperar el documento relacionado en MongoDB
-        BeachTranslationMongoDB mongoTranslation = beachTranslationMongoRepository.findByKey(mongoKey);
+        TableTranslationMongoDB mongoTranslation = beachTranslationMongoRepository.findByKey(mongoKey);
 
         if (mongoTranslation != null) {
             // Actualizar el documento existente
@@ -79,7 +79,7 @@ public class BeachTranslationMongoService {
         }
     }
 
-    private void updateExistingTranslations(BeachTranslationMongoDB beachTranslationMongoDB, String newDescription) {
+    private void updateExistingTranslations(TableTranslationMongoDB beachTranslationMongoDB, String newDescription) {
         List<TranslatedLanguageMongoDb> listDescriptions = beachTranslationMongoDB.getTranslations()
                 .getOrDefault("description", List.of());
 
@@ -94,7 +94,7 @@ public class BeachTranslationMongoService {
     }
 
     private void createNewTranslations(String mongoKey, String newDescription) {
-        BeachTranslationMongoDB newTranslation = new BeachTranslationMongoDB();
+        TableTranslationMongoDB newTranslation = new TableTranslationMongoDB();
         newTranslation.setKey(mongoKey);
         newTranslation.setValue("updated translation");
 
