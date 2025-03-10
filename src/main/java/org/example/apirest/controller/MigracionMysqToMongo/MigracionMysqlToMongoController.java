@@ -1,4 +1,5 @@
 package org.example.apirest.controller.MigracionMysqToMongo;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,17 @@ public class MigracionMysqlToMongoController {
             @RequestParam String targetLanguage) {
 
         boolean success = migrateMysqToMongoService.translateTableData(tableName, targetLanguage);
+
+        return success ? "Traducciones al " + targetLanguage + " completadas."
+                : "Error en la traducción.";
+    }
+
+    @GetMapping("/translateNotification")
+    public String translateNotification(
+            @RequestParam String targetLanguage) {
+        String tableName = "notifications";
+
+        boolean success = migrateMysqToMongoService.translateTableNotification(tableName, targetLanguage);
 
         return success ? "Traducciones al " + targetLanguage + " completadas."
                 : "Error en la traducción.";
