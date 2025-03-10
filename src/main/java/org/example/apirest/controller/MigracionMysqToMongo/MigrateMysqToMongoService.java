@@ -229,32 +229,52 @@ public class MigrateMysqToMongoService {
                         // Convertir el String JSON a un Map
                         Map<String, Object> jsonData = objectMapper.readValue(jsonText, new TypeReference<Map<String, Object>>() {});
 
-                        // Extraer solo el mensaje a traducir
-                        if (jsonData.containsKey("message")) {
-                            String originalMessage = jsonData.get("message").toString();
+                        boolean needsTranslation = false;
 
-                            // Traducir solo el mensaje
-                            String translatedMessage = traductorService.translateText(originalMessage, "es", languageToTranslate);
+                        // Traducir todos los valores dentro del JSON
+                        for (Map.Entry<String, Object> entry : jsonData.entrySet()) {
+                            String key = entry.getKey();
+                            String originalText = entry.getValue().toString();
 
-                            if (translatedMessage != null && !translatedMessage.isEmpty()) {
-                                // Reemplazar solo el mensaje en el JSON
-                                jsonData.put("message", translatedMessage);
+                            // Verificar si ya hay una traducción en el idioma especificado
+                            TranslatedLanguageMongoDb existingTranslation = translations.stream()
+                                    .filter(lang -> languageToTranslate.equals(lang.getId()))
+                                    .findFirst()
+                                    .orElse(null);
 
-                                // Convertir el JSON modificado de vuelta a String
-                                String updatedJson = objectMapper.writeValueAsString(jsonData);
+                            if (existingTranslation != null) {
+                                // Ya existe la traducción -> modificarla en lugar de añadir una nueva
+                                Map<String, Object> existingJson = objectMapper.readValue(existingTranslation.getTranslate(), new TypeReference<Map<String, Object>>() {});
+                                String translatedText = traductorService.translateText(originalText, "es", languageToTranslate);
 
-                                // Crear nueva traducción
-                                TranslatedLanguageMongoDb newTranslation = new TranslatedLanguageMongoDb();
-                                newTranslation.setId(languageToTranslate);
-                                newTranslation.setTranslate(updatedJson); // Mantener estructura JSON
+                                if (!translatedText.isEmpty()) {
+                                    existingJson.put(key, translatedText);
+                                    existingTranslation.setTranslate(objectMapper.writeValueAsString(existingJson));
+                                    needsTranslation = true;
+                                }
+                            } else {
+                                // No existe una traducción -> crear una nueva
+                                String translatedText = traductorService.translateText(originalText, "es", languageToTranslate);
 
-                                translations.add(newTranslation);
-                                document.getTranslations().put(field, translations);
+                                if (!translatedText.isEmpty()) {
+                                    TranslatedLanguageMongoDb newTranslation = new TranslatedLanguageMongoDb();
+                                    newTranslation.setId(languageToTranslate);
 
-                                // Guardar los cambios en MongoDB
-                                tableTranslationMongoRepository.save(document);
+                                    Map<String, Object> newJson = new HashMap<>();
+                                    newJson.put(key, translatedText);
+
+                                    newTranslation.setTranslate(objectMapper.writeValueAsString(newJson));
+                                    translations.add(newTranslation);
+                                    needsTranslation = true;
+                                }
                             }
                         }
+
+                        if (needsTranslation) {
+                            document.getTranslations().put(field, translations);
+                            tableTranslationMongoRepository.save(document);
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.out.println("Error procesando JSON en el documento con ID: " + document.getKey());
@@ -264,6 +284,7 @@ public class MigrateMysqToMongoService {
         }
         return true;
     }
+
 
 
 }
