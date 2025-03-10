@@ -168,7 +168,7 @@ public class MigrateMysqToMongoService {
             for (String field : document.getTranslations().keySet()) {
                 List<TranslatedLanguageMongoDb> translations = document.getTranslations().get(field);
 
-                // Buscar la traducción en español
+                // Buscar la traducción en español (original)
                 TranslatedLanguageMongoDb spanishTranslation = translations.stream()
                         .filter(lang -> "es".equals(lang.getId()))
                         .findFirst()
@@ -177,19 +177,29 @@ public class MigrateMysqToMongoService {
                 if (spanishTranslation != null) {
                     String textToTranslate = spanishTranslation.getTranslate();
 
-                    // Traducir el texto
+                    // Traducir el texto al idioma deseado
                     String translatedText = traductorService.translateText(textToTranslate, "es", languageToTranslate);
 
                     if (translatedText != null && !translatedText.isEmpty()) {
-                        // Agregar la traducción en el nuevo idioma
-                        TranslatedLanguageMongoDb newTranslation = new TranslatedLanguageMongoDb();
-                        newTranslation.setId(languageToTranslate);
-                        newTranslation.setTranslate(translatedText);
+                        // Buscar si ya existe la traducción en el idioma deseado
+                        Optional<TranslatedLanguageMongoDb> existingTranslationOpt = translations.stream()
+                                .filter(lang -> languageToTranslate.equals(lang.getId()))
+                                .findFirst();
 
-                        translations.add(newTranslation);
+                        if (existingTranslationOpt.isPresent()) {
+                            // Si la traducción ya existe, sobrescribirla
+                            TranslatedLanguageMongoDb existingTranslation = existingTranslationOpt.get();
+                            existingTranslation.setTranslate(translatedText);
+                        } else {
+                            // Si no existe, crear una nueva traducción
+                            TranslatedLanguageMongoDb newTranslation = new TranslatedLanguageMongoDb();
+                            newTranslation.setId(languageToTranslate);
+                            newTranslation.setTranslate(translatedText);
+                            translations.add(newTranslation);
+                        }
+
+                        // Guardar los cambios en MongoDB
                         document.getTranslations().put(field, translations);
-
-                        // Guardar el documento actualizado
                         tableTranslationMongoRepository.save(document);
                     }
                 }
@@ -197,6 +207,7 @@ public class MigrateMysqToMongoService {
         }
         return true;
     }
+
 
 
     public boolean translateTableNotification(String tableName, String languageToTranslate) {
