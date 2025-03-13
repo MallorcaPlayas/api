@@ -53,3 +53,6 @@ app.cors.allowed-origins=https://admin.playaruta.me,https://admind.playaruta.me,
 
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
+
+# permite que estos dominios accedan a los recursos del backend sin restricciones de CORS
+app.cors.allowed-origins=https://admin.playaruta.me,https://admind.playaruta.me,https://www.playaruta.me,https://wwwd.playaruta.me,http://localhost:81,http://localhost:1112
