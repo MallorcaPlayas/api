@@ -69,7 +69,7 @@ public class SecurityConfig {
         List<String> originsList = Arrays.asList(allowedOrigins.split(","));
 
         configuration.setAllowedOrigins(originsList); // Dominios permitidos
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Métodos HTTP permitidos
         configuration.setAllowedHeaders(List.of("*")); // Encabezados permitidos
         configuration.setAllowCredentials(true); // Permitir credenciales (ej. Authorization)
 
