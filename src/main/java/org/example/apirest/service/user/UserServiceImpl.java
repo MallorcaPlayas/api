@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +56,18 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
     public List<UserDto> findAll() {
         List<User> users = repository.findAll();
         return users.stream().map(user -> {
-                Photo photo = user.getPhoto();
-                PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+                List<Photo> photoList = user.getPhotos();
+
+                List<PhotoDto> photoDtoList = new ArrayList<>();
+
+                for (Photo photo : photoList) {
+                    PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+                    photoDtoList.add(photoDto);
+                }
+
+
                 UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
-                userDto.setPhoto(photoDto);
+                userDto.setPhoto(photoDtoList);
                 return userDto;
                 })
                 .toList();
@@ -67,10 +76,17 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
     @Override
     public UserDto findOne(Long id) {
         User user = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class,id));
-        Photo photo = user.getPhoto();
-        PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+        List<Photo> photoList = user.getPhotos();
+
+        List<PhotoDto> photoDtoList = new ArrayList<>();
+        for (Photo photo1 : photoList) {
+            PhotoDto photoDto = photoDtoConverter.entityToDto(photo1);
+            photoDtoList.add(photoDto);
+        }
+
+
         UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
-        userDto.setPhoto(photoDto);
+        userDto.setPhoto(photoDtoList);
         return userDto;
     }
 

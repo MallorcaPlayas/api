@@ -32,5 +32,5 @@ public class UserDto extends BaseDto {
     private Boolean state;
     private OrganizationDto organization;
     private List<UserHasRoleDto> roles;
-    private PhotoDto photo;
+    private List<PhotoDto> photo;
 }
