@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,11 +26,8 @@ public class UserRequireRole implements BaseEntity{
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime created;
+    @OneToMany(mappedBy = "userRequireRole")
+    private List<Document> documents;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updated;
-
-    private boolean isApproved;
+    private Boolean isApproved;
 }

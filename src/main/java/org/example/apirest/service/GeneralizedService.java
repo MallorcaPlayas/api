@@ -2,6 +2,7 @@ package org.example.apirest.service;
 
 import java.util.List;
 
+@Deprecated
 public interface GeneralizedService <Dto,CreateDto>{
     List<Dto> findAll();
     Dto findOne(Long id);

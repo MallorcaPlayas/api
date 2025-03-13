@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Deprecated
 @Component
 @RequiredArgsConstructor
 public class DtoConverterGeneralizedImpl<Entity extends BaseEntity, Dto, CreateDto> implements DtoConverterGeneralized<Entity, Dto, CreateDto> {
