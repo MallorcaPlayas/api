@@ -40,7 +40,7 @@ public class RouteDtoConverter implements DtoConverter<Route, RouteDto> {
         // convert locations to the dto
         List<LocationDto> locationDtos = locationDtoConverter.entityListToDtoList(locations);
 
-        // set location and photos to the dto
+        // set location and route to the dto
         routeDto.setLocations(locationDtos);
 
         return routeDto;

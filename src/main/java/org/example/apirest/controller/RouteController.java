@@ -27,17 +27,17 @@ public class RouteController {
         return ResponseEntity.ok(routeService.findAll());
     }
 
+    @PostMapping
+    @PreAuthorize("hasAuthority('createRoute')")
+    public ResponseEntity<RouteDto> create(@RequestBody CreateRouteDto entity) {
+        RouteDto newEntity = routeService.save(entity);
+        return ResponseEntity.ok(newEntity);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('readRoute')")
     public ResponseEntity<RouteDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(routeService.findOne(id));
-    }
-
-    @PostMapping(consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('createRoute')")
-    public ResponseEntity<RouteDto> create(@ModelAttribute CreateRouteDto entity) {
-        RouteDto newEntity = routeService.save(entity);
-        return ResponseEntity.ok(newEntity);
     }
 
     @PutMapping("/{id}")
@@ -54,16 +54,20 @@ public class RouteController {
         routeService.delete(id);
     }
 
-    @PostMapping("/upload")
+    @PostMapping(
+            path = "/upload",
+            consumes = {
+                    MediaType.MULTIPART_FORM_DATA_VALUE,
+                    MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('uploadRoute')")
     public ResponseEntity<RouteDto> upload(@RequestPart(required = false) CreateRouteDto route,
                                            @RequestPart MultipartFile file) {
         RouteDto routeDto = null;
 
-        if(route == null){
+        if (route == null) {
             routeDto = routeService.upload(file);
-        }else {
-            routeDto = routeService.upload(file,route);
+        } else {
+            routeDto = routeService.upload(file, route);
         }
 
         return ResponseEntity.ok(routeDto);

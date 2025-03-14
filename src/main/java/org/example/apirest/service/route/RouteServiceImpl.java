@@ -69,35 +69,64 @@ public class RouteServiceImpl {
         return routeDtoConverter.entityToDto(repository.save(routeOld));
     }
 
+    /**
+     * Uploads a GPX file and creates a new Route in the database, allowing the caller
+     * to override certain fields (like name, distance, etc.) via {@link CreateRouteDto}.
+     * @param multipartFile the GPX file to parse
+     * @param createRouteDto an object containing route details (e.g., name, distance)
+     *                       that override or supplement the parsed GPX data
+     * @return a {@link RouteDto} representing the newly created route
+     */
     @SneakyThrows
+    @Transactional
     public RouteDto upload(MultipartFile multipartFile,CreateRouteDto createRouteDto) {
+        // class for read gpx file
         RouteHandler routeHandler = new RouteHandler();
 
+        // reading the gpx file
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
 
+        // saving routes
         Route route = repository.save(createRouteDtoConverter.dtoToEntity(createRouteDto));
 
+        // get locations from gpx file and save
         routeHandler.getWayLocations().forEach(location -> {
             locationServiceImpl.createInRoute(location,route.getId());
         });
 
+        // converting route to dto
         return routeDtoConverter.entityToDto(route);
     }
 
+    /**
+     * Uploads a GPX file and creates a new Route in the database, extracting all route
+     * data (name, distance, etc.) directly from the file without overriding fields.
+     * This version does <em>not</em> take a {@link CreateRouteDto} parameter; all data
+     * is taken from the GPX file itself.
+     *
+     * @param multipartFile the GPX file to parse
+     * @return a {@link RouteDto} representing the newly created route
+     */
     @SneakyThrows
     @Transactional
     public RouteDto upload(MultipartFile multipartFile){
+        // class for read gpx file
         RouteHandler routeHandler = new RouteHandler();
 
+        // reading the gpx file
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
+        // getting route Data from gpx file
         CreateRouteDto createRouteDto = routeHandler.getRoute();
 
+        // saving route in database
         Route route = repository.save(createRouteDtoConverter.dtoToEntity(createRouteDto));
 
+        // saving locations in database
         routeHandler.getWayLocations().forEach(location -> {
             locationServiceImpl.createInRoute(location,route.getId());
         });
 
+        // returning route DTO
         return routeDtoConverter.entityToDto(repository.save(route));
     }
 
