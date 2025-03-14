@@ -45,9 +45,11 @@ public class LocationRepositoryFirestore{
                 .collection(ROUTE_PATH + "/" + id.toString() + "/" + LOCATION_PATH)
                 .document();
 
-        routeRerence.set(location);
+        routeRerence.set(location).get();
 
-        return routeRerence.get().get().toObject(Location.class);
+        return routeRerence.get()
+                .get()
+                .toObject(Location.class);
     }
 
     public void deleteFromRoute(Location location , Long id) {
@@ -55,5 +57,20 @@ public class LocationRepositoryFirestore{
                 .collection(ROUTE_PATH + "/" + id.toString() + "/" + LOCATION_PATH)
                 .document(location.getId().toString())
                 .delete();
+    }
+
+    @SneakyThrows
+    public void deleteAllFromRoute(Long routeId) {
+        com.google.cloud.firestore.DocumentReference ref = firestore
+                .collection(ROUTE_PATH)
+                .document(routeId.toString());
+
+        ref.listCollections().forEach(
+                collection -> collection.listDocuments().forEach(
+                        DocumentReference::delete
+                )
+        );
+
+        ref.delete();
     }
 }

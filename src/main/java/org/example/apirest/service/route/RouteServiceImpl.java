@@ -18,6 +18,7 @@ import org.example.apirest.utils.RouteHandler;
 import org.example.apirest.utils.Utils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.parsers.SAXParser;
@@ -45,18 +46,7 @@ public class RouteServiceImpl {
 
     @SneakyThrows
     public RouteDto save(CreateRouteDto entity) {
-        // save the route data
         Route route = repository.save(createRouteDtoConverter.dtoToEntity(entity));
-
-        // parsing file to location entity
-        RouteHandler routeHandler = new RouteHandler();
-        saxParser.parse(entity.getFile().getInputStream(),routeHandler);
-
-        // saving each location to a route
-        routeHandler.getWayLocations().forEach(location -> {
-            locationServiceImpl.createInRoute(location,route.getId());
-        });
-
         return routeDtoConverter.entityToDto(repository.save(route));
     }
 
@@ -79,38 +69,45 @@ public class RouteServiceImpl {
         return routeDtoConverter.entityToDto(repository.save(routeOld));
     }
 
-//    @SneakyThrows
-//    public RouteDto upload(MultipartFile multipartFile){
-//        RouteHandler routeHandler = new RouteHandler();
-//
-//        saxParser.parse(multipartFile.getInputStream(),routeHandler);
-//        CreateRouteDto createRouteDto = routeHandler.getRoute();
-//
-//        Route route = createRouteDtoConverter.dtoToEntity(createRouteDto);
-//
-//        return routeDtoConverter.entityToDto(repository.save(route));
-//    }
-//
-//    @SneakyThrows
-//    public List<RouteDto> uploadList(List<MultipartFile> files) {
-//        return files.stream().map(this::upload).toList();
-//    }
-//
-//    public RouteDto update(Long id, CreateRouteDto createEntity) {
-//        Route oldEntity = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class, id));
-//        Route entityToInsert = createRouteDtoConverter.dtoToEntity(createEntity);
-//
-//        if (oldEntity == null) {
-//            return null;
-//        }
-//
-//        Utils.updateFields(oldEntity, entityToInsert);
-//
-//        return routeDtoConverter.entityToDto(repository.save(oldEntity));
-//    }
+    @SneakyThrows
+    public RouteDto upload(MultipartFile multipartFile,CreateRouteDto createRouteDto) {
+        RouteHandler routeHandler = new RouteHandler();
 
+        saxParser.parse(multipartFile.getInputStream(),routeHandler);
+
+        Route route = repository.save(createRouteDtoConverter.dtoToEntity(createRouteDto));
+
+        routeHandler.getWayLocations().forEach(location -> {
+            locationServiceImpl.createInRoute(location,route.getId());
+        });
+
+        return routeDtoConverter.entityToDto(route);
+    }
+
+    @SneakyThrows
+    @Transactional
+    public RouteDto upload(MultipartFile multipartFile){
+        RouteHandler routeHandler = new RouteHandler();
+
+        saxParser.parse(multipartFile.getInputStream(),routeHandler);
+        CreateRouteDto createRouteDto = routeHandler.getRoute();
+
+        Route route = repository.save(createRouteDtoConverter.dtoToEntity(createRouteDto));
+
+        routeHandler.getWayLocations().forEach(location -> {
+            locationServiceImpl.createInRoute(location,route.getId());
+        });
+
+        return routeDtoConverter.entityToDto(repository.save(route));
+    }
+
+    @SneakyThrows
+    @Transactional
     public void delete(Long id) {
         Route entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Route.class,id));
+
+        locationServiceImpl.deleteAllFromRoute(id);
+
         repository.delete(entity);
     }
 }

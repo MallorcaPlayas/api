@@ -54,10 +54,18 @@ public class RouteController {
         routeService.delete(id);
     }
 
-//    @PostMapping("/upload")
-//    @PreAuthorize("hasAuthority('uploadRoute')")
-//    public ResponseEntity<List<RouteDto>> upload(@RequestPart List<MultipartFile> gpxFiles) {
-//        List<RouteDto> routeDtos = routeService.uploadList(gpxFiles);
-//        return ResponseEntity.ok(routeDtos);
-//    }
+    @PostMapping("/upload")
+    @PreAuthorize("hasAuthority('uploadRoute')")
+    public ResponseEntity<RouteDto> upload(@RequestPart(required = false) CreateRouteDto route,
+                                           @RequestPart MultipartFile file) {
+        RouteDto routeDto = null;
+
+        if(route == null){
+            routeDto = routeService.upload(file);
+        }else {
+            routeDto = routeService.upload(file,route);
+        }
+
+        return ResponseEntity.ok(routeDto);
+    }
 }

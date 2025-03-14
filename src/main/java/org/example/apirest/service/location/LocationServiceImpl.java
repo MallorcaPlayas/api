@@ -27,7 +27,9 @@ public class LocationServiceImpl {
 
     public LocationDto createInRoute(CreateLocationDto createLocationDto , Long id) {
         Location location = createLocationDtoConverter.dtoToEntity(createLocationDto);
-        return locationDtoConverter.entityToDto(repository.saveInRoute(location , id));
+        Location location1 = repository.saveInRoute(location , id);
+        LocationDto locationDto = locationDtoConverter.entityToDto(location1);
+        return locationDto;
     }
 
 //    public LocationDto updateInRoute(CreateLocationDto createLocationDto , Long id) {
@@ -38,5 +40,9 @@ public class LocationServiceImpl {
     public void deleteFromRoute(Long locationId, Long routeId) {
         Location location = repository.findByIdInRoute(locationId , routeId);
         repository.deleteFromRoute(location , routeId);
+    }
+
+    public void deleteAllFromRoute(Long routeId) {
+        repository.deleteAllFromRoute(routeId);
     }
 }

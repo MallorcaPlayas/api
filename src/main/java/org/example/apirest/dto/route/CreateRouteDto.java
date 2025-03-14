@@ -16,6 +16,5 @@ public class CreateRouteDto{
     private Double elevationAsc;
     private Double elevationDesc;
     private Boolean isPrivate;
-    private MultipartFile file;
     private Long userId;
 }

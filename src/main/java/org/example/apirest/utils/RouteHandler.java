@@ -3,6 +3,7 @@ package org.example.apirest.utils;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.route.CreateRouteDto;
@@ -18,6 +19,8 @@ import java.util.List;
 
 @Data
 public class RouteHandler extends DefaultHandler {
+
+    // name of the tags in the xml file
     private static final String NAME = "name";
     private static final String DISTANCE_METERS = "gpxtrkx:Distance";
     private static final String DURATION_SECONDS = "gpxtrkx:TotalElapsedTime";
@@ -28,9 +31,12 @@ public class RouteHandler extends DefaultHandler {
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
 
+    // Variables for save extracted data from xml file
     private CreateRouteDto route;
     private List<CreateLocationDto> trackedLocations;
     private List<CreateLocationDto> wayLocations;
+
+    // Auxiliary variables for the read xml file
     private CreateLocationDto currentLocation;
     private StringBuilder elementValue;
 

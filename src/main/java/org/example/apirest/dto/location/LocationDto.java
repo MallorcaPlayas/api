@@ -16,8 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationDto{
-    private Long id;
-    private GeoPoint point;
+    private Double longitude;
+    private Double latitude;
     private Double elevation;
-    private Timestamp time;
+    private LocalDateTime time;
 }
