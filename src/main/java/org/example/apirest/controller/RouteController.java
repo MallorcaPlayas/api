@@ -60,8 +60,8 @@ public class RouteController {
                     MediaType.MULTIPART_FORM_DATA_VALUE,
                     MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('uploadRoute')")
-    public ResponseEntity<RouteDto> upload(@RequestPart(required = false) CreateRouteDto route,
-                                           @RequestPart MultipartFile file) {
+    public ResponseEntity<RouteDto> upload(@RequestPart MultipartFile file,
+                                           @RequestPart(required = false) CreateRouteDto route) {
         RouteDto routeDto = null;
 
         if (route == null) {
