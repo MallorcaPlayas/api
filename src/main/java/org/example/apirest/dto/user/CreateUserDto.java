@@ -27,4 +27,21 @@ public class CreateUserDto extends BaseCreateDto {
     private Boolean state;
     private OrganizationDto organization;
     private List<CreateUserHasRoleDto> roles;
+
+    @Override
+    public String toString() {
+        return "CreateUserDto{" +
+                "userName='" + userName + '\'' +
+                ", firstSurname='" + firstSurname + '\'' +
+                ", secondSurname='" + secondSurname + '\'' +
+                ", email='" + email + '\'' +
+                ", birthday=" + birthday +
+                ", password='" + password + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", privatePrivacy=" + privatePrivacy +
+                ", state=" + state +
+                ", organization=" + organization +
+                ", roles=" + roles +
+                '}';
+    }
 }

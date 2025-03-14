@@ -33,6 +33,12 @@ public class UserController  {
         return ResponseEntity.ok(service.findAll());
     }
 
+    @GetMapping("/v2")
+    @PreAuthorize("hasAuthority('readUser')")
+    public ResponseEntity<List<UsertDtoV2>> getAllUser() {
+        return ResponseEntity.ok(service.findAllv2());
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('readUser')")
     public ResponseEntity<UserDto> show(@PathVariable Long id) {

@@ -33,4 +33,23 @@ public class UserDto extends BaseDto {
     private OrganizationDto organization;
     private List<UserHasRoleDto> roles;
     private List<PhotoDto> photo;
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "name='" + name + '\'' +
+                ", userName='" + userName + '\'' +
+                ", firstSurname='" + firstSurname + '\'' +
+                ", secondSurname='" + secondSurname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", birthday=" + birthday +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", privatePrivacy=" + privatePrivacy +
+                ", state=" + state +
+                ", organization=" + organization +
+                ", roles=" + roles +
+                ", photo=" + photo +
+                '}';
+    }
 }

@@ -5,6 +5,8 @@ import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.dto.user.UsertDtoUpdate;
+import org.example.apirest.dto.user.UsertDtoV2;
 import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
 import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
@@ -71,6 +73,28 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
                 return userDto;
                 })
                 .toList();
+    }
+
+
+    public List<UsertDtoV2> findAllv2() {
+        List<User> users = repository.findAll();
+
+        List<UsertDtoV2> userDtos = new ArrayList<>();
+        // TODO falta enviar los roles
+        for (User user : users) {
+            UsertDtoV2 userDto = new UsertDtoV2();
+            userDto.setId(user.getId());
+            userDto.setName(user.getName());
+            userDto.setUserName(user.getUserName());
+            userDto.setFirstSurname(user.getFirstSurname());
+            userDto.setSecondSurname(user.getSecondSurname());
+            userDto.setEmail(user.getEmail());
+            userDto.setBirthday(user.getBirthday());
+            userDto.setPrivatePrivacy(user.getPrivatePrivacy());
+            userDto.setState(user.getState());
+            userDtos.add(userDto);
+        }
+        return userDtos;
     }
 
     @Override
