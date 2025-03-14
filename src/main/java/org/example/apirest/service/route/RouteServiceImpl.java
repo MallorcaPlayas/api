@@ -1,5 +1,6 @@
 package org.example.apirest.service.route;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
@@ -9,108 +10,133 @@ import org.example.apirest.dto.photo.PhotoDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.error.NotFoundException;
-import org.example.apirest.model.Location;
+import org.example.apirest.model.location.Location;
 import org.example.apirest.model.Photo;
-import org.example.apirest.model.Route;
-import org.example.apirest.repository.LocationRepository;
-import org.example.apirest.repository.RouteRepository;
-import org.example.apirest.service.GeneralizedServiceImpl;
+import org.example.apirest.model.route.Route;
+import org.example.apirest.service.location.LocationServiceImpl;
 import org.example.apirest.utils.RouteHandler;
+import org.example.apirest.utils.Utils;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.util.List;
 
 @Service
-public class RouteServiceImpl extends GeneralizedServiceImpl<Route, RouteDto, CreateRouteDto, RouteRepository> {
+@RequiredArgsConstructor
+public class RouteServiceImpl {
 
-    private SAXParser saxParser;
-    private final DtoConverterGeneralizedImpl<Location, LocationDto,CreateLocationDto> dtoConverterLocation;
-    private final DtoConverter<Photo, PhotoDto> photoDtoConverter;
+    private final DtoConverter<Route, RouteDto> routeDtoConverter;
+    private final DtoConverter<Route, CreateRouteDto> createRouteDtoConverter;
 
-    public RouteServiceImpl(RouteRepository repository,
-                            DtoConverterGeneralizedImpl<Route,RouteDto,CreateRouteDto> dtoConverter,
-                            LocationRepository locationRepository,
-                            DtoConverterGeneralizedImpl<Location, LocationDto, CreateLocationDto> dtoConverterLocation,
-                            DtoConverter<Photo,PhotoDto> photoDtoConverter)
-            throws ParserConfigurationException, SAXException {
+    private final JpaRepository<Route,Long> repository;
+    private final SAXParser saxParser;
+    private final LocationServiceImpl locationServiceImpl;
 
-        super(repository, dtoConverter, Route.class, RouteDto.class);
-        this.dtoConverterLocation = dtoConverterLocation;
-        this.saxParser = SAXParserFactory.newInstance().newSAXParser();
-        this.photoDtoConverter = photoDtoConverter;
-    }
-
-    @Override
     public RouteDto findOne(Long id){
-
         Route route = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
-
-        RouteDto routeDto = dtoConverter.convertDto(route,RouteDto.class);
-
-        List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
-
-        routeDto.setPhotos(photoDtos);
-
-        return routeDto;
+        return routeDtoConverter.entityToDto(route);
     }
 
-    @Override
     public List<RouteDto> findAll(){
-
-        List<Route> routes = repository.findAll();
-
-        return routes.stream()
-                .map(route -> {
-                    RouteDto routeDto = dtoConverter.convertDto(route,RouteDto.class);
-
-                    List<PhotoDto> photoDtos = photoDtoConverter.entityListToDtoList(route.getPhotos());
-
-                    routeDto.setPhotos(photoDtos);
-
-                    return routeDto;
-                    
-                })
-                .toList();
-    }
-
-    @Override
-    public RouteDto save(CreateRouteDto entity) {
-        Route route = dtoConverter.convertToEntityFromCreateDto(entity, Route.class);
-        List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(entity.getLocations(),Location.class);
-        System.out.println(locations);
-        for(Location location : locations){
-           location.setRoute(route);
-        }
-        route.setLocations(locations);
-        return dtoConverter.convertDto(repository.save(route),RouteDto.class);
+        return routeDtoConverter.entityListToDtoList(repository.findAll());
     }
 
     @SneakyThrows
-    public RouteDto upload(MultipartFile multipartFile){
+    public RouteDto save(CreateRouteDto entity) {
+        Route route = repository.save(createRouteDtoConverter.dtoToEntity(entity));
+        return routeDtoConverter.entityToDto(repository.save(route));
+    }
+
+    @SneakyThrows
+    public RouteDto update(Long id , CreateRouteDto entity) {
+        // get location from database
+        Route routeOld = repository.findById(id).orElseThrow(() -> new NotFoundException(Route.class , id));
+
+        // if not exit return
+        if (routeOld == null) {
+            return null;
+        }
+
+        // convert from dto to route
+        Route routeNew = createRouteDtoConverter.dtoToEntity(entity);
+
+        // updating fields
+        Utils.updateFields(routeOld, routeNew);
+
+        return routeDtoConverter.entityToDto(repository.save(routeOld));
+    }
+
+    /**
+     * Uploads a GPX file and creates a new Route in the database, allowing the caller
+     * to override certain fields (like name, distance, etc.) via {@link CreateRouteDto}.
+     * @param multipartFile the GPX file to parse
+     * @param createRouteDto an object containing route details (e.g., name, distance)
+     *                       that override or supplement the parsed GPX data
+     * @return a {@link RouteDto} representing the newly created route
+     */
+    @SneakyThrows
+    @Transactional
+    public RouteDto upload(MultipartFile multipartFile,CreateRouteDto createRouteDto) {
+        // class for read gpx file
         RouteHandler routeHandler = new RouteHandler();
 
+        // reading the gpx file
         saxParser.parse(multipartFile.getInputStream(),routeHandler);
+
+        // saving routes
+        Route route = repository.save(createRouteDtoConverter.dtoToEntity(createRouteDto));
+
+        // get locations from gpx file and save
+        routeHandler.getWayLocations().forEach(location -> {
+            locationServiceImpl.createInRoute(location,route.getId());
+        });
+
+        // converting route to dto
+        return routeDtoConverter.entityToDto(route);
+    }
+
+    /**
+     * Uploads a GPX file and creates a new Route in the database, extracting all route
+     * data (name, distance, etc.) directly from the file without overriding fields.
+     * This version does <em>not</em> take a {@link CreateRouteDto} parameter; all data
+     * is taken from the GPX file itself.
+     *
+     * @param multipartFile the GPX file to parse
+     * @return a {@link RouteDto} representing the newly created route
+     */
+    @SneakyThrows
+    @Transactional
+    public RouteDto upload(MultipartFile multipartFile){
+        // class for read gpx file
+        RouteHandler routeHandler = new RouteHandler();
+
+        // reading the gpx file
+        saxParser.parse(multipartFile.getInputStream(),routeHandler);
+        // getting route Data from gpx file
         CreateRouteDto createRouteDto = routeHandler.getRoute();
 
-        Route route = dtoConverter.convertToEntityFromCreateDto(createRouteDto,Route.class);
+        // saving route in database
+        Route route = repository.save(createRouteDtoConverter.dtoToEntity(createRouteDto));
 
-        List<Location> locations = dtoConverterLocation.convertToEntityListFromCreateDto(createRouteDto.getLocations(),Location.class);
+        // saving locations in database
+        routeHandler.getWayLocations().forEach(location -> {
+            locationServiceImpl.createInRoute(location,route.getId());
+        });
 
-        for(Location location : locations){
-            location.setRoute(route);
-        }
-
-        route.setLocations(locations);
-        return dtoConverter.convertDto(repository.save(route),RouteDto.class);
+        // returning route DTO
+        return routeDtoConverter.entityToDto(repository.save(route));
     }
 
     @SneakyThrows
-    public List<RouteDto> uploadList(List<MultipartFile> files) {
-        return files.stream().map(this::upload).toList();
+    @Transactional
+    public void delete(Long id) {
+        Route entity = repository.findById(id).orElseThrow(()-> new NotFoundException(Route.class,id));
+
+        locationServiceImpl.deleteAllFromRoute(id);
+
+        repository.delete(entity);
     }
 }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.apirest.model.beach.Beach;
-import org.neo4j.cypherdsl.core.Use;
+import org.example.apirest.model.route.Route;
 
 @Data
 @AllArgsConstructor

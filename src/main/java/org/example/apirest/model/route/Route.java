@@ -1,12 +1,12 @@
-package org.example.apirest.model;
+package org.example.apirest.model.route;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.apirest.model.*;
+import org.example.apirest.model.location.Location;
 
-import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -26,7 +26,6 @@ public class Route implements BaseEntity {
     private Double elevationAsc;
     private Double elevationDesc;
 
-
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Complaint> routeComplaints;
 
@@ -39,8 +38,6 @@ public class Route implements BaseEntity {
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Excursion> excursions;
 
-    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<Location> locations;
 
     @OneToMany(mappedBy = "route")
     private List<Photo> photos;

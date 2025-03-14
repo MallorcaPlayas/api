@@ -1,7 +1,8 @@
-package org.example.apirest.dto.photo;
+package org.example.apirest.dto.photo.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.example.apirest.dto.DtoConverter;
+import org.example.apirest.dto.photo.CreatePhotoDto;
 import org.example.apirest.model.Photo;
 import org.example.apirest.service.s3.S3Service;
 import org.example.apirest.utils.Utils;
@@ -9,9 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -27,11 +25,6 @@ public class CreatePhotoDtoConverter implements DtoConverter<Photo, CreatePhotoD
     @Override
     public CreatePhotoDto entityToDto(Photo photo) {
         return mapper.map(photo, CreatePhotoDto.class);
-    }
-
-    @Override
-    public List<CreatePhotoDto> entityListToDtoList(List<Photo> photos) {
-        return photos.stream().map(this::entityToDto).toList();
     }
 
     @Override
@@ -52,12 +45,5 @@ public class CreatePhotoDtoConverter implements DtoConverter<Photo, CreatePhotoD
         }
         return photo;
     }
-
-    @Override
-    public List<Photo> dtoListToEntityList(List<CreatePhotoDto> photoDtos) {
-        return photoDtos.stream().map(this::dtoToEntity).toList();
-    }
-
-
     
 }

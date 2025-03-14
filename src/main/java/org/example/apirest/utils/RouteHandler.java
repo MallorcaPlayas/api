@@ -1,29 +1,42 @@
 package org.example.apirest.utils;
 
+import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.GeoPoint;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
 import org.example.apirest.dto.location.CreateLocationDto;
 import org.example.apirest.dto.route.CreateRouteDto;
-import org.example.apirest.model.Route;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class RouteHandler extends DefaultHandler {
+
+    // name of the tags in the xml file
     private static final String NAME = "name";
     private static final String DISTANCE_METERS = "gpxtrkx:Distance";
     private static final String DURATION_SECONDS = "gpxtrkx:TotalElapsedTime";
     private static final String ASCENDANT_METERS = "gpxtrkx:Ascent";
     private static final String DESCENDANT_METERS = "gpxtrkx:Descent";
     private static final String POINT = "trkpt";
+    private static final String WAY_POINT = "wpt";
     private static final String ELEVATION = "ele";
     private static final String TIME = "time";
 
+    // Variables for save extracted data from xml file
     private CreateRouteDto route;
+    private List<CreateLocationDto> trackedLocations;
+    private List<CreateLocationDto> wayLocations;
+
+    // Auxiliary variables for the read xml file
     private CreateLocationDto currentLocation;
     private StringBuilder elementValue;
 
@@ -39,7 +52,8 @@ public class RouteHandler extends DefaultHandler {
     @Override
     public void startDocument() throws SAXException {
         this.route = new CreateRouteDto();
-        this.route.setLocations(new ArrayList<>());
+        this.trackedLocations = new ArrayList<>();
+        this.wayLocations = new ArrayList<>();
     }
 
     @Override
@@ -47,8 +61,19 @@ public class RouteHandler extends DefaultHandler {
         switch (qName) {
             case POINT:
                 this.currentLocation = new CreateLocationDto();
-                this.currentLocation.setLatitude(Double.parseDouble(attr.getValue("lat")));
-                this.currentLocation.setLongitude(Double.parseDouble(attr.getValue("lon")));
+                this.currentLocation.setPoint(
+                        new GeoPoint(
+                                Double.parseDouble(attr.getValue("lat")),
+                                Double.parseDouble(attr.getValue("lon"))
+                        ));
+                break;
+            case WAY_POINT:
+                this.currentLocation = new CreateLocationDto();
+                this.currentLocation.setPoint(
+                        new GeoPoint(
+                                Double.parseDouble(attr.getValue("lat")),
+                                Double.parseDouble(attr.getValue("lon"))
+                        ));
                 break;
             case ELEVATION, TIME, NAME, DISTANCE_METERS, DURATION_SECONDS, ASCENDANT_METERS, DESCENDANT_METERS:
                 this.elementValue = new StringBuilder();
@@ -63,7 +88,10 @@ public class RouteHandler extends DefaultHandler {
                 this.route.setName(this.elementValue.toString());
                 break;
             case POINT:
-                this.route.getLocations().add(this.currentLocation);
+                this.trackedLocations.add(this.currentLocation);
+                break;
+            case WAY_POINT:
+                this.wayLocations.add(this.currentLocation);
                 break;
             case ELEVATION:
                 if (this.currentLocation == null) {
@@ -76,7 +104,8 @@ public class RouteHandler extends DefaultHandler {
                     return;
                 }
                 String datetime = elementValue.toString().replace("Z", "");
-                currentLocation.setTime(LocalDateTime.parse(datetime));
+                LocalDateTime localDateTime = LocalDateTime.parse(datetime);
+                currentLocation.setTime(Timestamp.of(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())));
                 break;
             case DISTANCE_METERS:
                 this.route.setDistance(Double.parseDouble(elementValue.toString()));

@@ -8,6 +8,7 @@ import org.example.apirest.dto.excursionTicketDetails.ExcursionTicketDetailsDto;
 import org.example.apirest.dto.route.CreateRouteDto;
 import org.example.apirest.dto.route.RouteDto;
 import org.example.apirest.model.*;
+import org.example.apirest.model.route.Route;
 import org.example.apirest.repository.ExcursionTicketDetailsRepository;
 import org.example.apirest.service.GeneralizedServiceImpl;
 import org.springframework.stereotype.Service;
