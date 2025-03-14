@@ -2,6 +2,7 @@ package org.example.apirest.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.example.apirest.dto.userRequireRole.ApproveRequestDto;
 import org.example.apirest.dto.userRequireRole.CreateUserRequireRoleDto;
 import org.example.apirest.dto.userRequireRole.UserRequireRoleDto;
 import org.example.apirest.providers.mallorca_playas_laravel_api.LaravelRolesApi;
@@ -58,9 +59,9 @@ public class UserRequireRoleController {
     @PatchMapping("/{id}")
     @SneakyThrows
     @PreAuthorize("hasAuthority('updateRole')")
-    public ResponseEntity<UserRequireRoleDto> approve(@RequestParam("approved") Boolean approved, @PathVariable Long id) {
+    public ResponseEntity<UserRequireRoleDto> approve(@RequestBody ApproveRequestDto request, @PathVariable Long id) {
 
-        UserRequireRoleDto requireRoleDto = service.approve(id, approved);
+        UserRequireRoleDto requireRoleDto = service.approve(id, request.getApproved());
 
         laravelRolesApi.notifyRoleApproved(id);
 

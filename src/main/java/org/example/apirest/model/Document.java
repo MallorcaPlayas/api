@@ -1,5 +1,6 @@
 package org.example.apirest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,7 @@ public class Document {
     private String path;
 
     @ManyToOne
+    @JoinColumn(name = "user_require_role_id")
+    @JsonBackReference
     private UserRequireRole userRequireRole;
 }

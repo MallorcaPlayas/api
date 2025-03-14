@@ -3,8 +3,11 @@ package org.example.apirest.service.user;
 import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.photo.PhotoDto;
+import org.example.apirest.dto.role.UserRoleDto;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.dto.user.UsertDtoUpdate;
+import org.example.apirest.dto.user.UsertDtoV2;
 import org.example.apirest.dto.userHasRole.CreateUserHasRoleDto;
 import org.example.apirest.dto.userHasRole.UserHasRoleDto;
 import org.example.apirest.error.NotFoundException;
@@ -20,9 +23,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Qualifier("userServiceImpl")
@@ -55,21 +60,64 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
     public List<UserDto> findAll() {
         List<User> users = repository.findAll();
         return users.stream().map(user -> {
-//                Photo photo = user.getPhoto();
-//                PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
-                    //                userDto.setPhoto(photoDto);
-                return dtoConverter.convertDto(user,UserDto.class);
+                List<Photo> photoList = user.getPhotos();
+
+                List<PhotoDto> photoDtoList = new ArrayList<>();
+
+                for (Photo photo : photoList) {
+                    PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+                    photoDtoList.add(photoDto);
+                }
+
+
+                UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
+                userDto.setPhoto(photoDtoList);
+                return userDto;
                 })
                 .toList();
+    }
+
+
+    public List<UsertDtoV2> findAllv2() {
+        List<User> userList = repository.findAll();
+
+        List<UsertDtoV2> userDtos = new ArrayList<>();
+        // TODO falta enviar los roles
+        for (User user : userList) {
+            UsertDtoV2 userDto = new UsertDtoV2();
+            userDto.setId(user.getId());
+            userDto.setName(user.getName());
+            userDto.setUserName(user.getUserName());
+            userDto.setFirstSurname(user.getFirstSurname());
+            userDto.setSecondSurname(user.getSecondSurname());
+            userDto.setEmail(user.getEmail());
+            userDto.setBirthday(user.getBirthday());
+            userDto.setPrivatePrivacy(user.getPrivatePrivacy());
+            userDto.setState(user.getState());
+
+            userDto.setRoles(user.getRoles().stream()
+                    .map(role -> new UserRoleDto(role.getId(), role.getRole().getName())) // Crear un DTO simple para roles
+                    .collect(Collectors.toList()));
+            userDtos.add(userDto);
+        }
+        return userDtos;
     }
 
     @Override
     public UserDto findOne(Long id) {
         User user = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class,id));
-//        Photo photo = user.getPhoto();
-//        PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
-        //        userDto.setPhoto(photoDto);
-        return dtoConverter.convertDto(user,UserDto.class);
+        List<Photo> photoList = user.getPhotos();
+
+        List<PhotoDto> photoDtoList = new ArrayList<>();
+        for (Photo photo1 : photoList) {
+            PhotoDto photoDto = photoDtoConverter.entityToDto(photo1);
+            photoDtoList.add(photoDto);
+        }
+
+
+        UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
+        userDto.setPhoto(photoDtoList);
+        return userDto;
     }
 
     @Override

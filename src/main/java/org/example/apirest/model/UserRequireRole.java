@@ -1,9 +1,11 @@
 package org.example.apirest.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "user_require_rol")
 public class UserRequireRole implements BaseEntity{
     @Id
@@ -27,6 +30,7 @@ public class UserRequireRole implements BaseEntity{
     private Role role;
 
     @OneToMany(mappedBy = "userRequireRole")
+    @JsonManagedReference
     private List<Document> documents;
 
     private Boolean isApproved;

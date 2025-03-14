@@ -2,6 +2,7 @@ package org.example.apirest.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,7 @@ public class User implements BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = true)
+    @JsonIgnore
     private Organization organization;
 
     @Column(name = "email_verified_at", nullable = true)
@@ -52,6 +54,7 @@ public class User implements BaseEntity {
     private String rememberToken;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
+    @JsonManagedReference // Esta parte se serializa
     private List<UserHasRole> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
@@ -76,5 +79,5 @@ public class User implements BaseEntity {
     private List<Complaint> complaints;
 
     @OneToMany(mappedBy = "user")
-    private List<Photo> photo;
+    private List<Photo> photos;
 }

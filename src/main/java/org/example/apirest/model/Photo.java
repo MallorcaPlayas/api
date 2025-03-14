@@ -35,7 +35,7 @@ public class Photo implements BaseEntity {
     private Comment comment;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne

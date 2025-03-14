@@ -23,17 +23,20 @@ public class BeachController{
     }
 
     // para usarlo en postman: 127.0.0.1:8080/beaches?language=es
+    // TODO modificar la logica en Quasar para enviar el idioma. Actualmente por defecto me da el idioma frances
     @GetMapping
     @PreAuthorize("hasAuthority('readBeach')")
+    // service.findAllTranslate(language)
     public ResponseEntity<List<BeachDto>> index(@RequestParam(defaultValue = "de") String language) {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(service.findAll(language));
     }
 
     // para usarlo en postman: 127.0.0.1:8080/beaches/2/?language=de
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('readBeach')")
-    public ResponseEntity<BeachDto> show(@PathVariable Long id , @RequestParam String language) {
-        return ResponseEntity.ok(service.findOne(id));
+    @GetMapping("/{id}/")
+//    @PreAuthorize("hasAuthority('readBeach')")
+    public ResponseEntity<BeachDto> show(@PathVariable Long id, @RequestParam String language) {
+        // TODO service.findOneTranslate(id, language) pero yo nececesito pasar el language
+        return ResponseEntity.ok(service.findOne(id, language));
     }
 
     @PostMapping
