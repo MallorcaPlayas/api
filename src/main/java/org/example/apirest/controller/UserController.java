@@ -2,6 +2,8 @@ package org.example.apirest.controller;
 
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
+import org.example.apirest.dto.user.UsertDtoUpdate;
+import org.example.apirest.dto.user.UsertDtoV2;
 import org.example.apirest.service.user.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +59,20 @@ public class UserController  {
     public ResponseEntity<UserDto> update(@RequestBody CreateUserDto entity, @PathVariable Long id) {
         UserDto updated = service.update(id, entity);
         return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/v2/{id}")
+    @PreAuthorize("hasAuthority('updateUser')")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UsertDtoUpdate usertDtoUpdate, @PathVariable String id) {
+        System.out.println("Entra la peticioón?");
+        System.out.println("tenemos la id bien?" + id);
+
+        System.out.println("tenemos la entiy bien?" + usertDtoUpdate.toString());
+        Long idLong = Long.parseLong(id);
+
+
+//        UserDto updated = service.update(idLong, usertDtoUpdate);
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/{id}")

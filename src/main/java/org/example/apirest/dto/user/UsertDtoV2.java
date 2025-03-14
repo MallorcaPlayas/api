@@ -3,8 +3,11 @@ package org.example.apirest.dto.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.apirest.dto.role.UserRoleDto;
+import org.example.apirest.model.UserHasRole;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,12 +31,16 @@ public class UsertDtoV2 {
 
     private Boolean state;
 
+    private List<UserRoleDto> roles;
+
 
 //    private List<UserRequireRole> userRequireRoles;
 
+
     @Override
     public String toString() {
-        return "UsertDtoUpdate{" +
+        return "UsertDtoV2{" +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", userName='" + userName + '\'' +
                 ", firstSurname='" + firstSurname + '\'' +
@@ -42,6 +49,7 @@ public class UsertDtoV2 {
                 ", birthday=" + birthday +
                 ", privatePrivacy=" + privatePrivacy +
                 ", state=" + state +
+                ", roles=" + roles +
                 '}';
     }
 }

@@ -3,6 +3,7 @@ package org.example.apirest.service.user;
 import org.example.apirest.dto.DtoConverter;
 import org.example.apirest.dto.DtoConverterGeneralizedImpl;
 import org.example.apirest.dto.photo.PhotoDto;
+import org.example.apirest.dto.role.UserRoleDto;
 import org.example.apirest.dto.user.CreateUserDto;
 import org.example.apirest.dto.user.UserDto;
 import org.example.apirest.dto.user.UsertDtoUpdate;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Qualifier("userServiceImpl")
@@ -77,11 +79,11 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
 
 
     public List<UsertDtoV2> findAllv2() {
-        List<User> users = repository.findAll();
+        List<User> userList = repository.findAll();
 
         List<UsertDtoV2> userDtos = new ArrayList<>();
         // TODO falta enviar los roles
-        for (User user : users) {
+        for (User user : userList) {
             UsertDtoV2 userDto = new UsertDtoV2();
             userDto.setId(user.getId());
             userDto.setName(user.getName());
@@ -92,6 +94,10 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
             userDto.setBirthday(user.getBirthday());
             userDto.setPrivatePrivacy(user.getPrivatePrivacy());
             userDto.setState(user.getState());
+
+            userDto.setRoles(user.getRoles().stream()
+                    .map(role -> new UserRoleDto(role.getId(), role.getRole().getName())) // Crear un DTO simple para roles
+                    .collect(Collectors.toList()));
             userDtos.add(userDto);
         }
         return userDtos;
