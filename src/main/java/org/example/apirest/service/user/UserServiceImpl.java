@@ -55,11 +55,10 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
     public List<UserDto> findAll() {
         List<User> users = repository.findAll();
         return users.stream().map(user -> {
-                Photo photo = user.getPhoto();
-                PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
-                UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
-                userDto.setPhoto(photoDto);
-                return userDto;
+//                Photo photo = user.getPhoto();
+//                PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+                    //                userDto.setPhoto(photoDto);
+                return dtoConverter.convertDto(user,UserDto.class);
                 })
                 .toList();
     }
@@ -67,11 +66,10 @@ public class UserServiceImpl extends GeneralizedServiceImpl<User, UserDto, Creat
     @Override
     public UserDto findOne(Long id) {
         User user = repository.findById(id).orElseThrow(() -> new NotFoundException(User.class,id));
-        Photo photo = user.getPhoto();
-        PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
-        UserDto userDto = dtoConverter.convertDto(user,UserDto.class);
-        userDto.setPhoto(photoDto);
-        return userDto;
+//        Photo photo = user.getPhoto();
+//        PhotoDto photoDto = photoDtoConverter.entityToDto(photo);
+        //        userDto.setPhoto(photoDto);
+        return dtoConverter.convertDto(user,UserDto.class);
     }
 
     @Override
